@@ -2,19 +2,25 @@
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">Homeopatia I</h3>
+        <h3 class="panel-title">
+          {{selectedCourse.name}}
+          <a href="#curso/editar/{{selectedCourse.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
+        </h3>
       </div>
       <div class="panel-body">
         <form role="form">
           <div class="form-group">
-            <label for="courseBegin">Inicio</label>
-            <input type="date" class="form-control" id="courseBegin">
+            <label>Horario</label>
+            <span class="pull-right">{{selectedCourse.schedule}}</span>
           </div>
           <div class="form-group">
-            <label for="courseEnd">Termino</label>
-            <input type="date" class="form-control" id="courseEnd">
+            <label>Inicio</label>
+            <span class="pull-right">{{selectedCourse.begin}}</span>
           </div>
-          <button type="submit" class="btn btn-default">Actualizar</button>
+          <div class="form-group">
+            <label>Termino</label>
+            <span class="pull-right">{{selectedCourse.end}}</span>
+          </div>
         </form>
       </div>
     </div>
@@ -25,8 +31,8 @@
       <div class="panel-body">
         <h3><img src="img/university1.svg"> Estudiantes</h3>
         <ul class="list-group">
-          <li class="list-group-item">
-            <a>Susana Alvarado</a>
+          <li class="list-group-item" ng-repeat="student in selectedCourse.students">
+            <a ng-click="selectStudent(student.id)">{{student.name}}</a>
             <div class="pull-right">
               <button type="button" class="btn btn-default btn-xs">
                 <img src="img/student52.svg" width="20">
@@ -35,20 +41,6 @@
                 <img src="img/incomes1.svg" width="20">
               </button>
               <button type="button" class="btn btn-default btn-xs">
-                <img src="img/forms.svg" width="20">
-              </button>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <a>Alfredo Alvarado</a>
-            <div class="pull-right">
-              <button type="button" class="btn btn-default btn-xs">
-                <img src="img/student52.svg" width="20">
-              </button>
-              <button type="button" class="btn btn-default btn-xs">
-                <img src="img/incomes1.svg" width="20">
-              </button>
-              <button class="btn btn-default btn-xs">
                 <img src="img/forms.svg" width="20">
               </button>
             </div>
@@ -59,9 +51,12 @@
   </div>
 
   <div class="col-md-3">
-    <div class="panel panel-default">
+    <div class="panel panel-default" ng-show="selectedStudent">
       <div class="panel-heading">
-        <h3 class="panel-title">Susana Alvarado</h3>
+        <h3 class="panel-title">
+          {{selectedStudent.name}}
+          <a href="#/persona/editar/{{selectedStudent.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
+        </h3>
       </div>
       <div class="panel-body" id="studenInfo">
         <div>
@@ -83,8 +78,18 @@
           </button>
           <div class="panel-collapse collapse in" id="cursosInscritos">
             <ul>
-              <li>Curso VI</li>
-              <li>Homeopatia I</li>
+              <li ng-repeat="course in selectedStudent.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosReservados">
+          Cursos Reservados
+          </button>
+          <div class="panel-collapse collapse in" id="cursosReservados">
+            <ul>
+              <li ng-repeat="course in selectedStudent.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
             </ul>
           </div>
         </div>
@@ -95,10 +100,7 @@
           </button>
           <div class="panel-collapse collapse in" id="cursosAnteriores">
             <ul>
-              <li>Herbolaria I</li>
-              <li>Curso I</li>
-              <li>Curso II</li>
-              <li>Ver todos...</li>
+              <li ng-repeat="course in selectedStudent.previous"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
             </ul>
           </div>
         </div>

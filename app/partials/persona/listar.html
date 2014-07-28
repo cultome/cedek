@@ -1,42 +1,47 @@
 <div class="row" id="buscarPersonas">
-  <div class="col-md-3">
+  <div class="col-md-3" ng-repeat="student in students">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarPersonas" href="#studenInfo1">
-          Susana Alvarado
+        <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarPersonas" href="#studenInfo{{student.id}}">
+          {{student.name}}
         </h3>
       </div>
-      <div class="panel-body panel-collapse collapse in" id="studenInfo1">
+      <div class="panel-body panel-collapse collapse" id="studenInfo{{student.id}}">
         <div class="row">
           <div class="col-md-12">
             <h5>Cursos Inscritos</h5>
           </div>
           <div class="col-md-12">
             <ul>
-              <li>Curso VI</li>
-              <li>Homeopatia I</li>
+              <li ng-repeat="course in student.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
             </ul>
           </div>
         </div>
 
-        <div class="row form-group">
+        <div class="row">
           <div class="col-md-12">
-            <h5>Inscribir / Reservar</h5>
+            <h5>Cursos Reservados</h5>
           </div>
           <div class="col-md-12">
-            <select class="form-control">
-              <option value="1">Herbolaria 1</option>
-              <option value="2">Esperanto Avanzado</option>
-            </select>
+            <ul>
+              <li ng-repeat="course in student.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+            </ul>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-offset-1 col-md-4">
-            <button class="btn btn-default">Reservar</button>
+        <div>
+          <div class="row form-group">
+            <div class="col-md-12">
+              <select class="form-control" ng-model="courseId" ng-options="c.id as c.name group by c.status for c in courses">
+                <option value="">Selecciona un curso</option>
+              </select>
+            </div>
           </div>
-          <div class="col-md-offset-1 col-md-4">
-            <button class="btn btn-default">Inscribir</button>
+
+          <div class="row form-group">
+            <div class="col-md-offset-3">
+              <button class="btn btn-default" ng-click="studentId = s.id">Inscribir / Reservar</button>
+            </div>
           </div>
         </div>
       </div>
