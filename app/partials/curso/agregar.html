@@ -1,0 +1,65 @@
+<div class="row">
+  <form class="form-horizontal" role="form">
+    <div class="col-md-offset-1 col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Datos del curso</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="form-group">
+              <label for="nombre" class="col-md-2 control-label">Nombre</label>
+              <div class="col-md-8">
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre completo">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="inicio" class="col-md-2 control-label">Inicio</label>
+              <div class="col-md-3">
+                <input type="date" class="form-control" id="inicio">
+              </div>
+
+              <label for="termino" class="col-md-2 control-label">Termino</label>
+              <div class="col-md-3">
+                <input type="date" class="form-control" id="termino">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Horario</h3>
+        </div>
+
+        <div class="panel-body">
+          <div class="row">
+            <div class="form-group">
+              <label for="dia" class="col-md-2 control-label">Dia</label>
+              <div class="col-md-3">
+                <select class="form-control" id="dia">
+                  <option value="1">Lunes</option>
+                  <option value="2">Martes</option>
+                  <option value="3">Miercoles</option>
+                  <option value="4">Jueves</option>
+                  <option value="5">Viernes</option>
+                  <option value="6">Sabado</option>
+                  <option value="7">Domingo</option>
+                </select>
+              </div>
+
+              <label for="hora" class="col-md-2 control-label">Hora</label>
+              <div class="col-md-3">
+                <input type="time" class="form-control" id="hora">
+              </div>
+            </div>
+          </div>
+        </div><!-- body -->
+      </div>
+    </div>
+  </form>
+</div>
