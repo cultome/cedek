@@ -230,7 +230,30 @@ app.directive('studentListFullOpc', function(){
 app.directive('studentView', function(){
   return {
     replace: true,
+    transclude: true,
+    scope: {
+      student: '=model',
+      canCollapse: '@canCollapse',
+      id: '='
+    },
     templateUrl: 'pages/curso/partials/vistaEstudiante.html'
+  };
+});
+
+app.directive('subscribeCourse', function(){
+  return {
+    replace: true,
+    templateUrl: 'pages/persona/partials/inscribeReservaCurso.html'
+  };
+});
+
+/*
+ * Candidato a Refactor
+ */
+app.directive('personView', function(){
+  return {
+    replace: true,
+    templateUrl: 'pages/persona/partials/vistaEstudiante.html'
   };
 });
 

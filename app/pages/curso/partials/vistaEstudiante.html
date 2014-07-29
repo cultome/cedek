@@ -1,13 +1,18 @@
-<div class="panel panel-default" ng-show="selectedStudent">
+<div class="panel panel-default" ng-show="student">
   <div class="panel-heading">
-    <h3 class="panel-title">
-      {{selectedStudent.name}}
-      <a href="#/persona/editar/{{selectedStudent.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
+    <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarPersonas" href="#{{id}}">
+      {{student.name}}
+      <a href="#/persona/editar/{{student.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
     </h3>
   </div>
-  <div class="panel-body" id="studenInfo">
+
+  <div
+    ng-class="{'panel-body':true, 'panel-collapse': true, 'collapse': true, 'in': canCollapse == 'false'}"
+    id="{{id}}">
+
+    <!-- inasistencias -->
     <div class="form-group">
-      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#inasistencias">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#{{id}}" href="#inasistencias">
       Inasistencias
       </button>
     </div>
@@ -19,35 +24,38 @@
       </ul>
     </div>
 
-    <div class="form-group" ng-show="selectedStudent.enrollments">
-      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosInscritos">
+    <!-- cursos inscritos -->
+    <div class="form-group" ng-show="student.enrollments">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#{{id}}" href="#cursosInscritos">
       Cursos Inscritos
       </button>
       <div class="panel-collapse collapse in" id="cursosInscritos">
         <ul>
-          <li ng-repeat="course in selectedStudent.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+          <li ng-repeat="course in student.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="form-group" ng-show="selectedStudent.reserves">
-      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosReservados">
+    <!-- cursos reservados -->
+    <div class="form-group" ng-show="student.reserves">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#{{id}}" href="#cursosReservados">
       Cursos Reservados
       </button>
       <div class="panel-collapse collapse in" id="cursosReservados">
         <ul>
-          <li ng-repeat="course in selectedStudent.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+          <li ng-repeat="course in student.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="form-group" ng-show="selectedStudent.scholarships">
-      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#becas">
+    <!-- becas -->
+    <div class="form-group" ng-show="student.scholarships">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#{{id}}" href="#becas">
       Becas
       </button>
       <div class="panel-collapse collapse in" id="becas">
         <ul>
-          <li ng-repeat="scholarship in selectedStudent.scholarships">
+          <li ng-repeat="scholarship in student.scholarships">
             <a href="#/curso/{{scholarship.id}}">{{scholarship.course.name}}</a>
             <span class="pull-right">{{scholarship.percentage}}%</span>
           </li>
@@ -55,19 +63,22 @@
       </div>
     </div>
 
-    <div class="form-group" ng-show="selectedStudent.debts">
-      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#adeudos">
+    <!-- adeudos -->
+    <div class="form-group" ng-show="student.debts">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#{{id}}" href="#adeudos">
       Adeudos
       </button>
       <div class="panel-collapse collapse in" id="adeudos">
         <ul>
-          <li ng-repeat="debt in selectedStudent.debts">
+          <li ng-repeat="debt in student.debts">
             <a href="#/curso/{{course.id}}">{{debt.course.name}}</a>
             <span class="pull-right">{{debt.amount | currency}}</span>
           </li>
         </ul>
       </div>
     </div>
+
+    <div ng-transclude></div>
 
   </div>
 </div>

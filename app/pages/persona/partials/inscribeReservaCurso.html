@@ -1,0 +1,15 @@
+<div>
+  <div class="row form-group">
+    <div class="col-md-12">
+      <select class="form-control" ng-model="courseId" ng-options="c.id as c.name group by c.status for c in courses">
+        <option value="">Selecciona un curso</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md-offset-3">
+      <button class="btn btn-default" ng-click="studentId = s.id">Inscribir / Reservar</button>
+    </div>
+  </div>
+</div>
