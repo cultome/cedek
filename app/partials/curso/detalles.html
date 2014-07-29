@@ -122,7 +122,7 @@
     </div>
   </div>
 
-  <div class="col-md-5">
+  <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-body">
         <h3 class="remove-top-margin"><img src="img/university1.svg"> Estudiantes</h3>
@@ -187,7 +187,7 @@
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-3" style="margin-left: -10px;">
     <div class="panel panel-default" ng-show="selectedStudent">
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -197,7 +197,7 @@
       </div>
       <div class="panel-body" id="studenInfo">
         <div class="form-group">
-          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#inasistencias">
+          <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#inasistencias">
           Inasistencias
           </button>
         </div>
@@ -210,7 +210,7 @@
         </div>
 
         <div class="form-group" ng-show="selectedStudent.enrollments">
-          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosInscritos">
+          <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosInscritos">
           Cursos Inscritos
           </button>
           <div class="panel-collapse collapse in" id="cursosInscritos">
@@ -221,7 +221,7 @@
         </div>
 
         <div class="form-group" ng-show="selectedStudent.reserves">
-          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosReservados">
+          <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosReservados">
           Cursos Reservados
           </button>
           <div class="panel-collapse collapse in" id="cursosReservados">
@@ -232,7 +232,7 @@
         </div>
 
         <div class="form-group" ng-show="selectedStudent.scholarships">
-          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#becas">
+          <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#becas">
           Becas
           </button>
           <div class="panel-collapse collapse in" id="becas">
@@ -246,7 +246,7 @@
         </div>
 
         <div class="form-group" ng-show="selectedStudent.debts">
-          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#adeudos">
+          <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#adeudos">
           Adeudos
           </button>
           <div class="panel-collapse collapse in" id="adeudos">
