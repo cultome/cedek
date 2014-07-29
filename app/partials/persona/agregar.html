@@ -6,20 +6,149 @@
           <h3 class="panel-title">Datos del cliente</h3>
         </div>
         <div class="panel-body">
-          <div class="form-group">
-            <div class="row">
-              <label for="nombre" class="col-md-2 control-label">Nombre</label>
+          <div class="row form-group">
+            <label for="nombre" class="col-md-3 control-label">Nombre</label>
+            <div class="col-md-6">
+              <input 
+                type="text" 
+                class="form-control" 
+                id="nombre" 
+                placeholder="Nombre completo"
+                ng-model="selectedStudent.name">
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label for="fechaNacimiento" class="col-md-3 control-label">Fecha de Nacimiento</label>
+            <div class="col-md-6">
+              <input 
+                type="date" 
+                class="form-control" 
+                id="fechaNacimiento" 
+                placeholder="Nombre completo">
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label for="direccion" class="col-md-3 control-label">Direccion</label>
+            <div class="col-md-6">
+              <input 
+                type="text" 
+                class="form-control" 
+                id="direccion" 
+                placeholder="Nombre completo">
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label for="telefono" class="col-md-3 control-label">Telefono</label>
+            <div class="col-md-3">
+              <input 
+                type="text" 
+                class="form-control" 
+                id="telefono" 
+                placeholder="56-56-20-44"
+                ng-model="selectedStudent.phones[0].number">
+            </div>
+            <div class="col-md-3">
+              <select class="form-control" ng-model="selectedStudent.phones[0].type" ng-options="type.id as type.name for type in phoneTypes">
+              </select>
+            </div>
+            <div class="col-md-1">
+              <button
+                class="btn btn-sm btn-default"
+                ng-click="addAnotherPhone()"><span class="glyphicon glyphicon-plus"></span></button>
+            </div>
+          </div>
+
+          <div class="row" ng-show="selectedStudent.phones.length > 1">
+            <div class="col-md-offset-3 col-md-6">
+              <ul>
+                <li ng-repeat="phone in selectedStudent.phones" ng-show="$index > 0">{{phone.number}} | {{getPhoneTypeName(phone.type)}}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label for="email" class="col-md-3 control-label">Correo Electronico</label>
+            <div class="col-md-6">
+              <input 
+                type="text" 
+                class="form-control" 
+                id="email" 
+                placeholder="Nombre completo">
+            </div>
+          </div>
+        </div>
+
+        <div ng-show="selectedStudent.enrollments || selectedStudent.reserves || selectedStudent.previous">
+          <div class="panel-heading">
+            <h3 class="panel-title">Historial Academico</h3>
+          </div>
+
+          <div class="panel-body">
+            <div class="row" ng-show="selectedStudent.enrollments">
+              <label class="col-md-3 control-label">Cursos Inscritos</label>
               <div class="col-md-6">
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="nombre" 
-                  placeholder="Nombre completo" 
-                  ng-model="selectedStudent.name">
+                <ul>
+                  <li ng-repeat="course in selectedStudent.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="row" ng-show="selectedStudent.reserves">
+              <label class="col-md-3 control-label">Cursos Reservados</label>
+              <div class="col-md-6">
+                <ul>
+                  <li ng-repeat="course in selectedStudent.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="row" ng-show="selectedStudent.previous">
+              <label class="col-md-3 control-label">Cursos Anteriores</label>
+              <div class="col-md-6">
+                <ul>
+                  <li ng-repeat="course in selectedStudent.previous"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
+
+
+        <div class="panel-heading">
+          <h3 class="panel-title">Datos Extendidos</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-offset-1 col-md-6">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox">
+                  Dirige un grupo de oracion?
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-offset-1 col-md-3">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="selectedStudent.hasScholarship">
+                  Tiene Beca?
+                </label>
+              </div>
+            </div>
+            <div ng-show="selectedStudent.hasScholarship">
+              <label for="porcentajeBeca" class="col-md-3 control-label">Porcentaje de Beca</label>
+              <div class="col-md-2 input-group">
+                <input type="number" class="form-control" placeholder="25" ng-model="selectedStudent.scholarshipPercent">
+                <span class="input-group-addon">%</span>
+              </div>
+            </div>
+          </div>
+
       </div>
     </div>
   </form>

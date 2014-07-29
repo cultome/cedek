@@ -4,10 +4,11 @@
       <div class="panel-heading">
         <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarPersonas" href="#studenInfo{{student.id}}">
           {{student.name}}
+          <a href="#persona/editar/{{student.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
         </h3>
       </div>
       <div class="panel-body panel-collapse collapse" id="studenInfo{{student.id}}">
-        <div class="row">
+        <div class="row" ng-show="student.enrollments">
           <div class="col-md-12">
             <h5>Cursos Inscritos</h5>
           </div>
@@ -18,13 +19,24 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="student.reserves">
           <div class="col-md-12">
             <h5>Cursos Reservados</h5>
           </div>
           <div class="col-md-12">
             <ul>
               <li ng-repeat="course in student.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row" ng-show="student.previous">
+          <div class="col-md-12">
+            <h5>Cursos Anteriores</h5>
+          </div>
+          <div class="col-md-12">
+            <ul>
+              <li ng-repeat="course in student.previous"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
             </ul>
           </div>
         </div>
