@@ -1,5 +1,5 @@
 <div class="row" id="buscarPersonas">
-  <div class="col-md-3" ng-repeat="student in students">
+  <div class="col-md-3" ng-repeat="student in students | filter:name">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarPersonas" href="#studenInfo{{student.id}}">

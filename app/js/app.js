@@ -18,10 +18,15 @@ config(['$routeProvider', function($routeProvider) {
 
 var app = angular.module('CEDEK');
 
-
 /*
  *   Controller
  */
+app.controller('RootCtrl', [function(){
+  $scope.name = "Susana"
+}]);
+
+
+
 app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService', 
   function($scope, $routeParams, PeopleService, CourseService, CatalogService){
     'use strict';
@@ -99,8 +104,8 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
     $scope.selectedCourse = null;
     $scope.selectedStudent = null;
-    $scope.studentsWithScholarship = [PeopleService.getStudent(1)];
-    $scope.studentsWithPendingPayments = [PeopleService.getStudent(1), PeopleService.getStudent(2)];
+    $scope.studentsWithScholarship = null;
+    $scope.studentsWithPendingPayments = null;
 
     $scope.courses = CourseService.getCourses();
 
@@ -150,8 +155,21 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       }
     };
 
+    $scope.getStudentsWithScholarship = function(courseId){
+      $scope.studentsWithScholarship = PeopleService.getStudentsWithScholarship(courseId);
+      return $scope.studentsWithScholarship;
+    };
+
+    $scope.getStudentsWithPendingPayments = function(courseId){
+      $scope.studentsWithPendingPayments = PeopleService.getStudentsWithPendingPayments(courseId);
+      return $scope.studentsWithPendingPayments;
+    };
+
     if($routeParams.courseId){
-      $scope.selectCourse(parseInt($routeParams.courseId));
+      var courseId = parseInt($routeParams.courseId);
+      $scope.selectCourse(courseId);
+      $scope.getStudentsWithScholarship(courseId);
+      $scope.getStudentsWithPendingPayments(courseId);
     }
   }]
 );
@@ -188,13 +206,52 @@ app.factory('PeopleService', [function(){
   return {
     getStudents: function(){
       return [
-        {"id": 1, "name": "Susana Alvarado", "hasScholarship": true, "scholarshipPercentage": 45, "debt": 145, "enrollments": [{"id": 1, "name": "Curso II"}], "reserves": [{"id": 2, "name": "Curso IV"}], "previous": [{"id": 3, "name": "Curso I"}], "debts": [{"id": 1, "course": {"name": "Biomagnetismo"}, "amount": 145, "dateLimit": "10 de octubre 2014"},{"id": 2, "course": {"name": "Homeopatia"}, "amount": 15}]},
-        {"id": 2, "name": "Noel Soria", "hasScholarship": false, "scholarshipPercentage": 0, "debt": 100, "debtLimit": "5 de enero 2015", "enrollments": [{"id": 1, "name": "Curso I"}], "debts": [{"id": 2, "course": {"name": "Biomagnetismo"}, "amount": 145, "dateLimit": "10 de octubre 2014", }]}
+        {
+"id": 1,
+"name": "Susana Alvarado",
+          "hasScholarship": true, "scholarshipPercentage": 45,
+          "enrollments": [{"id": 1, "name": "Curso II"}],
+          "reserves": [{"id": 2, "name": "Curso IV"}],
+          "previous": [{"id": 3, "name": "Curso I"}],
+          "debts": [{"id": 1, "course": {"id": 2, "name": "Biomagnetismo"}, "amount": 145, "dateLimit": "10 de octubre 2014"},{"id": 2, "course": {"id": 1, "name": "Homeopatia"}, "amount": 15}],
+// para pagos pendientes
+"debt": 145,
+"debtLimit": null,
+// /para pagos pendientes
+          "scholarships": [{"id": 1, "course": {"id": 2, "name": "Biomagnetismo"}, "percentage": 45}]
+        },
+        {
+          "id": 2,
+          "name": "Noel Soria",
+          "hasScholarship": false,
+          "scholarshipPercentage": 0,
+// para pagos pendientes
+"debt": 50,
+"debtLimit": "5 de enero 2015",
+// /para pagos pendientes
+          "enrollments": [{"id": 1, "name": "Curso I"}],
+          "debts": [{"id": 2, "course": {"id": 2, "name": "Biomagnetismo"}, "amount": 15, "dateLimit": "10 de octubre 2014"}],
+          "scholarships": [{"id": 1, "course": {"id": 1, "name": "Homeopatia"}, "percentage": 78}]
+        }
       ];
     },
 
     getStudent: function(id){
       return this.getStudents().filter(function(elem){ return elem.id === id; })[0];
+    },
+
+    getStudentsWithPendingPayments: function(courseId){
+      return this.getStudents().filter(function(elem){
+        var debts = elem.debts.filter(function(el){ return el.course.id === courseId; });
+        return debts != null && debts.length > 0;
+      });
+    },
+
+    getStudentsWithScholarship: function(courseId){
+      return this.getStudents().filter(function(elem){
+        var scholarships = elem.scholarships.filter(function(el){ return el.course.id === courseId; });
+        return scholarships != null && scholarships.length > 0;
+      });
     },
   };
 }]);
@@ -221,7 +278,7 @@ app.factory('CourseService', [function(){
         {"id": 1, "code": "HOM-JU", "name": "Homeopatia II", "begin": "4 de junio 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado"}, {"id": 2, "name": "Alfredo Alvarado"}]},
         {"id": 2, "code": "BIO-JU", "name": "Biomagnetismo", "begin": "23 de octubre 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado"}, {"id": 3, "name": "Carlos Soria"}]},
         {"id": 3, "code": "CUR-I", "name": "Curso I", "begin": "17 de abril 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 2, "name": "Alfredo Alvarado"}, {"id": 3, "name": "Carlos Soria"}]},
-        {"id": 4, "code": "CUR-II", "name": "Curso II", "begin": "6 de enero 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 3, "name": "Carlos Soria"}]},
+        {"id": 4, "code": "CUR-II", "name": "Curso II", "begin": "6 de enero 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 3, "name": "Carlos Soria"}, {"id": 4, "name": "Noel Soria"}]},
         {"id": 5, "code": "CUR-III", "name": "Curso III", "begin": "20 de marzo 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 2, "name": "Alfredo Alvarado"}]},
         {"id": 6, "code": "CUR-IV", "name": "Curso IV", "begin": "30 de septiembre 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado"}]}
       ];

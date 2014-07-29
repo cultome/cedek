@@ -59,7 +59,7 @@
             <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
               <div class="row">
                 <div class="col-md-7">
-                  {{student.name}}
+                  <a href="#persona/editar/{{student.id}}">{{student.name}}</a>
                 </div>
                 <div class="col-md-5 remove-padding">
                     <button class="btn btn-default btn-xs">
@@ -95,6 +95,10 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="input-group">
+                      <span
+                        class="input-group-addon"
+                        ng-show="student.paymentType == 2">$</span>
+
                       <input
                           type="date"
                           id="latePayment{{student.id}}"
@@ -123,7 +127,7 @@
       <div class="panel-body">
         <h3 class="remove-top-margin"><img src="img/university1.svg"> Estudiantes</h3>
         <ul class="list-group">
-          <li class="list-group-item" ng-repeat="student in selectedCourse.students">
+          <li class="list-group-item" ng-repeat="student in selectedCourse.students | filter:name">
             <div class="row">
               <div class="col-md-7">
                 <a ng-click="selectStudent(student.id)">{{student.name}}</a>
@@ -227,16 +231,34 @@
           </div>
         </div>
 
-        <div class="form-group" ng-show="selectedStudent.previous">
-          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosAnteriores">
-          Cursos Anteriores
+        <div class="form-group" ng-show="selectedStudent.scholarships">
+          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#becas">
+          Becas
           </button>
-          <div class="panel-collapse collapse in" id="cursosAnteriores">
+          <div class="panel-collapse collapse in" id="becas">
             <ul>
-              <li ng-repeat="course in selectedStudent.previous"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+              <li ng-repeat="scholarship in selectedStudent.scholarships">
+                <a href="#/curso/{{scholarship.id}}">{{scholarship.course.name}}</a>
+                <span class="pull-right">{{scholarship.percentage}}%</span>
+              </li>
             </ul>
           </div>
         </div>
+
+        <div class="form-group" ng-show="selectedStudent.debts">
+          <button class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#adeudos">
+          Adeudos
+          </button>
+          <div class="panel-collapse collapse in" id="adeudos">
+            <ul>
+              <li ng-repeat="debt in selectedStudent.debts">
+                <a href="#/curso/{{course.id}}">{{debt.course.name}}</a>
+                <span class="pull-right">{{debt.amount | currency}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

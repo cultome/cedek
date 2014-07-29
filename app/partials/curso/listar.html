@@ -12,7 +12,7 @@
 
   <div class="col-md-9">
     <div class="row" id="buscarCursos">
-      <div class="col-md-4" ng-repeat="course in courses">
+      <div class="col-md-4" ng-repeat="course in courses  | filter:name">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarCursos" href="#courseInfo{{course.id}}">
