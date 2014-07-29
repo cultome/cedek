@@ -6,17 +6,6 @@
       </li>
       <li class="list-group-item" ng-repeat="student in selectedCourse.students">
         <a href="#/persona/editar/{{student.id}}">{{student.name}}</a>
-        <div class="pull-right">
-          <button type="button" class="btn btn-default btn-xs">
-            <img src="img/student52.svg" width="20">
-          </button>
-          <button type="button" class="btn btn-default btn-xs">
-            <img src="img/incomes1.svg" width="20">
-          </button>
-          <button type="button" class="btn btn-default btn-xs">
-            <img src="img/forms.svg" width="20">
-          </button>
-        </div>
       </li>
     </ul>
   </div>
@@ -27,7 +16,10 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarCursos" href="#courseInfo{{course.id}}">
-              {{course.name}}
+              {{course.name}} - 
+              <strong>
+                {{course.code}}
+              </strong>
               <a href="#curso/editar/{{selectedCourse.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
             </h3>
           </div>
@@ -47,8 +39,11 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-offset-3 col-md-4">
+              <div class="col-md-4">
                 <button class="btn btn-sm btn-default" ng-click="selectCourse(course.id)">Ver estudiantes</button>
+              </div>
+              <div class="col-md-offset-2 col-md-4">
+                <a href="#/curso/{{course.id}}" class="btn btn-sm btn-default">Ver detalles</a>
               </div>
             </div>
           </div>

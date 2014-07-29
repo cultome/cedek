@@ -1,3 +1,11 @@
 .remove-top-margin{
   margin-top: 0px;
 }
+
+.payment-options {
+  margin-top: 10px;
+}
+
+.remove-padding {
+  padding: 0px;
+}

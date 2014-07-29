@@ -1,17 +1,21 @@
 <div class="row">
   <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">
-          {{selectedCourse.name}}
-          <a href="#curso/editar/{{selectedCourse.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
-        </h3>
-      </div>
-      <div class="panel-body">
-        <form role="form">
+    <div class="row" style="margin-left: 10px;">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {{selectedCourse.name}}
+            <a href="#curso/editar/{{selectedCourse.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
+          </h3>
+        </div>
+        <div class="panel-body">
           <div>
             <label>Horario</label>
             <span class="pull-right">{{selectedCourse.schedule}}</span>
+          </div>
+          <div>
+            <label>Clave</label>
+            <span class="pull-right">{{selectedCourse.code}}</span>
           </div>
           <div>
             <label>Inicio</label>
@@ -21,7 +25,95 @@
             <label>Termino</label>
             <span class="pull-right">{{selectedCourse.end}}</span>
           </div>
-        </form>
+        </div>
+
+
+        <!-- becados -->
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Becas
+          </h3>
+        </div>
+        <div class="panel-body">
+          <ul>
+            <li ng-repeat="student in studentsWithScholarship">
+            <a href="#persona/editar/{{student.id}}">{{student.name}}</a>
+            <span class="pull-right">
+              <strong>
+                {{student.scholarshipPercentage}}%
+              </strong>
+            </span>
+            </li>
+          </ul>
+        </div>
+
+
+        <!-- pagos pendientes -->
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Pagos Pendientes
+          </h3>
+        </div>
+        <div class="panel-body">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
+              <div class="row">
+                <div class="col-md-7">
+                  {{student.name}}
+                </div>
+                <div class="col-md-5 remove-padding">
+                    <button class="btn btn-default btn-xs">
+                      <strong>{{student.debt | currency}}</strong>
+                    </button>
+                    <button class="btn btn-default btn-xs" ng-click="toggleLatePaymentOptions(student.id)">
+                      <img src="img/dollars33.svg" width="20">
+                    </button>
+                </div>
+              </div>
+
+              <div class="row" ng-show="student.debtLimit">
+                <div class="col-md-11">
+                  <strong>{{student.debtLimit}}</strong>
+                </div>
+              </div>
+
+              <div id="latePaymentOption{{student.id}}" style="display: none;">
+                <div class="row payment-options">
+                  <div class="col-md-12">
+                    <div class="btn-group btn-group-justified">
+                      <div class="btn-group btn-group-sm">
+                        <button
+                          ng-class="{'btn': true, 'btn-default': true, 'active': student.paymentType == 2}"
+                          ng-click="changeToLatePartialPayment(student.id)">Parcial</button>
+                      </div>
+                      <div class="btn-group btn-group-sm">
+                        <button
+                          ng-class="{'btn': true, 'btn-default': true, 'active': student.paymentType == 3}"
+                          ng-click="changeToLatePayment(student.id)">Posterior</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="input-group">
+                      <input
+                          type="date"
+                          id="latePayment{{student.id}}"
+                          class="form-control"
+                          ng-model="student.payment">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default">
+                          <span class="glyphicon glyphicon-ok"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+
       </div>
     </div>
   </div>
@@ -32,17 +124,58 @@
         <h3 class="remove-top-margin"><img src="img/university1.svg"> Estudiantes</h3>
         <ul class="list-group">
           <li class="list-group-item" ng-repeat="student in selectedCourse.students">
-            <a ng-click="selectStudent(student.id)">{{student.name}}</a>
-            <div class="pull-right">
-              <button type="button" class="btn btn-default btn-xs">
-                <img src="img/student52.svg" width="20">
-              </button>
-              <button type="button" class="btn btn-default btn-xs">
-                <img src="img/incomes1.svg" width="20">
-              </button>
-              <button type="button" class="btn btn-default btn-xs">
-                <img src="img/forms.svg" width="20">
-              </button>
+            <div class="row">
+              <div class="col-md-7">
+                <a ng-click="selectStudent(student.id)">{{student.name}}</a>
+              </div>
+              <div class="col-md-5">
+                <div class="pull-right">
+                  <button class="btn btn-default btn-xs">
+                    <img src="img/student52.svg" width="20">
+                  </button>
+                  <button class="btn btn-default btn-xs">
+                    <strong>$300</strong>
+                  </button>
+                  <button class="btn btn-default btn-xs" ng-click="togglePaymentOptions(student.id)">
+                    <img src="img/dollars33.svg" width="20">
+                  </button>
+                  <button class="btn btn-default btn-xs">
+                    <img src="img/forms.svg" width="20">
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row payment-options" style="display: none;" id="paymentOption{{student.id}}">
+              <div class="col-md-12">
+                <div class="input-group">
+                  <span class="input-group-btn">
+                    <button
+                      ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 2}"
+                      type="button"
+                      ng-click="changeToPartialPayment(student.id)">Parcial</button>
+                    <button
+                      ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 3}"
+                      type="button"
+                      ng-click="changeToLaterPayment(student.id)">Posterior</button>
+                  </span>
+
+                  <span
+                    class="input-group-addon"
+                    ng-show="student.paymentType == 2">$</span>
+
+                  <input
+                    type="date"
+                    id="payment{{student.id}}"
+                    class="form-control"
+                    ng-model="student.payment">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                      <span class="glyphicon glyphicon-ok"></span>
+                    </button>
+                  </span>
+                </div>
+              </div>
+
             </div>
           </li>
         </ul>

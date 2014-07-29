@@ -81,37 +81,35 @@
           </div>
         </div>
 
-        <div ng-show="selectedStudent.enrollments || selectedStudent.reserves || selectedStudent.previous">
-          <div class="panel-heading">
-            <h3 class="panel-title">Historial Academico</h3>
+        <div class="panel-heading" ng-show="hasAcademicHistory()">
+          <h3 class="panel-title">Historial Academico</h3>
+        </div>
+
+        <div class="panel-body" ng-show="hasAcademicHistory()">
+          <div class="row" ng-show="selectedStudent.enrollments">
+            <label class="col-md-3 control-label">Cursos Inscritos</label>
+            <div class="col-md-6">
+              <ul>
+                <li ng-repeat="course in selectedStudent.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+              </ul>
+            </div>
           </div>
 
-          <div class="panel-body">
-            <div class="row" ng-show="selectedStudent.enrollments">
-              <label class="col-md-3 control-label">Cursos Inscritos</label>
-              <div class="col-md-6">
-                <ul>
-                  <li ng-repeat="course in selectedStudent.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
-                </ul>
-              </div>
+          <div class="row" ng-show="selectedStudent.reserves">
+            <label class="col-md-3 control-label">Cursos Reservados</label>
+            <div class="col-md-6">
+              <ul>
+                <li ng-repeat="course in selectedStudent.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+              </ul>
             </div>
+          </div>
 
-            <div class="row" ng-show="selectedStudent.reserves">
-              <label class="col-md-3 control-label">Cursos Reservados</label>
-              <div class="col-md-6">
-                <ul>
-                  <li ng-repeat="course in selectedStudent.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="row" ng-show="selectedStudent.previous">
-              <label class="col-md-3 control-label">Cursos Anteriores</label>
-              <div class="col-md-6">
-                <ul>
-                  <li ng-repeat="course in selectedStudent.previous"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
-                </ul>
-              </div>
+          <div class="row" ng-show="selectedStudent.previous">
+            <label class="col-md-3 control-label">Cursos Anteriores</label>
+            <div class="col-md-6">
+              <ul>
+                <li ng-repeat="course in selectedStudent.previous"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -143,11 +141,80 @@
             <div ng-show="selectedStudent.hasScholarship">
               <label for="porcentajeBeca" class="col-md-3 control-label">Porcentaje de Beca</label>
               <div class="col-md-2 input-group">
-                <input type="number" class="form-control" placeholder="25" ng-model="selectedStudent.scholarshipPercent">
+                <input type="number" class="form-control" placeholder="25" ng-model="selectedStudent.scholarshipPercentage">
                 <span class="input-group-addon">%</span>
               </div>
             </div>
           </div>
+        </div>
+
+
+        <div class="panel-heading">
+          <h3 class="panel-title">Pagos pendientes</h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-12">
+            <ul class="list-group">
+              <li class="list-group-item" ng-repeat="debt in selectedStudent.debts">
+                <div class="row">
+                  <div class="col-md-4">
+                    {{debt.course.name}}
+                  </div>
+                  <div class="col-md-2 remove-padding">
+                      <button class="btn btn-default btn-xs">
+                        <strong>{{debt.amount | currency}}</strong>
+                      </button>
+                      <button class="btn btn-default btn-xs" ng-click="toggleLatePaymentOptions(debt.id)">
+                        <img src="img/dollars33.svg" width="20">
+                      </button>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div style="display: none;" id="latePaymentOption{{debt.id}}">
+                        <div class="col-md-12">
+                          <div class="input-group input-group-sm">
+                            <span class="input-group-btn">
+                              <button
+                                ng-class="{'btn': true, 'btn-default':true, 'active': debt.paymentType == 2}"
+                                type="button"
+                                ng-click="changeToLatePartialPayment(debt.id)">Parcial</button>
+                              <button
+                                ng-class="{'btn': true, 'btn-default':true, 'active': debt.paymentType == 3}"
+                                type="button"
+                                ng-click="changeToLatePayment(debt.id)">Posterior</button>
+                            </span>
+
+                            <span
+                              class="input-group-addon"
+                              ng-show="debt.paymentType == 2">$</span>
+
+                            <input
+                              type="date"
+                              id="latePayment{{debt.id}}"
+                              class="form-control"
+                              ng-model="student.payment">
+                            <span class="input-group-btn">
+                              <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-ok"></span>
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" ng-show="debt.debtLimit">
+                  <div class="col-md-11">
+                    <strong>{{debt.dateLimit}}</strong>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
 
       </div>
     </div>
