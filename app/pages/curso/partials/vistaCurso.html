@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarCursos" href="#courseInfo{{course.id}}">
+      {{course.name}} - 
+      <strong>
+        {{course.code}}
+      </strong>
+      <a href="#curso/editar/{{selectedCourse.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
+    </h3>
+  </div>
+  <div class="panel-body panel-collapse collapse" id="courseInfo{{course.id}}">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-6"><strong>Inicio</strong></div>
+        <div class="col-md-6">{{course.begin}}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><strong>Termino</strong></div>
+        <div class="col-md-6">{{course.end}}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><strong>Horario</strong></div>
+        <div class="col-md-6">{{course.schedule}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn btn-sm btn-default" ng-click="selectCourse(course.id)">Ver estudiantes</button>
+      </div>
+      <div class="col-md-offset-2 col-md-4">
+        <a href="#/curso/{{course.id}}" class="btn btn-sm btn-default">Ver detalles</a>
+      </div>
+    </div>
+  </div>
+</div>

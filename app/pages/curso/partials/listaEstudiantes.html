@@ -1,0 +1,8 @@
+<ul class="list-group" ng-show="selectedCourse">
+  <li class="list-group-item">
+    Estudiantes de <strong>{{selectedCourse.name}}</strong>
+  </li>
+  <li class="list-group-item" ng-repeat="student in selectedCourse.students">
+    <a href="#/persona/editar/{{student.id}}">{{student.name}}</a>
+  </li>
+</ul>

@@ -3,16 +3,16 @@
 angular.module('CEDEK', ['ngRoute']).
 config(['$routeProvider', function($routeProvider) {
   'use strict';
-  $routeProvider.when('/personas/agregar', {templateUrl: 'partials/persona/agregar.html', controller: 'PeopleCtrl'});
-  $routeProvider.when('/personas/listar', {templateUrl: 'partials/persona/listar.html', controller: 'PeopleCtrl'});
-  $routeProvider.when('/persona/editar/:personId', {templateUrl: 'partials/persona/agregar.html', controller: 'PeopleCtrl'});
+  $routeProvider.when('/personas/agregar', {templateUrl: 'pages/persona/agregar.html', controller: 'PeopleCtrl'});
+  $routeProvider.when('/personas/listar', {templateUrl: 'pages/persona/listar.html', controller: 'PeopleCtrl'});
+  $routeProvider.when('/persona/editar/:personId', {templateUrl: 'pages/persona/agregar.html', controller: 'PeopleCtrl'});
 
-  $routeProvider.when('/cursos/listar', {templateUrl: 'partials/curso/listar.html', controller: 'CourseCtrl'});
-  $routeProvider.when('/cursos/agregar', {templateUrl: 'partials/curso/agregar.html', controller: 'CourseCtrl'});
-  $routeProvider.when('/curso/:courseId', {templateUrl: 'partials/curso/detalles.html', controller: 'CourseCtrl'});
-  $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'partials/curso/agregar.html', controller: 'CourseCtrl'});
+  $routeProvider.when('/cursos/listar', {templateUrl: 'pages/curso/listar.html', controller: 'CourseCtrl'});
+  $routeProvider.when('/cursos/agregar', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl'});
+  $routeProvider.when('/curso/:courseId', {templateUrl: 'pages/curso/detalles.html', controller: 'CourseCtrl'});
+  $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl'});
 
-  $routeProvider.when('/dashboard', {templateUrl: 'partials/dashboard.html', controller: 'DashboardCtrl'});
+  $routeProvider.when('/dashboard', {templateUrl: 'pages/dashboard.html', controller: 'DashboardCtrl'});
   $routeProvider.otherwise({redirectTo: '/dashboard'});
 }]);
 
@@ -195,7 +195,42 @@ app.controller('DashboardCtrl', ['$scope',
 app.directive('navigation', function(){
   return {
     replace: true,
-    templateUrl: 'partials/navigation.html'
+    templateUrl: 'pages/navigation.html'
+  };
+});
+
+app.directive('studentList', function(){
+  return {
+    replace: true,
+    templateUrl: 'pages/curso/partials/listaEstudiantes.html'
+  };
+});
+
+app.directive('courseView', function(){
+  return {
+    replace: true,
+    templateUrl: 'pages/curso/partials/vistaCurso.html'
+  };
+});
+
+app.directive('detailedCourseView', function(){
+  return {
+    replace: true,
+    templateUrl: 'pages/curso/partials/vistaDetalladaCurso.html'
+  };
+});
+
+app.directive('studentListFullOpc', function(){
+  return {
+    replace: true,
+    templateUrl: 'pages/curso/partials/listaEstudiantesOpcionesCompletas.html'
+  };
+});
+
+app.directive('studentView', function(){
+  return {
+    replace: true,
+    templateUrl: 'pages/curso/partials/vistaEstudiante.html'
   };
 });
 

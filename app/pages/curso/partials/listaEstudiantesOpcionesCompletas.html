@@ -1,0 +1,57 @@
+<ul class="list-group">
+  <li class="list-group-item" ng-repeat="student in selectedCourse.students | filter:name">
+    <div class="row">
+      <div class="col-md-7">
+        <a ng-click="selectStudent(student.id)">{{student.name}}</a>
+      </div>
+      <div class="col-md-5">
+        <div class="pull-right">
+          <button class="btn btn-default btn-xs">
+            <img src="img/student52.svg" width="20">
+          </button>
+          <button class="btn btn-default btn-xs">
+            <strong>$300</strong>
+          </button>
+          <button class="btn btn-default btn-xs" ng-click="togglePaymentOptions(student.id)">
+            <img src="img/dollars33.svg" width="20">
+          </button>
+          <button class="btn btn-default btn-xs">
+            <img src="img/forms.svg" width="20">
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row payment-options" style="display: none;" id="paymentOption{{student.id}}">
+      <div class="col-md-12">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button
+              ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 2}"
+              type="button"
+              ng-click="changeToPartialPayment(student.id)">Parcial</button>
+            <button
+              ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 3}"
+              type="button"
+              ng-click="changeToLaterPayment(student.id)">Posterior</button>
+          </span>
+
+          <span
+            class="input-group-addon"
+            ng-show="student.paymentType == 2">$</span>
+
+          <input
+            type="date"
+            id="payment{{student.id}}"
+            class="form-control"
+            ng-model="student.payment">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">
+              <span class="glyphicon glyphicon-ok"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </li>
+</ul>

@@ -1,0 +1,73 @@
+<div class="panel panel-default" ng-show="selectedStudent">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {{selectedStudent.name}}
+      <a href="#/persona/editar/{{selectedStudent.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
+    </h3>
+  </div>
+  <div class="panel-body" id="studenInfo">
+    <div class="form-group">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#inasistencias">
+      Inasistencias
+      </button>
+    </div>
+    <div class="panel-collapse collapse in" id="inasistencias">
+      <ul>
+        <li>Clase pasada</li>
+        <li>2 de abril</li>
+        <li>3 de febrero</li>
+      </ul>
+    </div>
+
+    <div class="form-group" ng-show="selectedStudent.enrollments">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosInscritos">
+      Cursos Inscritos
+      </button>
+      <div class="panel-collapse collapse in" id="cursosInscritos">
+        <ul>
+          <li ng-repeat="course in selectedStudent.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-group" ng-show="selectedStudent.reserves">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#cursosReservados">
+      Cursos Reservados
+      </button>
+      <div class="panel-collapse collapse in" id="cursosReservados">
+        <ul>
+          <li ng-repeat="course in selectedStudent.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-group" ng-show="selectedStudent.scholarships">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#becas">
+      Becas
+      </button>
+      <div class="panel-collapse collapse in" id="becas">
+        <ul>
+          <li ng-repeat="scholarship in selectedStudent.scholarships">
+            <a href="#/curso/{{scholarship.id}}">{{scholarship.course.name}}</a>
+            <span class="pull-right">{{scholarship.percentage}}%</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-group" ng-show="selectedStudent.debts">
+      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#studenInfo" href="#adeudos">
+      Adeudos
+      </button>
+      <div class="panel-collapse collapse in" id="adeudos">
+        <ul>
+          <li ng-repeat="debt in selectedStudent.debts">
+            <a href="#/curso/{{course.id}}">{{debt.course.name}}</a>
+            <span class="pull-right">{{debt.amount | currency}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
