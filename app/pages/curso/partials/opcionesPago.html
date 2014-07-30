@@ -1,0 +1,26 @@
+<div class="input-group input-group-sm">
+  <span class="input-group-btn">
+    <button
+      ng-class="{'btn': true, 'btn-default':true, 'active': debt.paymentType == 2}"
+      type="button"
+      ng-click="changeToPartialPayment()">Parcial</button>
+    <button
+      ng-class="{'btn': true, 'btn-default':true, 'active': debt.paymentType == 3}"
+      type="button"
+      ng-click="changeToLaterPayment()">Posterior</button>
+  </span>
+
+  <span
+    class="input-group-addon"
+    ng-show="debt.paymentType == 2">$</span>
+  <input
+    type="date"
+    id="payment{{debt.id}}"
+    class="form-control"
+    ng-model="debt.payment">
+  <span class="input-group-btn">
+    <button class="btn btn-default" type="button">
+      <span class="glyphicon glyphicon-ok"></span>
+    </button>
+  </span>
+</div>

@@ -69,15 +69,6 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     /*
      * Repetidos
      */
-    $scope.changeToLatePartialPayment = function(studentId){
-      $scope.selectedStudent.debts.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 2;
-      $("#latePayment" + studentId).attr("type", "number");
-    };
-
-    $scope.changeToLatePayment = function(studentId){
-      $scope.selectedStudent.debts.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 3;
-      $("#latePayment" + studentId).attr("type", "date");
-    };
 
     $scope.toggleLatePaymentOptions = function(studentId){
       console.log(studentId);
@@ -134,16 +125,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       } else {
         section.css("display", "none");
       }
-    };
-
-    $scope.changeToLatePartialPayment = function(studentId){
-      $scope.studentsWithPendingPayments.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 2;
-      $("#latePayment" + studentId).attr("type", "number");
-    };
-
-    $scope.changeToLatePayment = function(studentId){
-      $scope.studentsWithPendingPayments.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 3;
-      $("#latePayment" + studentId).attr("type", "date");
     };
 
     $scope.toggleLatePaymentOptions = function(studentId){
@@ -234,6 +215,7 @@ app.directive('studentView', function(){
     scope: {
       student: '=model',
       canCollapse: '@canCollapse',
+      showAttendance: '@showAttendance',
       id: '='
     },
     templateUrl: 'pages/curso/partials/vistaEstudiante.html'
@@ -247,13 +229,38 @@ app.directive('subscribeCourse', function(){
   };
 });
 
-/*
- * Candidato a Refactor
- */
-app.directive('personView', function(){
+function createPaymentChange(paymentType, debt, element, styleId, type){
+  return function(){
+    debt.paymentType = paymentType;
+    $(element).find("#" + styleId + debt.id).attr("type", type);
+  };
+};
+
+app.directive('paymentOptionsCompact', function(){
   return {
     replace: true,
-    templateUrl: 'pages/persona/partials/vistaEstudiante.html'
+    scope: {
+      debt: '=model'
+    },
+    link: function(scope, element, attrs){
+      scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "paymentSmall", "date");
+      scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "paymentSmall", "number");
+    },
+    templateUrl: 'pages/curso/partials/opcionesPagoCompacto.html'
+  };
+});
+
+app.directive('paymentOptions', function(){
+  return {
+    replace: true,
+    scope: {
+      debt: '=model'
+    },
+    link: function(scope, element, attrs){
+      scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "payment", "date");
+      scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "payment", "number");
+    },
+    templateUrl: 'pages/curso/partials/opcionesPago.html'
   };
 });
 
@@ -274,7 +281,7 @@ app.factory('PeopleService', [function(){
           "debts": [{"id": 1, "course": {"id": 2, "name": "Biomagnetismo"}, "amount": 145, "dateLimit": "10 de octubre 2014"},{"id": 2, "course": {"id": 1, "name": "Homeopatia"}, "amount": 15}],
 // para pagos pendientes
 "debt": 145,
-"debtLimit": null,
+"debtLimit": "5 de enero 2015",
 // /para pagos pendientes
           "scholarships": [{"id": 1, "course": {"id": 2, "name": "Biomagnetismo"}, "percentage": 45}]
         },

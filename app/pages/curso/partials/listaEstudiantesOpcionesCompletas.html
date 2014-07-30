@@ -21,37 +21,11 @@
         </div>
       </div>
     </div>
+
     <div class="row payment-options" style="display: none;" id="paymentOption{{student.id}}">
       <div class="col-md-12">
-        <div class="input-group">
-          <span class="input-group-btn">
-            <button
-              ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 2}"
-              type="button"
-              ng-click="changeToPartialPayment(student.id)">Parcial</button>
-            <button
-              ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 3}"
-              type="button"
-              ng-click="changeToLaterPayment(student.id)">Posterior</button>
-          </span>
-
-          <span
-            class="input-group-addon"
-            ng-show="student.paymentType == 2">$</span>
-
-          <input
-            type="date"
-            id="payment{{student.id}}"
-            class="form-control"
-            ng-model="student.payment">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">
-              <span class="glyphicon glyphicon-ok"></span>
-            </button>
-          </span>
-        </div>
+        <div payment-options model="student"></div>
       </div>
-
     </div>
   </li>
 </ul>

@@ -1,7 +1,7 @@
 <div class="row" id="buscarPersonas">
   <div class="col-md-3" ng-repeat="student in students | filter:name">
     <div student-view model="student" can-collapse="true" id="'studentInfo' + student.id">
-      <div subscribe-course></div>
+      <div subscribe-course show-attendance="false"></div>
     </div>
   </div>
 </div>

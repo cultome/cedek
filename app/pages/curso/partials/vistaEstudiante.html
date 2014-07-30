@@ -11,17 +11,19 @@
     id="{{id}}">
 
     <!-- inasistencias -->
-    <div class="form-group">
-      <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#{{id}}" href="#inasistencias">
-      Inasistencias
-      </button>
-    </div>
-    <div class="panel-collapse collapse in" id="inasistencias">
-      <ul>
-        <li>Clase pasada</li>
-        <li>2 de abril</li>
-        <li>3 de febrero</li>
-      </ul>
+    <div ng-show="showAttendance == 'true'">
+      <div class="form-group">
+        <button class="btn btn-block btn-default btn-sm" data-toggle="collapse" data-parent="#{{id}}" href="#inasistencias">
+        Inasistencias
+        </button>
+      </div>
+      <div class="panel-collapse collapse in" id="inasistencias">
+        <ul>
+          <li>Clase pasada</li>
+          <li>2 de abril</li>
+          <li>3 de febrero</li>
+        </ul>
+      </div>
     </div>
 
     <!-- cursos inscritos -->
