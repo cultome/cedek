@@ -22,9 +22,7 @@ var app = angular.module('CEDEK');
  *   Controller
  */
 app.controller('RootCtrl', [function(){
-  $scope.name = "Susana"
 }]);
-
 
 
 app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService', 
@@ -52,7 +50,7 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     };
 
     $scope.selectPerson = function(id){
-      $scope.selectedStudent = $scope.students.filter(function(elem){ return elem.id == id; })[0];
+      $scope.selectedStudent = $scope.students.filter(function(elem){ return elem.id === id; })[0];
     };
 
     $scope.hasAcademicHistory = function(){
@@ -125,7 +123,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
     // TODO check deprecated
     $scope.selectCourse = function(id){
-      $scope.selectedCourse = CourseService.getCourse(id)
+      $scope.selectedCourse = CourseService.getCourse(id);
     };
 
     $scope.changeToPartialPayment = function(studentId){
@@ -194,6 +192,8 @@ app.controller('DashboardCtrl', ['$scope',
  */
 
 app.directive('navigation', function(){
+  "use strict";
+
   return {
     replace: true,
     templateUrl: 'pages/navigation.html'
@@ -201,6 +201,8 @@ app.directive('navigation', function(){
 });
 
 app.directive('studentList', function(){
+  "use strict";
+
   return {
     replace: true,
     scope: {
@@ -212,6 +214,8 @@ app.directive('studentList', function(){
 });
 
 app.directive('courseView', function(){
+  "use strict";
+
   return {
     replace: true,
     templateUrl: 'pages/partials/vistaCurso.html'
@@ -219,6 +223,8 @@ app.directive('courseView', function(){
 });
 
 app.directive('detailedCourseView', function(){
+  "use strict";
+
   return {
     replace: true,
     templateUrl: 'pages/partials/vistaDetalladaCurso.html'
@@ -226,6 +232,8 @@ app.directive('detailedCourseView', function(){
 });
 
 app.directive('studentListFullOpc', function(){
+  "use strict";
+
   return {
     replace: true,
     templateUrl: 'pages/partials/listaEstudiantesOpcionesCompletas.html'
@@ -233,6 +241,8 @@ app.directive('studentListFullOpc', function(){
 });
 
 app.directive('studentView', function(){
+  "use strict";
+
   return {
     replace: true,
     transclude: true,
@@ -247,6 +257,8 @@ app.directive('studentView', function(){
 });
 
 app.directive('subscribeCourse', function(){
+  "use strict";
+
   return {
     replace: true,
     templateUrl: 'pages/partials/inscribeReservaCurso.html'
@@ -254,13 +266,17 @@ app.directive('subscribeCourse', function(){
 });
 
 function createPaymentChange(paymentType, debt, element, styleId, type){
+  "use strict";
+
   return function(){
     debt.paymentType = paymentType;
     $(element).find("#" + styleId + debt.id).attr("type", type);
   };
-};
+}
 
 app.directive('paymentOptionsCompact', function(){
+  "use strict";
+
   return {
     replace: true,
     scope: {
@@ -275,6 +291,8 @@ app.directive('paymentOptionsCompact', function(){
 });
 
 app.directive('paymentOptions', function(){
+  "use strict";
+
   return {
     replace: true,
     scope: {
@@ -289,6 +307,8 @@ app.directive('paymentOptions', function(){
 });
 
 app.directive('searchAttendance', ['CourseService', function(CourseService){
+  "use strict";
+
   return {
     replace: true,
     templateUrl: 'pages/partials/buscarAsistencia.html',
@@ -310,6 +330,8 @@ app.directive('searchAttendance', ['CourseService', function(CourseService){
  *   Factory
  */
 app.factory('PeopleService', [function(){
+  "use strict";
+
   return {
     getStudents: function(){
       return [
@@ -364,6 +386,8 @@ app.factory('PeopleService', [function(){
 }]);
 
 app.factory('CatalogService', [function(){
+  "use strict";
+
   return {
     phoneTypes: function(){
       return [
@@ -376,6 +400,8 @@ app.factory('CatalogService', [function(){
 }]);
 
 app.factory('CourseService', [function(){
+  "use strict";
+
   return {
     getCourse: function(id){
       return this.getCourses().filter(function(elem){ return elem.id === id; })[0];
