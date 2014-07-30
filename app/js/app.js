@@ -94,8 +94,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     'use strict';
 
     $scope.showAttendance = false;
-    $scope.attendanceDate = null;
-    $scope.attendance = null;
     $scope.students = null;
     $scope.selectedCourse = null;
     $scope.selectedStudent = null;
@@ -108,17 +106,12 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     };
 
     $scope.toggleViewAttendance = function(id){
-      if($scope.selectedCourse && $scope.attendance && $scope.selectedCourse.id === id){
+      if($scope.selectedCourse && $scope.showAttendance && $scope.selectedCourse.id === id){
         $scope.showAttendance = false;
-        $scope.attendance = null;
       } else {
         $scope.showAttendance = true;
         $scope.selectCourse(id);
       }
-    };
-
-    $scope.getAttendance = function(){
-      $scope.attendance = CourseService.getAttendance($scope.selectedCourse.id, $scope.attendanceDate);
     };
 
     $scope.toggleViewStudents = function(id){
@@ -287,14 +280,32 @@ app.directive('paymentOptions', function(){
     scope: {
       debt: '=model'
     },
+    templateUrl: 'pages/partials/opcionesPago.html',
     link: function(scope, element, attrs){
       scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "payment", "date");
       scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "payment", "number");
-    },
-    templateUrl: 'pages/partials/opcionesPago.html'
+    }
   };
 });
 
+app.directive('searchAttendance', ['CourseService', function(CourseService){
+  return {
+    replace: true,
+    templateUrl: 'pages/partials/buscarAsistencia.html',
+    scope: {
+      courseId: '&courseId',
+    },
+    link: function(scope, element, attrs){
+      scope.attendanceDate = "";
+      scope.attendance = null;
+
+      scope.getAttendance = function(){
+        console.log(scope.courseId(), scope.attendanceDate);
+        scope.attendance = CourseService.getAttendance(scope.courseId(), scope.attendanceDate);
+      };
+    }
+  };
+}]);
 /*
  *   Factory
  */
