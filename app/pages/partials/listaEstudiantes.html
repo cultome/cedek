@@ -1,8 +1,9 @@
-<ul class="list-group" ng-show="selectedCourse">
-  <li class="list-group-item">
-    Estudiantes de <strong>{{selectedCourse.name}}</strong>
-  </li>
-  <li class="list-group-item" ng-repeat="student in selectedCourse.students">
+<ul class="list-group">
+  <li class="list-group-item" ng-repeat="student in students">
+    <span ng-if="showAttendance">
+      <span class="glyphicon glyphicon-ok" style="color: #0C0;" ng-show="student.attend"></span>
+      <span class="glyphicon glyphicon-remove" style="color: #C00;" ng-hide="student.attend"></span>
+    </span>
     <a href="#/persona/editar/{{student.id}}">{{student.name}}</a>
   </li>
 </ul>

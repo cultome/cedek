@@ -1,7 +1,7 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title" data-toggle="collapse" data-parent="#buscarCursos" href="#courseInfo{{course.id}}">
-      {{course.name}} - 
+  <div class="panel-heading" data-toggle="collapse" data-parent="#buscarCursos" href="#courseInfo{{course.id}}">
+    <h3 class="panel-title" >
+      {{course.name}} -
       <strong>
         {{course.code}}
       </strong>
@@ -25,10 +25,13 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <button class="btn btn-sm btn-default" ng-click="selectCourse(course.id)">Ver estudiantes</button>
+        <a class="btn btn-block btn-sm btn-default" ng-click="toggleViewStudents(course.id)">Estudiantes</a>
       </div>
-      <div class="col-md-offset-2 col-md-4">
-        <a href="#/curso/{{course.id}}" class="btn btn-sm btn-default">Ver detalles</a>
+      <div class="col-md-4">
+        <a href="#/curso/{{course.id}}" class="btn btn-block btn-sm btn-default">Detalles</a>
+      </div>
+      <div class="col-md-4">
+        <a class="btn btn-block btn-sm btn-default" ng-click="toggleViewAttendance(course.id)">Asistencia</a>
       </div>
     </div>
   </div>

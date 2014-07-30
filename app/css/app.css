@@ -1,4 +1,4 @@
-.remove-top-margin{
+.remove-top-margin {
   margin-top: 0px;
 }
 
@@ -8,4 +8,12 @@
 
 .remove-padding {
   padding: 0px;
+}
+
+.left-sidebar {
+  margin-left: 10px;
+}
+
+.right-sidebar {
+  margin-left: -20px;
 }

@@ -1,7 +1,47 @@
 <div class="row">
   <div class="col-md-3">
-    <div student-list></div>
+
+    <!-- lista de estudiantes -->
+    <div class="panel panel-default left-sidebar" ng-show="students">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Estudiantes de <strong>{{selectedCourse.name}}</strong>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div student-list model="students"></div>
+      </div>
+    </div>
+
+    <!-- sesiones -->
+    <div class="panel panel-default left-sidebar" ng-show="showAttendance">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Asistencia de <strong>{{selectedCourse.name}}</strong>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div class="input-group">
+          <select class="form-control" ng-model="attendanceDate">
+            <option values="3-7-2014">3 de abril 2014</option>
+            <option values="3-7-2014">8 de marzo 2014</option>
+            <option values="3-7-2014">9 de febrero 2014</option>
+            <option values="3-7-2014">16 de enero 2014</option>
+          </select>
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">
+              <span class="glyphicon glyphicon-ok" ng-click="getAttendance()"></span>
+            </button>
+          </span>
+        </div>
+
+        <div student-list model="attendance" show-attendance="true"></div>
+
+      </div>
+    </div>
+
   </div>
+
   <div class="col-md-9">
     <div class="row" id="buscarCursos">
       <div class="col-md-4" ng-repeat="course in courses  | filter:name">

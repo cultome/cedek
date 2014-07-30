@@ -93,17 +93,44 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
   function($scope, $routeParams, PeopleService, CourseService){
     'use strict';
 
+    $scope.showAttendance = false;
+    $scope.attendanceDate = null;
+    $scope.attendance = null;
+    $scope.students = null;
     $scope.selectedCourse = null;
     $scope.selectedStudent = null;
     $scope.studentsWithScholarship = null;
     $scope.studentsWithPendingPayments = null;
-
     $scope.courses = CourseService.getCourses();
 
     $scope.selectStudent = function(id){
       $scope.selectedStudent = PeopleService.getStudent(id);
     };
 
+    $scope.toggleViewAttendance = function(id){
+      if($scope.selectedCourse && $scope.attendance && $scope.selectedCourse.id === id){
+        $scope.showAttendance = false;
+        $scope.attendance = null;
+      } else {
+        $scope.showAttendance = true;
+        $scope.selectCourse(id);
+      }
+    };
+
+    $scope.getAttendance = function(){
+      $scope.attendance = CourseService.getAttendance($scope.selectedCourse.id, $scope.attendanceDate);
+    };
+
+    $scope.toggleViewStudents = function(id){
+      if($scope.selectedCourse && $scope.students && $scope.selectedCourse.id === id){
+        $scope.students = null;
+      } else {
+        $scope.selectCourse(id);
+        $scope.students = $scope.selectedCourse.students;
+      }
+    };
+
+    // TODO check deprecated
     $scope.selectCourse = function(id){
       $scope.selectedCourse = CourseService.getCourse(id)
     };
@@ -183,6 +210,10 @@ app.directive('navigation', function(){
 app.directive('studentList', function(){
   return {
     replace: true,
+    scope: {
+      students: '=model',
+      showAttendance: '@showAttendance'
+    },
     templateUrl: 'pages/partials/listaEstudiantes.html'
   };
 });
@@ -340,7 +371,7 @@ app.factory('CourseService', [function(){
     },
     getCourses: function(){
       return [
-        {"id": 1, "code": "HOM-JU", "name": "Homeopatia II", "begin": "4 de junio 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado"}, {"id": 2, "name": "Alfredo Alvarado"}]},
+        {"id": 1, "code": "HOM-JU", "name": "Homeopatia II", "begin": "4 de junio 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado", "attend": true}, {"id": 2, "name": "Alfredo Alvarado"}]},
         {"id": 2, "code": "BIO-JU", "name": "Biomagnetismo", "begin": "23 de octubre 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado"}, {"id": 3, "name": "Carlos Soria"}]},
         {"id": 3, "code": "CUR-I", "name": "Curso I", "begin": "17 de abril 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 2, "name": "Alfredo Alvarado"}, {"id": 3, "name": "Carlos Soria"}]},
         {"id": 4, "code": "CUR-II", "name": "Curso II", "begin": "6 de enero 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 3, "name": "Carlos Soria"}, {"id": 4, "name": "Noel Soria"}]},
@@ -353,6 +384,14 @@ app.factory('CourseService', [function(){
       return [
         {"id": 1, "status": "Activo", "name": "Esperanto Avanzado"},
         {"id": 2, "status": "Abierto", "name": "Curso IV"}
+      ];
+    },
+
+    getAttendance: function(courseId, date){
+      return [
+        {"id": 1, "name": "Susana Alvarado", "attend": true},
+        {"id": 2, "name": "Carlos Soria", "attend": false},
+        {"id": 2, "name": "Paloma Alvarado", "attend": true}
       ];
     },
   };
