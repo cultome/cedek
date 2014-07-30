@@ -183,28 +183,28 @@ app.directive('navigation', function(){
 app.directive('studentList', function(){
   return {
     replace: true,
-    templateUrl: 'pages/curso/partials/listaEstudiantes.html'
+    templateUrl: 'pages/partials/listaEstudiantes.html'
   };
 });
 
 app.directive('courseView', function(){
   return {
     replace: true,
-    templateUrl: 'pages/curso/partials/vistaCurso.html'
+    templateUrl: 'pages/partials/vistaCurso.html'
   };
 });
 
 app.directive('detailedCourseView', function(){
   return {
     replace: true,
-    templateUrl: 'pages/curso/partials/vistaDetalladaCurso.html'
+    templateUrl: 'pages/partials/vistaDetalladaCurso.html'
   };
 });
 
 app.directive('studentListFullOpc', function(){
   return {
     replace: true,
-    templateUrl: 'pages/curso/partials/listaEstudiantesOpcionesCompletas.html'
+    templateUrl: 'pages/partials/listaEstudiantesOpcionesCompletas.html'
   };
 });
 
@@ -218,14 +218,14 @@ app.directive('studentView', function(){
       showAttendance: '@showAttendance',
       id: '='
     },
-    templateUrl: 'pages/curso/partials/vistaEstudiante.html'
+    templateUrl: 'pages/partials/vistaEstudiante.html'
   };
 });
 
 app.directive('subscribeCourse', function(){
   return {
     replace: true,
-    templateUrl: 'pages/persona/partials/inscribeReservaCurso.html'
+    templateUrl: 'pages/partials/inscribeReservaCurso.html'
   };
 });
 
@@ -246,7 +246,7 @@ app.directive('paymentOptionsCompact', function(){
       scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "paymentSmall", "date");
       scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "paymentSmall", "number");
     },
-    templateUrl: 'pages/curso/partials/opcionesPagoCompacto.html'
+    templateUrl: 'pages/partials/opcionesPagoCompacto.html'
   };
 });
 
@@ -260,7 +260,7 @@ app.directive('paymentOptions', function(){
       scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "payment", "date");
       scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "payment", "number");
     },
-    templateUrl: 'pages/curso/partials/opcionesPago.html'
+    templateUrl: 'pages/partials/opcionesPago.html'
   };
 });
 
