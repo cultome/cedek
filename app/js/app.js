@@ -93,7 +93,15 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
     $scope.showAttendance = false;
     $scope.students = null;
-    $scope.selectedCourse = null;
+    $scope.selectedCourse = {
+      "name": "",
+      "code": "",
+      "cost": 0,
+      "begin": "",
+      "end": "",
+      "day": "",
+      "hour": "",
+    };
     $scope.selectedStudent = null;
     $scope.studentsWithScholarship = null;
     $scope.studentsWithPendingPayments = null;
@@ -320,12 +328,24 @@ app.directive('searchAttendance', ['CourseService', function(CourseService){
       scope.attendance = null;
 
       scope.getAttendance = function(){
-        console.log(scope.courseId(), scope.attendanceDate);
         scope.attendance = CourseService.getAttendance(scope.courseId(), scope.attendanceDate);
       };
     }
   };
 }]);
+
+app.directive('scholarships', [function(){
+  "use strict";
+
+  return {
+    replace: true,
+    scope: {
+      scholarships: '=model'
+    },
+    templateUrl: 'pages/partials/becas.html'
+  };
+}]);
+
 /*
  *   Factory
  */

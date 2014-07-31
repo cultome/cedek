@@ -32,16 +32,7 @@
     </h3>
   </div>
   <div class="panel-body">
-    <ul>
-      <li ng-repeat="student in studentsWithScholarship">
-      <a href="#persona/editar/{{student.id}}">{{student.name}}</a>
-      <span class="pull-right">
-        <strong>
-          {{student.scholarshipPercentage}}%
-        </strong>
-      </span>
-      </li>
-    </ul>
+    <div scholarships model="studentsWithScholarship"></div>
   </div>
 
 
@@ -84,6 +75,7 @@
       </li>
     </ul>
   </div>
+  
   <!-- asistencias -->
   <div class="panel-heading">
     <h3 class="panel-title">

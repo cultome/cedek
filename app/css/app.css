@@ -10,6 +10,10 @@
   padding: 0px;
 }
 
+.remove-left-padding {
+  padding-left: 0px;
+}
+
 .left-sidebar {
   margin-left: 10px;
 }
