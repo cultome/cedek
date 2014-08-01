@@ -1,5 +1,5 @@
 <div class="row">
-  <form class="form-horizontal" role="form">
+  <form class="form-horizontal" role="form" name="courseForm" novalidate>
     <div class="col-md-offset-1 col-md-8">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -34,12 +34,14 @@
 
               <label for="clave" class="col-md-2 control-label">Costo</label>
               <div class="col-md-3">
-                <div class="input-group">
+                <div ng-class="{'input-group': true, 'has-error': courseForm.course_cost.$invalid}">
                   <span class="input-group-addon">$</span>
                   <input
+                    name="course_cost"
                     type="number"
                     class="form-control"
                     ng-model="course.cost"
+                    min="0"
                     placeholder="100.00">
                 </div>
               </div>
@@ -73,13 +75,13 @@
               <label for="dia" class="col-md-2 control-label">Dia</label>
               <div class="col-md-3">
                 <select class="form-control" id="dia" ng-model="course.day">
-                  <option value="1">Lunes</option>
-                  <option value="2">Martes</option>
-                  <option value="3">Miercoles</option>
-                  <option value="4">Jueves</option>
-                  <option value="5">Viernes</option>
-                  <option value="6">Sabado</option>
-                  <option value="7">Domingo</option>
+                  <option value="0">Lunes</option>
+                  <option value="1">Martes</option>
+                  <option value="2">Miercoles</option>
+                  <option value="3">Jueves</option>
+                  <option value="4">Viernes</option>
+                  <option value="5">Sabado</option>
+                  <option value="6">Domingo</option>
                 </select>
               </div>
 
@@ -102,7 +104,14 @@
                 Estudiantes inscritos
                 <span class="label label-default pull-right">{{course.students.length}}</span>
               </h4>
-              <div student-list model="course.students"></div>
+
+              <!-- condicionado a uno u otro -->
+              <div ng-hide="course.students">
+                No hay estudiantes inscritos a este curso.
+              </div>
+
+              <div ng-show="course.students" student-list model="course.students"></div>
+              <!-- /condicionado a uno u otro -->
             </div>
 
             <div class="col-md-6">
@@ -110,11 +119,12 @@
               <div class="input-group">
                 <span class="input-group-btn">
                   <select type="text" id="students" class="form-control">
-                    <option>Noel Soria</option>
-                    <option>Carlos Soria</option>
-                    <option>Susana Alvarado</option>
-                    <option>Paloma Alvarado</option>
-                    <option>Alfredo Alvarado</option>
+                    <option value="">Seleccione estudiante</option>
+                    <option value="1">Noel Soria</option>
+                    <option value="2">Carlos Soria</option>
+                    <option value="3">Susana Alvarado</option>
+                    <option value="4">Paloma Alvarado</option>
+                    <option value="5">Alfredo Alvarado</option>
                   </select>
                   <button class="btn btn-default">Inscribir</button>
                 </span>
@@ -135,24 +145,37 @@
                 Estudiantes con Beca
                 <span class="label label-default pull-right">{{studentsWithScholarship.length}}</span>
               </h4>
+
+              <!-- condicionado a uno u otro -->
+              <div ng-hide="studentsWithScholarship">
+                No hay estudiantes becados en este curso.
+              </div>
+
               <div scholarships model="studentsWithScholarship"></div>
+              <!-- /condicionado a uno u otro -->
             </div>
 
             <div class="col-md-7">
               <h4>Nueva Beca</h4>
               <div class="row">
                 <div class="col-md-8 input-group-sm">
-                  <select type="text" class="form-control">
-                    <option>Noel Soria</option>
-                    <option>Carlos Soria</option>
-                    <option>Susana Alvarado</option>
-                    <option>Paloma Alvarado</option>
-                    <option>Alfredo Alvarado</option>
+                  <select type="text" class="form-control" ng-model="panels.newScholarship.studentId">
+                    <option value="">Seleccione estudiante</option>
+                    <option value="1">Noel Soria</option>
+                    <option value="2">Carlos Soria</option>
+                    <option value="3">Susana Alvarado</option>
+                    <option value="4">Paloma Alvarado</option>
+                    <option value="5">Alfredo Alvarado</option>
                   </select>
                 </div>
                 <div class="col-md-3 remove-left-padding">
-                  <div class="input-group input-group-sm">
-                    <input type="number" class="form-control" placeholder="100">
+                  <div ng-class="{'input-group': true, 'input-group-sm': true, 'has-error': courseForm.newScholarship_amount.$invalid, 'has-feedback': courseForm.newScholarship_amount.$invalid}">
+                    <input
+                      type="number"
+                      class="form-control"
+                      min="0" max="100"
+                      ng-model="panels.newScholarship.amount"
+                      name="newScholarship_amount">
                     <span class="input-group-addon">%</span>
                   </div>
                 </div>
@@ -168,12 +191,12 @@
         </div>
 
         <!-- pagos pendientes -->
-        <div class="panel-heading">
+        <div class="panel-heading" ng-show="studentsWithPendingPayments">
           <h3 class="panel-title">
             Pagos Pendientes
           </h3>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" ng-show="studentsWithPendingPayments">
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
               <div class="row">
@@ -207,10 +230,10 @@
         </div>
 
         <!-- asistencia -->
-        <div class="panel-heading">
+        <div class="panel-heading" ng-show="sessions">
           <h3 class="panel-title">Asistencia</h3>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" ng-show="sessions">
           <div
             search-attendance course-id="course.id"
             sessions="sessions">

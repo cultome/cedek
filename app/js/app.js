@@ -116,6 +116,10 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         "courseName": "",
         "show": false
       },
+      "newScholarship": {
+        "studentId": "",
+        "amount": 0
+      }
     };
 
     $scope.selectStudent = function(studentId){
@@ -186,14 +190,14 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.getStudentsWithPendingPayments(courseId);
       $scope.sessions = CourseService.getCourseSessions(courseId);
     } else {
-      $scope.selectedCourse = {
+      $scope.course = {
         "name": "",
         "code": "",
         "cost": 0,
         "begin": "",
         "end": "",
-        "day": "",
-        "hour": "",
+        "day": 0,
+        "hour": "18:00",
       };
     }
   }]
@@ -553,9 +557,10 @@ app.factory('CourseService', [function(){
         "id": 1,
         "code": "HOM-JU",
         "name": "Homeopatia II",
-        "begin": "4 de junio 2014",
-        "end": "5 de enero 2015",
-        "schedule": "Jueves 18:00",
+        "begin": "2014-07-04",
+        "end": "2015-01-23",
+        "day": 3,
+        "hour": "19:30",
         "students": [
           {
             "id": 1,

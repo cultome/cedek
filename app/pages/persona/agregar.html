@@ -1,5 +1,5 @@
 <div class="row">
-  <form class="form-horizontal" role="form">
+  <form class="form-horizontal" role="form" name="studentForm">
     <div class="col-md-offset-1 col-md-8">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -42,13 +42,18 @@
           </div>
 
           <div class="row form-group">
-            <label for="telefono" class="col-md-3 control-label">Telefono</label>
-            <div class="col-md-3">
+            <label for="student_phone" class="col-md-3 control-label">Telefono</label>
+            <div ng-class="{'col-md-3': true, 'has-error': studentForm.student_phone.$invalid, 'has-feedback': studentForm.student_phone.$invalid}">
               <input
                 type="text"
                 class="form-control"
-                id="telefono"
+                name="student_phone"
+                ng-pattern="/^[^a-z^A-Z]+$/"
                 ng-model="student.phones[0].number">
+                <span
+                  class="glyphicon glyphicon-remove form-control-feedback"
+                  ng-show="studentForm.student_phone.$invalid">
+                </span>
             </div>
             <div class="col-md-3">
               <select
@@ -75,15 +80,19 @@
             </div>
           </div>
 
-          <div class="row form-group">
-            <label for="email" class="col-md-3 control-label">Correo Electronico</label>
+          <div ng-class="{'row': true, 'form-group': true, 'has-error': studentForm.student_email.$invalid, 'has-feedback': studentForm.student_email.$invalid}">
+            <label for="student_email" class="col-md-3 control-label">Correo Electronico</label>
             <div class="col-md-6">
               <input
-                type="text"
+                type="email"
                 class="form-control"
-                id="email"
+                name="student_email"
                 placeholder="Correo electronico"
                 ng-model="student.email">
+                <span
+                  class="glyphicon glyphicon-remove form-control-feedback"
+                  ng-show="studentForm.student_email.$invalid">
+                </span>
             </div>
           </div>
         </div>
@@ -157,11 +166,20 @@
                 </label>
               </div>
             </div>
-            <div ng-show="student.hasScholarship">
+            <div
+              ng-show="student.hasScholarship"
+              ng-class="{'has-error': studentForm.student_scholarshipPercentage.$invalid, 'has-feedback': studentForm.student_scholarshipPercentage.$invalid}">
               <label for="porcentajeBeca" class="col-md-3 control-label">Porcentaje de Beca</label>
               <div class="col-md-2 input-group">
-                <input type="number" class="form-control" placeholder="25" ng-model="student.scholarshipPercentage">
-                <span class="input-group-addon">%</span>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="25"
+                  name="student_scholarshipPercentage"
+                  min="0" max="100"
+                  ng-model="student.scholarshipPercentage">
+
+               <span class="input-group-addon">%</span>
               </div>
             </div>
           </div>
@@ -175,6 +193,11 @@
           </div>
 
           <div class="row">
+
+            <div class="col-md-offset-1 col-md-8" ng-hide="student.scholarships">
+              No tiene beca en ningun curso.
+            </div>
+
             <div class="col-md-offset-1 col-md-8">
               <div class="form-group" ng-show="student.scholarships">
                 <div class="list-group slim">
