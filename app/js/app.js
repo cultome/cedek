@@ -21,11 +21,21 @@ var app = angular.module('CEDEK');
 /*
  *   Controller
  */
-app.controller('RootCtrl', [function(){
+app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
+  $scope.showFilter = true;
+
+  $scope.$on("$routeChangeSuccess", function(){
+    var path = $route.current.originalPath;
+    if(path != undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
+      $scope.showFilter = true;
+    } else {
+      $scope.showFilter = false;
+    }
+  });
 }]);
 
 
-app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService', 
+app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService',
   function($scope, $routeParams, PeopleService, CourseService, CatalogService){
     'use strict';
 
