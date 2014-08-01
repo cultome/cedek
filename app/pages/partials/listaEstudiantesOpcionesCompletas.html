@@ -1,5 +1,5 @@
 <ul class="list-group">
-  <li class="list-group-item" ng-repeat="student in selectedCourse.students | filter:name">
+  <li class="list-group-item" ng-repeat="student in course.students | filter:name">
     <div class="row">
       <div class="col-md-7">
         <a ng-click="selectStudent(student.id)">{{student.name}}</a>
@@ -10,7 +10,7 @@
             <img src="img/student52.svg" width="20">
           </button>
           <button class="btn btn-default btn-xs">
-            <strong>$300</strong>
+            <strong>{{student.price | currency}}</strong>
           </button>
           <button class="btn btn-default btn-xs" ng-click="togglePaymentOptions(student.id)">
             <img src="img/dollars33.svg" width="20">

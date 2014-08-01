@@ -1,26 +1,26 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">
-      {{selectedCourse.name}}
-      <a href="#curso/editar/{{selectedCourse.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
+      {{course.name}}
+      <a href="#curso/editar/{{course.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
     </h3>
   </div>
   <div class="panel-body">
     <div>
       <label>Horario</label>
-      <span class="pull-right">{{selectedCourse.schedule}}</span>
+      <span class="pull-right">{{course.schedule}}</span>
     </div>
     <div>
       <label>Clave</label>
-      <span class="pull-right">{{selectedCourse.code}}</span>
+      <span class="pull-right">{{course.code}}</span>
     </div>
     <div>
       <label>Inicio</label>
-      <span class="pull-right">{{selectedCourse.begin}}</span>
+      <span class="pull-right">{{course.begin}}</span>
     </div>
     <div>
       <label>Termino</label>
-      <span class="pull-right">{{selectedCourse.end}}</span>
+      <span class="pull-right">{{course.end}}</span>
     </div>
   </div>
 
@@ -59,9 +59,9 @@
           </div>
         </div>
 
-        <div class="row" ng-show="student.debtLimit">
+        <div class="row" ng-show="student.debtPayDate">
           <div class="col-md-11">
-            <strong>{{student.debtLimit}}</strong>
+            <strong>{{student.debtPayDate}}</strong>
           </div>
         </div>
 
@@ -75,7 +75,7 @@
       </li>
     </ul>
   </div>
-  
+
   <!-- asistencias -->
   <div class="panel-heading">
     <h3 class="panel-title">
@@ -83,7 +83,11 @@
     </h3>
   </div>
   <div class="panel-body">
-    <div search-attendance course-id="selectedCourse.id"></div>
+    <div
+      search-attendance
+      course-id="course.id"
+      sessions="sessions">
+    </div>
   </div>
 
 

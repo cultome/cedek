@@ -1,11 +1,10 @@
 <div>
   <div class="input-group">
-    <select class="form-control" ng-model="attendanceDate">
-      <option value="">Selecciona sesion</option>
-      <option value="3-7-2014">3 de abril 2014</option>
-      <option value="3-7-2014">8 de marzo 2014</option>
-      <option value="3-7-2014">9 de febrero 2014</option>
-      <option value="3-7-2014">16 de enero 2014</option>
+    <select
+      class="form-control"
+      ng-model="attendanceDate"
+      ng-options="d.id as d.label for d in sessions">
+      <option value="">Selecciona clase</option>
     </select>
     <span class="input-group-btn">
       <button class="btn btn-default" type="button" ng-click="getAttendance()">

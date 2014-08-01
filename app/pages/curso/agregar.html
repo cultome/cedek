@@ -14,7 +14,7 @@
                   type="text"
                   class="form-control"
                   id="nombre"
-                  ng-model="selectedCourse.name"
+                  ng-model="course.name"
                   placeholder="Nombre completo">
               </div>
             </div>
@@ -28,7 +28,7 @@
                   type="text"
                   class="form-control"
                   id="clave"
-                  ng-model="selectedCourse.code"
+                  ng-model="course.code"
                   placeholder="HOM-JU">
               </div>
 
@@ -39,7 +39,7 @@
                   <input
                     type="number"
                     class="form-control"
-                    ng-model="selectedCourse.cost"
+                    ng-model="course.cost"
                     placeholder="100.00">
                 </div>
               </div>
@@ -53,7 +53,7 @@
                 <input
                   type="date"
                   class="form-control"
-                  ng-model="selectedCourse.begin"
+                  ng-model="course.begin"
                   id="inicio">
               </div>
 
@@ -62,7 +62,7 @@
                 <input
                   type="date"
                   class="form-control"
-                  ng-model="selectedCourse.end"
+                  ng-model="course.end"
                   id="termino">
               </div>
             </div>
@@ -72,7 +72,7 @@
             <div class="form-group">
               <label for="dia" class="col-md-2 control-label">Dia</label>
               <div class="col-md-3">
-                <select class="form-control" id="dia" ng-model="selectedCourse.day">
+                <select class="form-control" id="dia" ng-model="course.day">
                   <option value="1">Lunes</option>
                   <option value="2">Martes</option>
                   <option value="3">Miercoles</option>
@@ -85,7 +85,7 @@
 
               <label for="hora" class="col-md-2 control-label">Hora</label>
               <div class="col-md-3">
-                <input type="time" class="form-control" id="hora" ng-model="selectedCourse.hour">
+                <input type="time" class="form-control" id="hora" ng-model="course.hour">
               </div>
             </div>
           </div>
@@ -100,9 +100,9 @@
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
                 Estudiantes inscritos
-                <span class="label label-default pull-right">{{selectedCourse.students.length}}</span>
+                <span class="label label-default pull-right">{{course.students.length}}</span>
               </h4>
-              <div student-list model="selectedCourse.students"></div>
+              <div student-list model="course.students"></div>
             </div>
 
             <div class="col-md-6">
@@ -196,9 +196,9 @@
                 </div>
               </div>
 
-              <div class="row" ng-show="student.debtLimit">
+              <div class="row" ng-show="student.debtPayDate">
                 <div class="col-md-4">
-                  <strong>{{student.debtLimit}}</strong>
+                  <strong>{{student.debtPayDate}}</strong>
                 </div>
               </div>
 
@@ -211,7 +211,10 @@
           <h3 class="panel-title">Asistencia</h3>
         </div>
         <div class="panel-body">
-          <div search-attendance course-id="selectedCourse.id"></div>
+          <div
+            search-attendance course-id="course.id"
+            sessions="sessions">
+          </div>
         </div>
       </div>
     </div>

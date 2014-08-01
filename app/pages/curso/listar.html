@@ -1,27 +1,31 @@
-<div class="row">
+<div class="row" ng-init="initCourseList()">
   <div class="col-md-3">
 
     <!-- lista de estudiantes -->
-    <div class="panel panel-default left-sidebar" ng-show="students">
+    <div class="panel panel-default left-sidebar" ng-show="panels.students.show">
       <div class="panel-heading">
         <h3 class="panel-title">
-          Estudiantes de <strong>{{selectedCourse.name}}</strong>
+          Estudiantes de <strong>{{panels.students.courseName}}</strong>
         </h3>
       </div>
       <div class="panel-body">
-        <div student-list model="students"></div>
+        <div student-list model="panels.students.studentsList"></div>
       </div>
     </div>
 
     <!-- sesiones -->
-    <div class="panel panel-default left-sidebar" ng-show="showAttendance">
+    <div class="panel panel-default left-sidebar" ng-show="panels.attendance.show">
       <div class="panel-heading">
         <h3 class="panel-title">
-          Asistencia de <strong>{{selectedCourse.name}}</strong>
+          Asistencia de <strong>{{panels.attendance.courseName}}</strong>
         </h3>
       </div>
       <div class="panel-body">
-        <div search-attendance course-id="selectedCourse.id"></div>
+        <div
+          search-attendance
+          course-id="panels.attendance.courseId"
+          sessions="panels.attendance.sessions">
+        </div>
       </div>
     </div>
 

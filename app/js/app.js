@@ -32,12 +32,24 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
       $scope.showFilter = false;
     }
   });
+
+  $scope.toggleLatePaymentOptions = function(studentId){
+    var section = $("#latePaymentOption" + studentId);
+    if(section.css("display") === "none"){
+      section.css("display", "");
+    } else {
+      section.css("display", "none");
+    }
+  };
 }]);
 
 
 app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService',
   function($scope, $routeParams, PeopleService, CourseService, CatalogService){
     'use strict';
+    // list students
+    $scope.students = null;
+    $scope.courses = null;
 
     $scope.courseId = "";
     $scope.studentId = "";
@@ -52,15 +64,9 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       "debts": null
     };
     $scope.phoneTypes = CatalogService.phoneTypes();
-    $scope.students = PeopleService.getStudents();
-    $scope.courses = CourseService.getCurrentCourses();
 
     $scope.getPhoneTypeName = function(id){
       return $scope.phoneTypes.filter(function(elem){ return elem.id === id; })[0].name;
-    };
-
-    $scope.selectPerson = function(id){
-      $scope.selectedStudent = $scope.students.filter(function(elem){ return elem.id === id; })[0];
     };
 
     $scope.hasAcademicHistory = function(){
@@ -74,25 +80,13 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       });
     };
 
-    /*
-     * Repetidos
-     */
-
-    $scope.toggleLatePaymentOptions = function(studentId){
-      console.log(studentId);
-      var section = $("#latePaymentOption" + studentId);
-      if(section.css("display") === "none"){
-        section.css("display", "");
-      } else {
-        section.css("display", "none");
-      }
+    $scope.initStudentList = function(){
+      $scope.students = PeopleService.listStudents();
+      $scope.courses = CourseService.getOpenCourses();
     };
-    /*
-     * /Repetidos
-     */
 
     if($routeParams.personId){
-      $scope.selectPerson(parseInt($routeParams.personId));
+      $scope.selectedStudent = PeopleService.getStudent(parseInt($routeParams.personId));
     }
   }]
 );
@@ -101,56 +95,66 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
   function($scope, $routeParams, PeopleService, CourseService){
     'use strict';
 
-    $scope.showAttendance = false;
     $scope.students = null;
-    $scope.selectedCourse = {
-      "name": "",
-      "code": "",
-      "cost": 0,
-      "begin": "",
-      "end": "",
-      "day": "",
-      "hour": "",
-    };
+    $scope.course = null;
+    $scope.sessions = null;
     $scope.selectedStudent = null;
     $scope.studentsWithScholarship = null;
     $scope.studentsWithPendingPayments = null;
-    $scope.courses = CourseService.getCourses();
+    $scope.courses = null;
+    $scope.attendanceDate = 0;
+
+    // panel de la izquierda en detalles
+    $scope.panels = {
+      "students": {
+        "courseId": 0,
+        "courseName": "",
+        "show": false
+      },
+      "attendance": {
+        "courseId": 0,
+        "courseName": "",
+        "show": false
+      },
+    };
 
     $scope.selectStudent = function(id){
       $scope.selectedStudent = PeopleService.getStudent(id);
     };
 
-    $scope.toggleViewAttendance = function(id){
-      if($scope.selectedCourse && $scope.showAttendance && $scope.selectedCourse.id === id){
-        $scope.showAttendance = false;
+    function fillPanelWithCourseInfo(id, panelName){
+      var course = $scope.courses.filter(function(elem){ return elem.id === id; })[0];
+      $scope.panels[panelName].courseName = course.name;
+      $scope.panels[panelName].courseId = course.id;
+    }
+
+    $scope.toggleViewStudents = function(courseId){
+      if($scope.panels.students.show  && $scope.panels.students.courseId === courseId){
+        $scope.panels.students.show = false;
       } else {
-        $scope.showAttendance = true;
-        $scope.selectCourse(id);
+        $scope.panels.students.show = true;
+        fillPanelWithCourseInfo(courseId, "students");
+        $scope.panels.students.studentsList = PeopleService.getStudentsFromCourse(courseId);
       }
     };
 
-    $scope.toggleViewStudents = function(id){
-      if($scope.selectedCourse && $scope.students && $scope.selectedCourse.id === id){
-        $scope.students = null;
+    $scope.toggleViewAttendance = function(courseId){
+      if($scope.panels.attendance.show && $scope.panels.attendance.courseId === courseId){
+        $scope.panels.attendance.show = false;
       } else {
-        $scope.selectCourse(id);
-        $scope.students = $scope.selectedCourse.students;
+        $scope.panels.attendance.show = true;
+        fillPanelWithCourseInfo(courseId, "attendance");
+        $scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
       }
-    };
-
-    // TODO check deprecated
-    $scope.selectCourse = function(id){
-      $scope.selectedCourse = CourseService.getCourse(id);
     };
 
     $scope.changeToPartialPayment = function(studentId){
-      $scope.selectedCourse.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 2;
+      $scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 2;
       $("#payment" + studentId).attr("type", "number");
     };
 
     $scope.changeToLaterPayment = function(studentId){
-      $scope.selectedCourse.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 3;
+      $scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 3;
       $("#payment" + studentId).attr("type", "date");
     };
 
@@ -163,30 +167,34 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       }
     };
 
-    $scope.toggleLatePaymentOptions = function(studentId){
-      var section = $("#latePaymentOption" + studentId);
-      if(section.css("display") === "none"){
-        section.css("display", "");
-      } else {
-        section.css("display", "none");
-      }
-    };
-
     $scope.getStudentsWithScholarship = function(courseId){
       $scope.studentsWithScholarship = PeopleService.getStudentsWithScholarship(courseId);
-      return $scope.studentsWithScholarship;
     };
 
     $scope.getStudentsWithPendingPayments = function(courseId){
       $scope.studentsWithPendingPayments = PeopleService.getStudentsWithPendingPayments(courseId);
-      return $scope.studentsWithPendingPayments;
+    };
+
+    $scope.initCourseList = function(){
+      $scope.courses = CourseService.getCourses();
     };
 
     if($routeParams.courseId){
       var courseId = parseInt($routeParams.courseId);
-      $scope.selectCourse(courseId);
+      $scope.course = CourseService.getCourse(courseId);
       $scope.getStudentsWithScholarship(courseId);
       $scope.getStudentsWithPendingPayments(courseId);
+      $scope.sessions = CourseService.getCourseSessions(courseId);
+    } else {
+      $scope.selectedCourse = {
+        "name": "",
+        "code": "",
+        "cost": 0,
+        "begin": "",
+        "end": "",
+        "day": "",
+        "hour": "",
+      };
     }
   }]
 );
@@ -332,6 +340,7 @@ app.directive('searchAttendance', ['CourseService', function(CourseService){
     templateUrl: 'pages/partials/buscarAsistencia.html',
     scope: {
       courseId: '&courseId',
+      sessions: '='
     },
     link: function(scope, element, attrs){
       scope.attendanceDate = "";
@@ -363,54 +372,124 @@ app.factory('PeopleService', [function(){
   "use strict";
 
   return {
-    getStudents: function(){
+    listStudents: function(){
       return [
         {
-"id": 1,
-"name": "Susana Alvarado",
-          "hasScholarship": true, "scholarshipPercentage": 45,
-          "enrollments": [{"id": 1, "name": "Curso II"}],
-          "reserves": [{"id": 2, "name": "Curso IV"}],
-          "previous": [{"id": 3, "name": "Curso I"}],
-          "debts": [{"id": 1, "course": {"id": 2, "name": "Biomagnetismo"}, "amount": 145, "dateLimit": "10 de octubre 2014"},{"id": 2, "course": {"id": 1, "name": "Homeopatia"}, "amount": 15}],
-// para pagos pendientes
-"debt": 145,
-"debtLimit": "5 de enero 2015",
-// /para pagos pendientes
-          "scholarships": [{"id": 1, "course": {"id": 2, "name": "Biomagnetismo"}, "percentage": 45}]
-        },
-        {
-          "id": 2,
-          "name": "Noel Soria",
-          "hasScholarship": false,
-          "scholarshipPercentage": 0,
-// para pagos pendientes
-"debt": 50,
-"debtLimit": "5 de enero 2015",
-// /para pagos pendientes
-          "enrollments": [{"id": 1, "name": "Curso I"}],
-          "debts": [{"id": 2, "course": {"id": 2, "name": "Biomagnetismo"}, "amount": 15, "dateLimit": "10 de octubre 2014"}],
-          "scholarships": [{"id": 1, "course": {"id": 1, "name": "Homeopatia"}, "percentage": 78}]
+          "id": 1,
+          // personales
+          "name": "Susana Alvarado",
+          "birthday": "1983-10-02",
+          "address": "Av Iman 580, Coyoacan, DF",
+          "email": "susana@gmail.com",
+          "phones": [
+            {
+              "number": "5607-4335",
+              "type": 1
+            },
+            {
+              "number": "5517-8390",
+              "type": 2
+            },
+          ],
+          // extendidos
+          "leadPrayGroup": true,
+          "hasScholarship": true,
+          "scholarshipPercentage": 10,
+          // historial
+          "previous": [
+            {"id": 1, "name": "Curso I"}
+          ],
+          "enrollments": [
+            {"id": 2, "name": "Curso II"}
+          ],
+          "reserves": [
+            {"id": 3, "name": "Curso III"},
+            {"id": 4, "name": "Curso IV"}
+          ],
+          "scholarships": [
+            {"id": 1, "percentage": 45, "courseId": 2, "courseName": "Biomagnetismo"}
+          ],
+          "debts": [
+            {"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}
+          ]
         }
       ];
     },
 
-    getStudent: function(id){
-      return this.getStudents().filter(function(elem){ return elem.id === id; })[0];
+    // READY!
+    getStudentsFromCourse: function(courseId){
+      return [
+        {
+          "id": 1,
+          "name": "Susana Alvarado"
+        }
+      ];
     },
 
+    // READY!
+    getStudent: function(personId){
+      return {
+        "id": 1,
+        // personales
+        "name": "Susana Alvarado",
+        "birthday": "1983-10-02",
+        "address": "Av Iman 580, Coyoacan, DF",
+        "email": "susana@gmail.com",
+        "phones": [
+          {
+            "number": "5607-4335",
+            "type": 1
+          },
+          {
+            "number": "5517-8390",
+            "type": 2
+          },
+        ],
+        // extendidos
+        "leadPrayGroup": true,
+        "hasScholarship": true,
+        "scholarshipPercentage": 10,
+        // historial
+        "previous": [
+          {"id": 1, "name": "Curso I"}
+        ],
+        "enrollments": [
+          {"id": 2, "name": "Curso II"}
+        ],
+        "reserves": [
+          {"id": 3, "name": "Curso III"},
+          {"id": 4, "name": "Curso IV"}
+        ],
+        "scholarships": [
+          {"id": 1, "percentage": 45, "courseId": 2, "courseName": "Biomagnetismo"}
+        ],
+        "debts": [
+          {"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}
+        ]
+      };
+    },
+
+    // READY!
     getStudentsWithPendingPayments: function(courseId){
-      return this.getStudents().filter(function(elem){
-        var debts = elem.debts.filter(function(el){ return el.course.id === courseId; });
-        return debts != null && debts.length > 0;
-      });
+      return [
+        {
+          "id": 1,
+          "name": "Susana Alvarado",
+          "debt": 150,
+          "debtPayDate": "20 de julio 2014"
+        }
+      ];
     },
 
+    // READY!
     getStudentsWithScholarship: function(courseId){
-      return this.getStudents().filter(function(elem){
-        var scholarships = elem.scholarships.filter(function(el){ return el.course.id === courseId; });
-        return scholarships != null && scholarships.length > 0;
-      });
+      return [
+        {
+          "id": 1,
+          "name": "Susana Alvarado",
+          "percentage": 90
+        }
+      ];
     },
   };
 }]);
@@ -433,32 +512,112 @@ app.factory('CourseService', [function(){
   "use strict";
 
   return {
+    // READY!
     getCourse: function(id){
-      return this.getCourses().filter(function(elem){ return elem.id === id; })[0];
+      return {
+        "id": 1,
+        "code": "HOM-JU",
+        "name": "Homeopatia II",
+        "begin": "4 de junio 2014",
+        "end": "5 de enero 2015",
+        "schedule": "Jueves 18:00",
+        "students": [
+          {
+            "id": 1,
+            "name": "Susana Alvarado",
+            "price": 80
+          },
+          {
+            "id": 2,
+            "name": "Alfredo Alvarado",
+            "price": 250
+          }
+        ]
+      };
     },
+
+    // READY!
+    getCourseSessions: function(courseId){
+      return [
+        {
+          "id": 1,
+          "label": "1 de julio 2014",
+          "date": "1-7-2014"
+        },
+        {
+          "id": 2,
+          "label": "8 de julio 2014",
+          "date": "8-7-2014"
+        },
+        {
+          "id": 3,
+          "label": "15 de julio 2014",
+          "date": "15-7-2014"
+        }
+      ];
+    },
+
+    // READY!
     getCourses: function(){
       return [
-        {"id": 1, "code": "HOM-JU", "name": "Homeopatia II", "begin": "4 de junio 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado", "attend": true}, {"id": 2, "name": "Alfredo Alvarado"}]},
-        {"id": 2, "code": "BIO-JU", "name": "Biomagnetismo", "begin": "23 de octubre 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado"}, {"id": 3, "name": "Carlos Soria"}]},
-        {"id": 3, "code": "CUR-I", "name": "Curso I", "begin": "17 de abril 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 2, "name": "Alfredo Alvarado"}, {"id": 3, "name": "Carlos Soria"}]},
-        {"id": 4, "code": "CUR-II", "name": "Curso II", "begin": "6 de enero 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 3, "name": "Carlos Soria"}, {"id": 4, "name": "Noel Soria"}]},
-        {"id": 5, "code": "CUR-III", "name": "Curso III", "begin": "20 de marzo 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 2, "name": "Alfredo Alvarado"}]},
-        {"id": 6, "code": "CUR-IV", "name": "Curso IV", "begin": "30 de septiembre 2014", "end": "5 de enero 2015", "schedule": "Jueves 18:00", "students": [{"id": 1, "name": "Susana Alvarado"}]}
+        {
+          "id": 1,
+          "code": "HOM-JU",
+          "name": "Homeopatia II",
+          "begin": "4 de junio 2014",
+          "end": "5 de enero 2015",
+          "schedule": "Jueves 18:00"
+        },
+        {
+          "id": 2,
+          "code": "BIO-JU",
+          "name": "Biomagnetismo",
+          "begin": "23 de octubre 2014",
+          "end": "5 de enero 2015",
+          "schedule": "Jueves 18:00"
+        }
       ];
     },
 
-    getCurrentCourses: function(){
+    // READY!
+    getOpenCourses: function(){
       return [
-        {"id": 1, "status": "Activo", "name": "Esperanto Avanzado"},
-        {"id": 2, "status": "Abierto", "name": "Curso IV"}
+        {
+          "id": 5,
+          "status": "En Curso",
+          "name": "Esperanto Avanzado"
+        },
+        {
+          "id": 6,
+          "status": "Abierto",
+          "name": "Homeopatia II"
+        },
+        {
+          "id": 7,
+          "status": "Abierto",
+          "name": "Taller Homeopatia"
+        }
       ];
     },
 
+    // READY!
     getAttendance: function(courseId, date){
       return [
-        {"id": 1, "name": "Susana Alvarado", "attend": true},
-        {"id": 2, "name": "Carlos Soria", "attend": false},
-        {"id": 2, "name": "Paloma Alvarado", "attend": true}
+        {
+          "id": 1,
+          "name": "Susana Alvarado",
+          "attend": true
+        },
+        {
+          "id": 2,
+          "name": "Carlos Soria",
+          "attend": false
+        },
+        {
+          "id": 2,
+          "name": "Paloma Alvarado",
+          "attend": true
+        }
       ];
     },
   };

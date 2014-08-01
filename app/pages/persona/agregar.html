@@ -25,7 +25,7 @@
                 type="date"
                 class="form-control"
                 id="fechaNacimiento"
-                placeholder="Nombre completo">
+                ng-model="selectedStudent.birthday">
             </div>
           </div>
 
@@ -36,7 +36,8 @@
                 type="text"
                 class="form-control"
                 id="direccion"
-                placeholder="Nombre completo">
+                placeholder="Direccion"
+                ng-model="selectedStudent.address">
             </div>
           </div>
 
@@ -47,11 +48,13 @@
                 type="text"
                 class="form-control"
                 id="telefono"
-                placeholder="56-56-20-44"
                 ng-model="selectedStudent.phones[0].number">
             </div>
             <div class="col-md-3">
-              <select class="form-control" ng-model="selectedStudent.phones[0].type" ng-options="type.id as type.name for type in phoneTypes">
+              <select
+                class="form-control"
+                ng-model="selectedStudent.phones[0].type"
+                ng-options="type.id as type.name for type in phoneTypes">
               </select>
             </div>
             <div class="col-md-1">
@@ -62,9 +65,12 @@
           </div>
 
           <div class="row" ng-show="selectedStudent.phones.length > 1">
-            <div class="col-md-offset-3 col-md-6">
+            <div class="col-md-offset-3 col-md-3">
               <ul>
-                <li ng-repeat="phone in selectedStudent.phones" ng-show="$index > 0">{{phone.number}} | {{getPhoneTypeName(phone.type)}}</li>
+                <li ng-repeat="phone in selectedStudent.phones" ng-show="$index > 0">
+                  {{phone.number}}
+                  <span class="label label-default pull-right">{{getPhoneTypeName(phone.type)}}</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -76,7 +82,8 @@
                 type="text"
                 class="form-control"
                 id="email"
-                placeholder="Nombre completo">
+                placeholder="Correo electronico"
+                ng-model="selectedStudent.email">
             </div>
           </div>
         </div>
@@ -87,48 +94,59 @@
 
         <div class="panel-body" ng-show="hasAcademicHistory()">
           <div class="row" ng-show="selectedStudent.enrollments">
-            <label class="col-md-3 control-label">Cursos Inscritos</label>
-            <div class="col-md-6">
-              <ul>
-                <li ng-repeat="course in selectedStudent.enrollments"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
-              </ul>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Cursos Inscritos</h3>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="course in selectedStudent.enrollments">
+                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div class="row" ng-show="selectedStudent.reserves">
-            <label class="col-md-3 control-label">Cursos Reservados</label>
-            <div class="col-md-6">
-              <ul>
-                <li ng-repeat="course in selectedStudent.reserves"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
-              </ul>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Cursos Reservados</h3>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="course in selectedStudent.reserves">
+                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div class="row" ng-show="selectedStudent.previous">
-            <label class="col-md-3 control-label">Cursos Anteriores</label>
-            <div class="col-md-6">
-              <ul>
-                <li ng-repeat="course in selectedStudent.previous"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
-              </ul>
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Cursos Anteriores</h3>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="course in selectedStudent.previous">
+                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
+
+          </div><!-- row -->
         </div>
-
 
         <div class="panel-heading">
           <h3 class="panel-title">Datos Extendidos</h3>
         </div>
         <div class="panel-body">
-          <div class="row">
-            <div class="col-md-offset-1 col-md-6">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox">
-                  Dirige un grupo de oracion?
-                </label>
-              </div>
-            </div>
-          </div>
+
           <div class="row">
             <div class="col-md-offset-1 col-md-3">
               <div class="checkbox">
@@ -146,6 +164,18 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-md-offset-1 col-md-6">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="selectedStudent.leadPrayGroup">
+                  Dirige un grupo de oracion?
+                </label>
+              </div>
+            </div>
+          </div>
+
         </div>
 
 
@@ -158,7 +188,7 @@
               <li class="list-group-item" ng-repeat="debt in selectedStudent.debts">
                 <div class="row">
                   <div class="col-md-4">
-                    {{debt.course.name}}
+                    {{debt.courseName}}
                   </div>
                   <div class="col-md-2 remove-padding">
                       <button class="btn btn-default btn-sm">
@@ -178,9 +208,9 @@
                   </div>
                 </div>
 
-                <div class="row" ng-show="debt.debtLimit">
+                <div class="row" ng-show="debt.debtPayDate">
                   <div class="col-md-11">
-                    <strong>{{debt.dateLimit}}</strong>
+                    <strong>{{debt.debtPayDate}}</strong>
                   </div>
                 </div>
               </li>

@@ -1,5 +1,5 @@
-<div class="panel panel-default" ng-show="student" data-toggle="collapse" data-parent="#buscarPersonas" href="#{{id}}">
-  <div class="panel-heading">
+<div class="panel panel-default" ng-show="student">
+  <div class="panel-heading" data-toggle="collapse" data-parent="#buscarPersonas" href="#{{id}}">
     <h3 class="panel-title">
       {{student.name}}
       <a href="#/persona/editar/{{student.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
@@ -58,7 +58,7 @@
       <div class="panel-collapse collapse in" id="becas">
         <ul>
           <li ng-repeat="scholarship in student.scholarships">
-            <a href="#/curso/{{scholarship.id}}">{{scholarship.course.name}}</a>
+            <a href="#/curso/{{scholarshipId}}">{{scholarship.courseName}}</a>
             <span class="pull-right">{{scholarship.percentage}}%</span>
           </li>
         </ul>
@@ -73,7 +73,7 @@
       <div class="panel-collapse collapse in" id="adeudos">
         <ul>
           <li ng-repeat="debt in student.debts">
-            <a href="#/curso/{{course.id}}">{{debt.course.name}}</a>
+            <a href="#/curso/{{debt.courseId}}">{{debt.courseName}}</a>
             <span class="pull-right">{{debt.amount | currency}}</span>
           </li>
         </ul>
