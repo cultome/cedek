@@ -21,3 +21,7 @@
 .right-sidebar {
   margin-left: -20px;
 }
+
+.list-group.slim .list-group-item {
+  padding: 5px 15px;
+}

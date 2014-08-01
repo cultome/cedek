@@ -118,8 +118,8 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       },
     };
 
-    $scope.selectStudent = function(id){
-      $scope.selectedStudent = PeopleService.getStudent(id);
+    $scope.selectStudent = function(studentId){
+      $scope.selectedStudent = PeopleService.getCourseStudent($scope.course.id, studentId);
     };
 
     function fillPanelWithCourseInfo(id, panelName){
@@ -424,6 +424,40 @@ app.factory('PeopleService', [function(){
           "name": "Susana Alvarado"
         }
       ];
+    },
+
+    // READY!
+    getCourseStudent: function(courseId, personId){
+      return {
+        "id": 1,
+        // personales
+        "name": "Susana Alvarado",
+        "birthday": "1983-10-02",
+        "address": "Av Iman 580, Coyoacan, DF",
+        "email": "susana@gmail.com",
+        // historial
+        "enrollments": [
+          {"id": 2, "name": "Curso II"}
+        ],
+        "scholarships": [
+          {"id": 1, "percentage": 45, "courseId": 2, "courseName": "Biomagnetismo"}
+        ],
+        "debts": [
+          {"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}
+        ],
+        "unattendance": [
+          {
+          "id": 1,
+          "label": "1 de julio 2014",
+          "date": "1-7-2014"
+          },
+          {
+            "id": 2,
+            "label": "8 de julio 2014",
+            "date": "8-7-2014"
+          },
+        ]
+      };
     },
 
     // READY!
