@@ -53,7 +53,7 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
     $scope.courseId = "";
     $scope.studentId = "";
-    $scope.selectedStudent = {
+    $scope.student = {
       "name": "",
       "hasScholarship": false,
       "scholarshipPercent": 0,
@@ -70,11 +70,11 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     };
 
     $scope.hasAcademicHistory = function(){
-      return $scope.selectedStudent.enrollments || $scope.selectedStudent.reserves || $scope.selectedStudent.previous;
+      return $scope.student.enrollments || $scope.student.reserves || $scope.student.previous;
     };
 
     $scope.addAnotherPhone = function(){
-      $scope.selectedStudent.phones.unshift({
+      $scope.student.phones.unshift({
         "number": "",
         "type": 1
       });
@@ -86,7 +86,7 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     };
 
     if($routeParams.personId){
-      $scope.selectedStudent = PeopleService.getStudent(parseInt($routeParams.personId));
+      $scope.student = PeopleService.getStudent(parseInt($routeParams.personId));
     }
   }]
 );
@@ -407,7 +407,7 @@ app.factory('PeopleService', [function(){
             {"id": 4, "name": "Curso IV"}
           ],
           "scholarships": [
-            {"id": 1, "percentage": 45, "courseId": 2, "courseName": "Biomagnetismo"}
+            {"id": 1, "percentage": 75, "courseId": 7, "courseName": "Biomagnetismo"}
           ],
           "debts": [
             {"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}
@@ -495,7 +495,8 @@ app.factory('PeopleService', [function(){
           {"id": 4, "name": "Curso IV"}
         ],
         "scholarships": [
-          {"id": 1, "percentage": 45, "courseId": 2, "courseName": "Biomagnetismo"}
+          {"id": 1, "percentage": 45, "courseId": 7, "courseName": "Biomagnetismo"},
+          {"id": 1, "percentage": 30, "courseId": 8, "courseName": "Mecanica Cuantica"}
         ],
         "debts": [
           {"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}

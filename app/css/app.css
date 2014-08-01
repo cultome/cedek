@@ -14,12 +14,8 @@
   padding-left: 0px;
 }
 
-.left-sidebar {
-  margin-left: 10px;
-}
-
-.right-sidebar {
-  margin-left: -20px;
+.main-content{
+  padding: 0px 10px;
 }
 
 .list-group.slim .list-group-item {
