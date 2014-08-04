@@ -1,6 +1,8 @@
 /* jshint strict: true */
 
-angular.module('CEDEK', ['ngRoute']).
+angular.module('CEDEK', [
+  'ngRoute'//,'templates'
+]).
 config(['$routeProvider', function($routeProvider) {
   'use strict';
   $routeProvider.when('/personas/agregar', {templateUrl: 'pages/persona/agregar.html', controller: 'PeopleCtrl'});
@@ -22,11 +24,13 @@ var app = angular.module('CEDEK');
  *   Controller
  */
 app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
+  "use strict";
+
   $scope.showFilter = true;
 
   $scope.$on("$routeChangeSuccess", function(){
     var path = $route.current.originalPath;
-    if(path != undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
+    if(path !== undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
       $scope.showFilter = true;
     } else {
       $scope.showFilter = false;

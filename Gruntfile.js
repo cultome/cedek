@@ -58,7 +58,7 @@ module.exports = function(grunt) {
     cssmin: {
       minify: {
         files: {
-          'target/css/cedek.min.css': ['build/cedek.css']
+          'target/css/cedek.min.css': ['app/css/app.css']
         }
       }
     },
@@ -139,23 +139,23 @@ module.exports = function(grunt) {
               // eliminamos los imports de nuestros js
               retVal = retVal.replace(/<script type="text\/javascript" src="js\/([\w\/]+?).js"><\/script>/g, "");
               // eliminamos los imports de nuestros css
-              retVal = retVal.replace(/<link rel="stylesheet" type=\"text\/css\" href="css\/([\w]+?).css"\/>/, "");
+              retVal = retVal.replace(/<link rel="stylesheet" type="text\/css" href="css\/([\w]+?).css"\/>/g, "");
               // sustituimos los comentarios por imports
               retVal = retVal.replace(/<!-- cedek.min.js -->/g, "<script type=\"text/javascript\" src=\"js/cedek.min.js\"></script>");
               retVal = retVal.replace(/<!-- templates.js -->/g, "<script type=\"text/javascript\" src=\"js/templates.js\"></script>");
               retVal = retVal.replace(/<!-- cedek.min.css -->/g, "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/cedek.min.css\"/>");
 
               // cambiamos a las versiones minimizadas de las librerias de tercero
-              retVal = retVal.replace(/..\/bower_components\/bootstrap\/dist\/css\/bootstrap.css/g, "lib\/bootstrap.min.css");
+              retVal = retVal.replace(/..\/bower_components\/bootstrap\/dist\/css\/bootstrap.min.css/g, "lib\/bootstrap.min.css");
 
               retVal = retVal.replace(/lib\/(([\w-_ ]+)\/)+/g, "lib\/"); // movemos el path de las librerias de tercero desde app a lib
 
-              retVal = retVal.replace(/..\/bower_components\/angular\/angular.js/g, "lib\/angular.min.js");
-              retVal = retVal.replace(/..\/bower_components\/angular-route\/angular-route.js/g, "lib\/angular-route.min.js");
-              retVal = retVal.replace(/..\/bower_components\/angular-resource\/angular-resource.js/g, "lib\/angular-resource.min.js");
-              retVal = retVal.replace(/..\/bower_components\/angular-sanitize\/angular-sanitize.js/g, "lib\/angular-sanitize.min.js");
-              retVal = retVal.replace(/..\/bower_components\/jquery\/dist\/jquery.js/g, "lib\/jquery.min.js");
-              retVal = retVal.replace(/..\/bower_components\/bootstrap\/dist\/js\/bootstrap.js/g, "lib\/bootstrap.min.js");
+              retVal = retVal.replace(/..\/bower_components\/angular\/angular.min.js/g, "lib\/angular.min.js");
+              retVal = retVal.replace(/..\/bower_components\/angular-route\/angular-route.min.js/g, "lib\/angular-route.min.js");
+              retVal = retVal.replace(/..\/bower_components\/angular-resource\/angular-resource.min.js/g, "lib\/angular-resource.min.js");
+              retVal = retVal.replace(/..\/bower_components\/angular-sanitize\/angular-sanitize.min.js/g, "lib\/angular-sanitize.min.js");
+              retVal = retVal.replace(/..\/bower_components\/jquery\/dist\/jquery.min.js/g, "lib\/jquery.min.js");
+              retVal = retVal.replace(/..\/bower_components\/bootstrap\/dist\/js\/bootstrap.min.js/g, "lib\/bootstrap.min.js");
 
               return retVal;
             } else {
