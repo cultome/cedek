@@ -65,7 +65,8 @@
             <div class="col-md-1">
               <button
                 class="btn btn-sm btn-default"
-                ng-click="addAnotherPhone()"><span class="glyphicon glyphicon-plus"></span></button>
+                ng-click="addAnotherPhone()"
+								ng-disabled="studentForm.student_phone.$invalid || student.phones[0].number === ''"><span class="glyphicon glyphicon-plus"></span></button>
             </div>
           </div>
 
