@@ -1,6 +1,7 @@
 /* jshint strict: true */
 
 angular.module('CEDEK', [
+	'ngResource',
   'ngRoute'//,'templates'
 ]).
 config(['$routeProvider', function($routeProvider) {
@@ -178,11 +179,11 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 			};
 
 			$scope.getStudentsWithScholarship = function(courseId){
-				$scope.studentsWithScholarship = PeopleService.getStudentsWithScholarship(courseId);
+				$scope.studentsWithScholarship = PeopleService.getCourseScholarships(courseId);
 			};
 
 			$scope.getStudentsWithPendingPayments = function(courseId){
-				$scope.studentsWithPendingPayments = PeopleService.getStudentsWithPendingPayments(courseId);
+				$scope.studentsWithPendingPayments = PeopleService.getCourseDebts(courseId);
 			};
 
 			$scope.initCourseList = function(){
@@ -382,293 +383,75 @@ app.directive('scholarships', [function(){
 /*
  *   Factory
  */
-app.factory('PeopleService', [function(){
+app.factory('PeopleService', ['$resource', function($resource){
 	"use strict";
+
+	var PersonResource = $resource('http://localhost:4567/people/:personId', {personId: '@id'});
+	var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
 	return {
 		listStudents: function(){
-			return [
-{
-	"id": 1,
-	// personales
-	"name": "Susana Alvarado",
-	"birthday": "1983-10-02",
-	"address": "Av Iman 580, Coyoacan, DF",
-	"email": "susana@gmail.com",
-	"phones": [
-{
-	"number": "5607-4335",
-	"type": 1
-},
-{
-	"number": "5517-8390",
-"type": 2
-},
-	],
-	// extendidos
-	"leadPrayGroup": true,
-	"hasScholarship": true,
-	"scholarshipPercentage": 10,
-	// historial
-	"previous": [
-{"id": 1, "name": "Curso I"}
-],
-	"enrollments": [
-{"id": 2, "name": "Curso II"}
-],
-	"reserves": [
-{"id": 3, "name": "Curso III"},
-{"id": 4, "name": "Curso IV"}
-],
-	"scholarships": [
-{"id": 1, "percentage": 75, "courseId": 7, "courseName": "Biomagnetismo"}
-],
-	"debts": [
-{"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}
-]
-}
-];
-},
+			return PersonResource.query();
+		},
 
-	// READY!
-	getStudentsFromCourse: function(courseId){
-		return [
-		{
-			"id": 1,
-			"name": "Susana Alvarado"
+		getStudentsFromCourse: function(courseId){
+			return CourseResource.query({courseId: courseId, action: "students"});
+		},
+
+		getCourseStudent: function(courseId, personId){
+			return CourseResource.query({courseId: courseId, action: "students", actionId: personId});
+		},
+
+		getStudent: function(personId){
+			return PersonResource.get({personId: personId});
+		},
+
+		getCourseDebts: function(courseId){
+			return CourseResource.query({courseId: courseId, action: "debts"});
+		},
+
+		getCourseScholarships: function(courseId){
+			return CourseResource.query({courseId: courseId, action: "scholarships"});
 		}
-		];
-	},
-
-	// READY!
-	getCourseStudent: function(courseId, personId){
-		return {
-			"id": 1,
-			// personales
-			"name": "Susana Alvarado",
-			"birthday": "1983-10-02",
-			"address": "Av Iman 580, Coyoacan, DF",
-			"email": "susana@gmail.com",
-			// historial
-			"enrollments": [
-			{"id": 2, "name": "Curso II"}
-			],
-				"scholarships": [
-				{"id": 1, "percentage": 45, "courseId": 2, "courseName": "Biomagnetismo"}
-			],
-				"debts": [
-				{"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}
-			],
-				"unattendance": [
-				{
-					"id": 1,
-					"label": "1 de julio 2014",
-					"date": "1-7-2014"
-				},
-				{
-					"id": 2,
-					"label": "8 de julio 2014",
-					"date": "8-7-2014"
-				},
-				]
-		};
-	},
-
-	// READY!
-	getStudent: function(personId){
-		return {
-			"id": 1,
-			// personales
-			"name": "Susana Alvarado",
-			"birthday": "1983-10-02",
-			"address": "Av Iman 580, Coyoacan, DF",
-			"email": "susana@gmail.com",
-			"phones": [
-			{
-				"number": "5607-4335",
-				"type": 1
-			},
-			{
-				"number": "5517-8390",
-				"type": 2
-			},
-			],
-			// extendidos
-			"leadPrayGroup": true,
-			"hasScholarship": true,
-			"scholarshipPercentage": 10,
-			// historial
-			"previous": [
-			{"id": 1, "name": "Curso I"}
-			],
-				"enrollments": [
-				{"id": 2, "name": "Curso II"}
-			],
-				"reserves": [
-				{"id": 3, "name": "Curso III"},
-				{"id": 4, "name": "Curso IV"}
-			],
-				"scholarships": [
-				{"id": 1, "percentage": 45, "courseId": 7, "courseName": "Biomagnetismo"},
-				{"id": 1, "percentage": 30, "courseId": 8, "courseName": "Mecanica Cuantica"}
-			],
-				"debts": [
-				{"id": 1, "courseId": 2, "courseName": "Biomagnetismo", "amount": 145}
-			]
-		};
-	},
-
-	// READY!
-	getStudentsWithPendingPayments: function(courseId){
-		return [
-		{
-			"id": 1,
-			"name": "Susana Alvarado",
-			"debt": 150,
-			"debtPayDate": "20 de julio 2014"
-		}
-		];
-	},
-
-	// READY!
-	getStudentsWithScholarship: function(courseId){
-		return [
-		{
-			"id": 1,
-			"name": "Susana Alvarado",
-			"percentage": 90
-		}
-		];
-	},
 	};
 }]);
 
-app.factory('CatalogService', [function(){
+app.factory('CatalogService', ['$resource', function($resource){
 	"use strict";
+
+	var CatalogResource = $resource('http://localhost:4567/catalogs/:catalogId', {catalogId: '@id'});
 
 	return {
 		phoneTypes: function(){
-			return [
-{"id": 1, "name": "Casa"},
-{"id": 2, "name": "Movil"},
-{"id": 3, "name": "Oficina"}
-];
-}
-};
+			return CatalogResource.query({catalogId: 'phone'});
+		}
+	};
 }]);
 
-app.factory('CourseService', [function(){
+app.factory('CourseService', ['$resource', function($resource){
 	"use strict";
 
+	var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
+
 	return {
-		// READY!
-		getCourse: function(id){
-			return {
-				"id": 1,
-	"code": "HOM-JU",
-	"name": "Homeopatia II",
-	"begin": "2014-07-04",
-	"end": "2015-01-23",
-	"day": 3,
-	"hour": "19:30",
-	"students": [
-{
-	"id": 1,
-	"name": "Susana Alvarado",
-	"price": 80
-},
-{
-	"id": 2,
-	"name": "Alfredo Alvarado",
-	"price": 250
-}
-]
-};
-},
+		getCourse: function(courseId){
+			return CourseResource.get({courseId: courseId});
+		},
 
-	// READY!
-	getCourseSessions: function(courseId){
-		return [
-		{
-			"id": 1,
-			"label": "1 de julio 2014",
-			"date": "1-7-2014"
+		getCourseSessions: function(courseId){
+			return CourseResource.query({courseId: courseId, action: "sessions"});
 		},
-		{
-			"id": 2,
-			"label": "8 de julio 2014",
-			"date": "8-7-2014"
-		},
-		{
-			"id": 3,
-			"label": "15 de julio 2014",
-			"date": "15-7-2014"
-		}
-		];
-	},
 
-	// READY!
-	getCourses: function(){
-		return [
-		{
-			"id": 1,
-			"code": "HOM-JU",
-			"name": "Homeopatia II",
-			"begin": "4 de junio 2014",
-			"end": "5 de enero 2015",
-			"schedule": "Jueves 18:00"
+		getCourses: function(){
+			return CourseResource.query();
 		},
-		{
-			"id": 2,
-			"code": "BIO-JU",
-			"name": "Biomagnetismo",
-			"begin": "23 de octubre 2014",
-			"end": "5 de enero 2015",
-			"schedule": "Jueves 18:00"
-		}
-		];
-	},
 
-	// READY!
-	getOpenCourses: function(){
-		return [
-		{
-			"id": 5,
-			"status": "En Curso",
-			"name": "Esperanto Avanzado"
+		getOpenCourses: function(){
+			return CourseResource.query({action: "open"});
 		},
-		{
-			"id": 6,
-			"status": "Abierto",
-			"name": "Homeopatia II"
-		},
-		{
-			"id": 7,
-			"status": "Abierto",
-			"name": "Taller Homeopatia"
-		}
-		];
-	},
 
-	// READY!
-	getAttendance: function(courseId, date){
-		return [
-		{
-			"id": 1,
-			"name": "Susana Alvarado",
-			"attend": true
+		getAttendance: function(courseId, date){
+			return CourseResource.query({courseId: courseId, action: "attendance", date: date});
 		},
-		{
-			"id": 2,
-			"name": "Carlos Soria",
-			"attend": false
-		},
-		{
-			"id": 2,
-			"name": "Paloma Alvarado",
-			"attend": true
-		}
-		];
-	},
 	};
 }]);
