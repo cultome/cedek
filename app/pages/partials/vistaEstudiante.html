@@ -76,7 +76,7 @@
         <div class="panel-collapse collapse in" id="becas">
           <ul class="list-group slim">
             <li class="list-group-item" ng-repeat="scholarship in student.scholarships">
-              <a href="#/curso/{{scholarship.courseId}}">{{scholarship.courseName}}</a>
+              <a href="#/curso/{{scholarship.courseId}}">{{scholarship.course_name}}</a>
               <span class="pull-right">{{scholarship.percentage}}%</span>
             </li>
           </ul>
@@ -97,7 +97,7 @@
         <div class="panel-collapse collapse in" id="pagosPendientes">
           <ul class="list-group slim">
             <li class="list-group-item" ng-repeat="debt in student.debts">
-              <a href="#/curso/{{debt.courseId}}">{{debt.courseName}}</a>
+              <a href="#/curso/{{debt.courseId}}">{{debt.course_name}}</a>
               <span class="pull-right">{{debt.amount | currency}}</span>
             </li>
           </ul>

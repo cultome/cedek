@@ -205,7 +205,7 @@
                   <div class="panel-collapse collapse in" id="becas">
                     <ul class="list-group slim">
                       <li class="list-group-item" ng-repeat="scholarship in student.scholarships">
-                        <a href="#/curso/{{scholarship.courseId}}">{{scholarship.courseName}}</a>
+                        <a href="#/curso/{{scholarship.courseId}}">{{scholarship.course_name}}</a>
                         <span class="pull-right">{{scholarship.percentage}}%</span>
                       </li>
                     </ul>
@@ -249,7 +249,7 @@
               <li class="list-group-item" ng-repeat="debt in student.debts">
                 <div class="row">
                   <div class="col-md-4">
-                    {{debt.courseName}}
+                    {{debt.course_name}}
                   </div>
                   <div class="col-md-2 remove-padding">
                       <button class="btn btn-default btn-sm">

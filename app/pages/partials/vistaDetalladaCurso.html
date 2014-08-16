@@ -8,7 +8,7 @@
   <div class="panel-body">
     <div>
       <label>Horario</label>
-      <span class="pull-right">{{course.hour}}</span>
+      <span class="pull-right">{{course.schedule}}</span>
     </div>
     <div>
       <label>Clave</label>
@@ -35,7 +35,6 @@
     <div scholarships model="studentsWithScholarship"></div>
   </div>
 
-
   <!-- pagos pendientes -->
   <div class="panel-heading">
     <h3 class="panel-title">
@@ -47,11 +46,11 @@
       <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
         <div class="row">
           <div class="col-md-7">
-            <a href="#persona/editar/{{student.id}}">{{student.name}}</a>
+            <a href="#persona/editar/{{student.id}}">{{student.student_name}}</a>
           </div>
           <div class="col-md-5 remove-padding">
               <button class="btn btn-default btn-xs">
-                <strong>{{student.debt | currency}}</strong>
+                <strong>{{student.amount | currency}}</strong>
               </button>
               <button class="btn btn-default btn-xs" ng-click="toggleLatePaymentOptions(student.id)">
                 <img src="img/dollars33.svg" width="20">
