@@ -156,19 +156,19 @@
         <div class="panel-heading">
           <h3 class="panel-title">Becas</h3>
         </div>
-        <div class="panel-body">
 
+        <div class="panel-body">
           <div class="row">
             <div class="col-md-offset-1 col-md-3">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="student.hasScholarship">
+                  <input type="checkbox" ng-model="student.has_scholarship">
                   Tiene beca escolar?
                 </label>
               </div>
             </div>
             <div
-              ng-show="student.hasScholarship"
+              ng-show="student.has_scholarship"
               ng-class="{'has-error': studentForm.student_scholarshipPercentage.$invalid, 'has-feedback': studentForm.student_scholarshipPercentage.$invalid}">
               <label for="porcentajeBeca" class="col-md-3 control-label">Porcentaje de Beca</label>
               <div class="col-md-2 input-group">
@@ -178,23 +178,22 @@
                   placeholder="25"
                   name="student_scholarshipPercentage"
                   min="0" max="100"
-                  ng-model="student.scholarshipPercentage">
+                  ng-model="student.scholarship_percentage">
 
                <span class="input-group-addon">%</span>
               </div>
             </div>
           </div>
 
-          <hr>
+          <hr ng-hide="isCreatingPerson()">
 
-          <div class="row">
+          <div class="row" ng-hide="isCreatingPerson()">
             <div class="col-md-offset-1 col-md-6">
               <h4>Cursos con Beca</h4>
             </div>
           </div>
 
-          <div class="row">
-
+          <div class="row" ng-hide="isCreatingPerson()">
             <div class="col-md-offset-1 col-md-8" ng-hide="student.scholarships">
               No tiene beca en ningun curso.
             </div>
@@ -229,7 +228,7 @@
             <div class="col-md-offset-1 col-md-6">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="student.leadPrayGroup">
+                  <input type="checkbox" ng-model="student.lead_pray_group">
                   Dirige un grupo de oracion?
                 </label>
               </div>
@@ -276,6 +275,24 @@
                 </div>
               </li>
             </ul>
+          </div>
+        </div>
+
+
+        <!-- datos extendidos -->
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-md-offset-2 col-md-4" ng-show="isCreatingPerson()">
+              <button class="btn btn-success btn-block" ng-click="create()">Crear</button>
+            </div>
+
+            <div class="col-md-offset-2 col-md-4" ng-hide="isCreatingPerson()">
+              <button class="btn btn-success btn-block" ng-click="update(student.id)">Actualizar</button>
+            </div>
+
+            <div class="col-md-4">
+              <button class="btn btn-danger btn-block">Cancelar</button>
+            </div>
           </div>
         </div>
 

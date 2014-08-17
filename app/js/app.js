@@ -60,18 +60,36 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     $scope.studentId = "";
     $scope.student = {
       "name": "",
-      "hasScholarship": false,
-      "scholarshipPercent": 0,
+      "has_scholarship": false,
+      "scholarship_percentage": '',
+      "lead_pray_group": false,
       "phones": [{
         "number": "",
         "type": 1
-      }],
-      "debts": null
+      }]
     };
     $scope.phoneTypes = CatalogService.phoneTypes();
 
+		// deprecate
+    $scope.create = function(){
+    	console.log($scope.studentForm);
+    	var success = PeopleService.createStudent($scope.student);
+    	console.log("Saved? ");
+    	console.log(success);
+    };
+
+    $scope.update = function(personId){
+    };
+
+    $scope.isCreatingPerson = function(){
+    	return $scope.student.scholarships == null;
+    };
+
     $scope.getPhoneTypeName = function(id){
-      return $scope.phoneTypes.filter(function(elem){ return elem.id === id; })[0].name;
+    	if($scope.phoneTypes.length <= 1){
+    		return "";
+    	}
+    	return $scope.phoneTypes.filter(function(elem){ return elem.id === id; })[0].name;
     };
 
     $scope.hasAcademicHistory = function(){
@@ -390,6 +408,11 @@ app.factory('PeopleService', ['$resource', function($resource){
 	var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
 	return {
+		createStudent: function(student){
+			console.log(student);
+			return PersonResource.save(student);
+		},
+
 		listStudents: function(){
 			return PersonResource.query();
 		},
