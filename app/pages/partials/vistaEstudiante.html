@@ -12,7 +12,7 @@
 
     <!-- inasistencias -->
     <div ng-show="showAttendance == 'true'">
-      <div class="list-group slim">
+      <div class="list-group slim" ng-show="student.unattendance">
         <span class="list-group-item disabled text-center"
           data-toggle="collapse"
           data-parent="#{{id}}"
@@ -20,7 +20,7 @@
           Inasistencias
         </span>
         <div class="panel-collapse collapse in" id="inasistencias">
-          <span class="list-group-item" ng-repeat="date in student.unattendance">{{ date.label }}</span>
+          <span class="list-group-item" ng-repeat="date in student.unattendance">{{ date.session_date }}</span>
         </div>
       </div>
     </div>
@@ -76,7 +76,7 @@
         <div class="panel-collapse collapse in" id="becas">
           <ul class="list-group slim">
             <li class="list-group-item" ng-repeat="scholarship in student.scholarships">
-              <a href="#/curso/{{scholarship.courseId}}">{{scholarship.course_name}}</a>
+              <a href="#/curso/{{scholarship.course_id}}">{{scholarship.course_name}}</a>
               <span class="pull-right">{{scholarship.percentage}}%</span>
             </li>
           </ul>
@@ -97,7 +97,7 @@
         <div class="panel-collapse collapse in" id="pagosPendientes">
           <ul class="list-group slim">
             <li class="list-group-item" ng-repeat="debt in student.debts">
-              <a href="#/curso/{{debt.courseId}}">{{debt.course_name}}</a>
+              <a href="#/curso/{{debt.course_id}}">{{debt.course_name}}</a>
               <span class="pull-right">{{debt.amount | currency}}</span>
             </li>
           </ul>

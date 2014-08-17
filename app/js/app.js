@@ -399,7 +399,7 @@ app.factory('PeopleService', ['$resource', function($resource){
 		},
 
 		getCourseStudent: function(courseId, personId){
-			return CourseResource.query({courseId: courseId, action: "students", actionId: personId});
+			return CourseResource.get({courseId: courseId, action: "students", actionId: personId});
 		},
 
 		getStudent: function(personId){
