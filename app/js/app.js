@@ -1,8 +1,8 @@
 /* jshint strict: true */
 
 angular.module('CEDEK', [
-	'ngResource',
-  'ngRoute'//,'templates'
+    'ngResource',
+    'ngRoute'//,'templates'
 ]).
 config(['$routeProvider', function($routeProvider) {
   'use strict';
@@ -50,431 +50,447 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 
 
 app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService',
-  function($scope, $routeParams, PeopleService, CourseService, CatalogService){
-    'use strict';
-    // list students
-    $scope.students = null;
-    $scope.courses = null;
+    function($scope, $routeParams, PeopleService, CourseService, CatalogService){
+      'use strict';
+      // list students
+      $scope.students = null;
+      $scope.courses = null;
 
-    $scope.courseId = "";
-    $scope.studentId = "";
-    $scope.student = {
-      "name": "",
-      "has_scholarship": false,
-      "scholarship_percentage": '',
-      "lead_pray_group": false,
-      "phones": [{
-        "number": "",
-        "type": 1
-      }]
-    };
-    $scope.phoneTypes = CatalogService.phoneTypes();
+      $scope.courseId = "";
+      $scope.studentId = "";
+      $scope.student = {
+        "name": "",
+        "has_scholarship": false,
+        "scholarship_percentage": '',
+        "lead_pray_group": false,
+        "phones": [{
+          "number": "",
+          "type": 1
+        }]
+      };
+      $scope.phoneTypes = CatalogService.phoneTypes();
 
-		// deprecate
-    $scope.create = function(){
-    	console.log($scope.studentForm);
-    	var success = PeopleService.createStudent($scope.student);
-    	console.log("Saved? ");
-    	console.log(success);
-    };
+      // deprecate
+      $scope.create = function(){
+        console.log($scope.studentForm);
+        var success = PeopleService.createStudent($scope.student);
+        console.log("Saved? ");
+        console.log(success);
+      };
 
-    $scope.update = function(personId){
-    };
+      $scope.update = function(personId){
+      };
 
-    $scope.isCreatingPerson = function(){
-    	return $scope.student.scholarships == null;
-    };
+      $scope.isCreatingPerson = function(){
+        return $scope.student.scholarships == null;
+      };
 
-    $scope.getPhoneTypeName = function(id){
-    	if($scope.phoneTypes.length <= 1){
-    		return "";
-    	}
-    	return $scope.phoneTypes.filter(function(elem){ return elem.id === id; })[0].name;
-    };
+      $scope.getPhoneTypeName = function(id){
+        if($scope.phoneTypes.length <= 1){
+          return "";
+        }
+        return $scope.phoneTypes.filter(function(elem){ return elem.id === id; })[0].name;
+      };
 
-    $scope.hasAcademicHistory = function(){
-      return $scope.student.enrollments || $scope.student.reserves || $scope.student.previous;
-    };
+      $scope.hasAcademicHistory = function(){
+        return $scope.student.enrollments || $scope.student.reserves || $scope.student.previous;
+      };
 
-    $scope.addAnotherPhone = function(){
-			if(!$scope.student.phones[0].number.match(/^[\s]*$/)){
-				$scope.student.phones.unshift({
-					"number": "",
-					"type": 1
-				});
-			}
-		};
+      $scope.addAnotherPhone = function(){
+        if(!$scope.student.phones[0].number.match(/^[\s]*$/)){
+          $scope.student.phones.unshift({
+            "number": "",
+            "type": 1
+          });
+        }
+      };
 
-		$scope.initStudentList = function(){
-			$scope.students = PeopleService.listStudents();
-			$scope.courses = CourseService.getOpenCourses();
-		};
+      $scope.initStudentList = function(){
+        $scope.students = PeopleService.listStudents();
+        $scope.courses = CourseService.getOpenCourses();
+      };
 
-		if($routeParams.personId){
-			$scope.student = PeopleService.getStudent(parseInt($routeParams.personId));
-		}
-	}]
+      if($routeParams.personId){
+        $scope.student = PeopleService.getStudent(parseInt($routeParams.personId));
+      }
+    }]
 );
 
 app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService',
-		function($scope, $routeParams, PeopleService, CourseService){
-			'use strict';
+    function($scope, $routeParams, PeopleService, CourseService){
+      'use strict';
 
-			$scope.students = null;
-			$scope.course = null;
-			$scope.sessions = null;
-			$scope.selectedStudent = null;
-			$scope.studentsWithScholarship = null;
-			$scope.studentsWithPendingPayments = null;
-			$scope.courses = null;
-			$scope.attendanceDate = 0;
+      $scope.students = null;
+      $scope.course = null;
+      $scope.sessions = null;
+      $scope.selectedStudent = null;
+      $scope.studentsWithScholarship = null;
+      $scope.studentsWithPendingPayments = null;
+      $scope.courses = null;
+      $scope.attendanceDate = 0;
 
-			// panel de la izquierda en detalles
-			$scope.panels = {
-				"students": {
-					"courseId": 0,
-	"courseName": "",
-	"show": false
-				},
-	"attendance": {
-		"courseId": 0,
-		"courseName": "",
-		"show": false
-	},
-	"newScholarship": {
-		"studentId": "",
-		"amount": 0
-	}
-			};
+      // panel de la izquierda en detalles
+      $scope.panels = {
+        "students": {
+          "courseId": 0,
+          "courseName": "",
+          "show": false
+        },
+        "attendance": {
+          "courseId": 0,
+          "courseName": "",
+          "show": false
+        },
+        "newScholarship": {
+          "studentId": "",
+          "amount": 0
+        }
+      };
 
-			$scope.selectStudent = function(studentId){
-				$scope.selectedStudent = PeopleService.getCourseStudent($scope.course.id, studentId);
-			};
+      $scope.isCreatingCourse = function(){
+        return $scope.studentsWithScholarship == null;
+      };
 
-			function fillPanelWithCourseInfo(id, panelName){
-				var course = $scope.courses.filter(function(elem){ return elem.id === id; })[0];
-				$scope.panels[panelName].courseName = course.name;
-				$scope.panels[panelName].courseId = course.id;
-			}
+      $scope.create = function(){
+        console.log($scope.courseForm);
+        var success = CourseService.createCourse($scope.course);
+        console.log("Saved? ");
+        console.log(success);
+      };
 
-			$scope.toggleViewStudents = function(courseId){
-				if($scope.panels.students.show  && $scope.panels.students.courseId === courseId){
-					$scope.panels.students.show = false;
-				} else {
-					$scope.panels.students.show = true;
-					fillPanelWithCourseInfo(courseId, "students");
-					$scope.panels.students.studentsList = PeopleService.getStudentsFromCourse(courseId);
-				}
-			};
+      $scope.selectStudent = function(studentId){
+        $scope.selectedStudent = PeopleService.getCourseStudent($scope.course.id, studentId);
+      };
 
-			$scope.toggleViewAttendance = function(courseId){
-				if($scope.panels.attendance.show && $scope.panels.attendance.courseId === courseId){
-					$scope.panels.attendance.show = false;
-				} else {
-					$scope.panels.attendance.show = true;
-					fillPanelWithCourseInfo(courseId, "attendance");
-					$scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
-				}
-			};
+      function fillPanelWithCourseInfo(id, panelName){
+        var course = $scope.courses.filter(function(elem){ return elem.id === id; })[0];
+        $scope.panels[panelName].courseName = course.name;
+        $scope.panels[panelName].courseId = course.id;
+      }
 
-			$scope.changeToPartialPayment = function(studentId){
-				$scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 2;
-				$("#payment" + studentId).attr("type", "number");
-			};
+      $scope.toggleViewStudents = function(courseId){
+        if($scope.panels.students.show  && $scope.panels.students.courseId === courseId){
+          $scope.panels.students.show = false;
+        } else {
+          $scope.panels.students.show = true;
+          fillPanelWithCourseInfo(courseId, "students");
+          $scope.panels.students.studentsList = PeopleService.getStudentsFromCourse(courseId);
+        }
+      };
 
-			$scope.changeToLaterPayment = function(studentId){
-				$scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 3;
-				$("#payment" + studentId).attr("type", "date");
-			};
+      $scope.toggleViewAttendance = function(courseId){
+        if($scope.panels.attendance.show && $scope.panels.attendance.courseId === courseId){
+          $scope.panels.attendance.show = false;
+        } else {
+          $scope.panels.attendance.show = true;
+          fillPanelWithCourseInfo(courseId, "attendance");
+          $scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
+        }
+      };
 
-			$scope.togglePaymentOptions = function(studentId){
-				var section = $("#paymentOption" + studentId);
-				if(section.css("display") === "none"){
-					section.css("display", "");
-				} else {
-					section.css("display", "none");
-				}
-			};
+      $scope.changeToPartialPayment = function(studentId){
+        $scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 2;
+        $("#payment" + studentId).attr("type", "number");
+      };
 
-			$scope.getStudentsWithScholarship = function(courseId){
-				$scope.studentsWithScholarship = PeopleService.getCourseScholarships(courseId);
-			};
+      $scope.changeToLaterPayment = function(studentId){
+        $scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 3;
+        $("#payment" + studentId).attr("type", "date");
+      };
 
-			$scope.getStudentsWithPendingPayments = function(courseId){
-				$scope.studentsWithPendingPayments = PeopleService.getCourseDebts(courseId);
-			};
+      $scope.togglePaymentOptions = function(studentId){
+        var section = $("#paymentOption" + studentId);
+        if(section.css("display") === "none"){
+          section.css("display", "");
+        } else {
+          section.css("display", "none");
+        }
+      };
 
-			$scope.initCourseList = function(){
-				$scope.courses = CourseService.getCourses();
-			};
+      $scope.getStudentsWithScholarship = function(courseId){
+        $scope.studentsWithScholarship = PeopleService.getCourseScholarships(courseId);
+      };
 
-			if($routeParams.courseId){
-				var courseId = parseInt($routeParams.courseId);
-				$scope.course = CourseService.getCourse(courseId);
-				$scope.getStudentsWithScholarship(courseId);
-				$scope.getStudentsWithPendingPayments(courseId);
-				$scope.sessions = CourseService.getCourseSessions(courseId);
-			} else {
-				$scope.course = {
-					"name": "",
-					"code": "",
-					"cost": 0,
-					"begin": "",
-					"end": "",
-					"day": 0,
-					"hour": "18:00",
-				};
-			}
-		}]
+      $scope.getStudentsWithPendingPayments = function(courseId){
+        $scope.studentsWithPendingPayments = PeopleService.getCourseDebts(courseId);
+      };
+
+      $scope.initCourseList = function(){
+        $scope.courses = CourseService.getCourses();
+      };
+
+      if($routeParams.courseId){
+        var courseId = parseInt($routeParams.courseId);
+        $scope.course = CourseService.getCourse(courseId);
+        $scope.getStudentsWithScholarship(courseId);
+        $scope.getStudentsWithPendingPayments(courseId);
+        $scope.sessions = CourseService.getCourseSessions(courseId);
+      } else {
+        $scope.course = {
+          "name": "",
+          "code": "",
+          "cost": 0,
+          "begin": "",
+          "end": "",
+          "day": 0,
+          "hour": "18:00",
+        };
+      }
+    }]
 );
 
 app.controller('DashboardCtrl', ['$scope',
-		function($scope){
-			'use strict';
+    function($scope){
+      'use strict';
 
-			$scope.todayCourses = [
-{"id": 1, "scheduleTime": "13:00", "name": "Esperanto Basico"}
-];
+      $scope.todayCourses = [
+      {"id": 1, "scheduleTime": "13:00", "name": "Esperanto Basico"}
+      ];
 
-$scope.comingCourses = [
-{"id": 2, "name": "Curso I", "beginDate": "20 junio 2014"}
-];
+      $scope.comingCourses = [
+      {"id": 2, "name": "Curso I", "beginDate": "20 junio 2014"}
+      ];
 
-$scope.todayBirthdays = [
-{"id": 1, "name": "Susana Alvarado", "age": 31}
-];
-}]
-);
+      $scope.todayBirthdays = [
+      {"id": 1, "name": "Susana Alvarado", "age": 31}
+      ];
+    }]
+    );
 
 /*
  *   Directive
  */
 
 app.directive('navigation', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	templateUrl: 'pages/navigation.html'
-	};
+  return {
+    replace: true,
+    templateUrl: 'pages/navigation.html'
+  };
 });
 
 app.directive('studentList', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	scope: {
-		students: '=model',
-	showAttendance: '@showAttendance'
-	},
-	templateUrl: 'pages/partials/listaEstudiantes.html'
-	};
+  return {
+    replace: true,
+    scope: {
+      students: '=model',
+      showAttendance: '@showAttendance'
+    },
+    templateUrl: 'pages/partials/listaEstudiantes.html'
+  };
 });
 
 app.directive('courseView', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	templateUrl: 'pages/partials/vistaCurso.html'
-	};
+  return {
+    replace: true,
+    templateUrl: 'pages/partials/vistaCurso.html'
+  };
 });
 
 app.directive('detailedCourseView', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	templateUrl: 'pages/partials/vistaDetalladaCurso.html'
-	};
+  return {
+    replace: true,
+    templateUrl: 'pages/partials/vistaDetalladaCurso.html'
+  };
 });
 
 app.directive('studentListFullOpc', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	templateUrl: 'pages/partials/listaEstudiantesOpcionesCompletas.html'
-	};
+  return {
+    replace: true,
+    templateUrl: 'pages/partials/listaEstudiantesOpcionesCompletas.html'
+  };
 });
 
 app.directive('studentView', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	transclude: true,
-	scope: {
-		student: '=model',
-	canCollapse: '@canCollapse',
-	showAttendance: '@showAttendance',
-	id: '='
-	},
-	templateUrl: 'pages/partials/vistaEstudiante.html'
-	};
+  return {
+    replace: true,
+    transclude: true,
+    scope: {
+      student: '=model',
+      canCollapse: '@canCollapse',
+      showAttendance: '@showAttendance',
+      id: '='
+    },
+    templateUrl: 'pages/partials/vistaEstudiante.html'
+  };
 });
 
 app.directive('subscribeCourse', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	templateUrl: 'pages/partials/inscribeReservaCurso.html'
-	};
+  return {
+    replace: true,
+    templateUrl: 'pages/partials/inscribeReservaCurso.html'
+  };
 });
 
 function createPaymentChange(paymentType, debt, element, styleId, type){
-	"use strict";
+  "use strict";
 
-	return function(){
-		debt.paymentType = paymentType;
-		$(element).find("#" + styleId + debt.id).attr("type", type);
-	};
+  return function(){
+    debt.paymentType = paymentType;
+    $(element).find("#" + styleId + debt.id).attr("type", type);
+  };
 }
 
 app.directive('paymentOptionsCompact', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	scope: {
-		debt: '=model'
-	},
-	link: function(scope, element, attrs){
-		scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "paymentSmall", "date");
-		scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "paymentSmall", "number");
-	},
-	templateUrl: 'pages/partials/opcionesPagoCompacto.html'
-	};
+  return {
+    replace: true,
+    scope: {
+      debt: '=model'
+    },
+    link: function(scope, element, attrs){
+      scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "paymentSmall", "date");
+      scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "paymentSmall", "number");
+    },
+    templateUrl: 'pages/partials/opcionesPagoCompacto.html'
+  };
 });
 
 app.directive('paymentOptions', function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	scope: {
-		debt: '=model'
-	},
-	templateUrl: 'pages/partials/opcionesPago.html',
-	link: function(scope, element, attrs){
-		scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "payment", "date");
-		scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "payment", "number");
-	}
-	};
+  return {
+    replace: true,
+    scope: {
+      debt: '=model'
+    },
+    templateUrl: 'pages/partials/opcionesPago.html',
+    link: function(scope, element, attrs){
+      scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "payment", "date");
+      scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "payment", "number");
+    }
+  };
 });
 
 app.directive('searchAttendance', ['CourseService', function(CourseService){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	templateUrl: 'pages/partials/buscarAsistencia.html',
-	scope: {
-		courseId: '&courseId',
-	sessions: '='
-	},
-	link: function(scope, element, attrs){
-		scope.attendanceDate = "";
-		scope.attendance = null;
+  return {
+    replace: true,
+    templateUrl: 'pages/partials/buscarAsistencia.html',
+    scope: {
+      courseId: '&courseId',
+      sessions: '='
+    },
+    link: function(scope, element, attrs){
+      scope.attendanceDate = "";
+      scope.attendance = null;
 
-		scope.getAttendance = function(){
-			scope.attendance = CourseService.getAttendance(scope.courseId(), scope.attendanceDate);
-		};
-	}
-	};
+      scope.getAttendance = function(){
+        scope.attendance = CourseService.getAttendance(scope.courseId(), scope.attendanceDate);
+      };
+    }
+  };
 }]);
 
 app.directive('scholarships', [function(){
-	"use strict";
+  "use strict";
 
-	return {
-		replace: true,
-	scope: {
-		scholarships: '=model'
-	},
-	templateUrl: 'pages/partials/becas.html'
-	};
+  return {
+    replace: true,
+    scope: {
+      scholarships: '=model'
+    },
+    templateUrl: 'pages/partials/becas.html'
+  };
 }]);
 
 /*
  *   Factory
  */
 app.factory('PeopleService', ['$resource', function($resource){
-	"use strict";
+  "use strict";
 
-	var PersonResource = $resource('http://localhost:4567/people/:personId', {personId: '@id'});
-	var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
+  var PersonResource = $resource('http://localhost:4567/people/:personId', {personId: '@id'});
+  var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
-	return {
-		createStudent: function(student){
-			console.log(student);
-			return PersonResource.save(student);
-		},
+  return {
+    createStudent: function(student){
+      console.log(student);
+      return PersonResource.save(student);
+    },
 
-		listStudents: function(){
-			return PersonResource.query();
-		},
+    listStudents: function(){
+      return PersonResource.query();
+    },
 
-		getStudentsFromCourse: function(courseId){
-			return CourseResource.query({courseId: courseId, action: "students"});
-		},
+    getStudentsFromCourse: function(courseId){
+      return CourseResource.query({courseId: courseId, action: "students"});
+    },
 
-		getCourseStudent: function(courseId, personId){
-			return CourseResource.get({courseId: courseId, action: "students", actionId: personId});
-		},
+    getCourseStudent: function(courseId, personId){
+      return CourseResource.get({courseId: courseId, action: "students", actionId: personId});
+    },
 
-		getStudent: function(personId){
-			return PersonResource.get({personId: personId});
-		},
+    getStudent: function(personId){
+      return PersonResource.get({personId: personId});
+    },
 
-		getCourseDebts: function(courseId){
-			return CourseResource.query({courseId: courseId, action: "debts"});
-		},
+    getCourseDebts: function(courseId){
+      return CourseResource.query({courseId: courseId, action: "debts"});
+    },
 
-		getCourseScholarships: function(courseId){
-			return CourseResource.query({courseId: courseId, action: "scholarships"});
-		}
-	};
+    getCourseScholarships: function(courseId){
+      return CourseResource.query({courseId: courseId, action: "scholarships"});
+    }
+  };
 }]);
 
 app.factory('CatalogService', ['$resource', function($resource){
-	"use strict";
+  "use strict";
 
-	var CatalogResource = $resource('http://localhost:4567/catalogs/:catalogId', {catalogId: '@id'});
+  var CatalogResource = $resource('http://localhost:4567/catalogs/:catalogId', {catalogId: '@id'});
 
-	return {
-		phoneTypes: function(){
-			return CatalogResource.query({catalogId: 'phone'});
-		}
-	};
+  return {
+    phoneTypes: function(){
+      return CatalogResource.query({catalogId: 'phone'});
+    }
+  };
 }]);
 
 app.factory('CourseService', ['$resource', function($resource){
-	"use strict";
+  "use strict";
 
-	var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
+  var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
-	return {
-		getCourse: function(courseId){
-			return CourseResource.get({courseId: courseId});
-		},
+  return {
+    createCourse: function(course){
+      console.log(course);
+      return CourseResource.save(course);
+    },
 
-		getCourseSessions: function(courseId){
-			return CourseResource.query({courseId: courseId, action: "sessions"});
-		},
+    getCourse: function(courseId){
+      return CourseResource.get({courseId: courseId});
+    },
 
-		getCourses: function(){
-			return CourseResource.query();
-		},
+    getCourseSessions: function(courseId){
+      return CourseResource.query({courseId: courseId, action: "sessions"});
+    },
 
-		getOpenCourses: function(){
-			return CourseResource.query({action: "open"});
-		},
+    getCourses: function(){
+      return CourseResource.query();
+    },
 
-		getAttendance: function(courseId, date){
-			return CourseResource.query({courseId: courseId, action: "attendance", date: date});
-		},
-	};
+    getOpenCourses: function(){
+      return CourseResource.query({action: "open"});
+    },
+
+    getAttendance: function(courseId, date){
+      return CourseResource.query({courseId: courseId, action: "attendance", date: date});
+    },
+  };
 }]);

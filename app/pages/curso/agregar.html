@@ -94,10 +94,10 @@
         </div><!-- body -->
 
         <!-- inscripcion -->
-        <div class="panel-heading">
+        <div class="panel-heading" ng-hide="isCreatingCourse()">
           <h3 class="panel-title">Estudiantes</h3>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" ng-hide="isCreatingCourse()">
           <div class="row">
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
@@ -135,10 +135,10 @@
         </div>
 
         <!-- becas -->
-        <div class="panel-heading">
+        <div class="panel-heading" ng-hide="isCreatingCourse()">
           <h3 class="panel-title">Becas</h3>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" ng-hide="isCreatingCourse()">
           <div class="row">
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
@@ -191,12 +191,12 @@
         </div>
 
         <!-- pagos pendientes -->
-        <div class="panel-heading" ng-show="studentsWithPendingPayments">
+        <div class="panel-heading" ng-show="studentsWithPendingPayments && !isCreatingCourse()">
           <h3 class="panel-title">
             Pagos Pendientes
           </h3>
         </div>
-        <div class="panel-body" ng-show="studentsWithPendingPayments">
+        <div class="panel-body" ng-show="studentsWithPendingPayments && !isCreatingCourse()">
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
               <div class="row">
@@ -230,13 +230,31 @@
         </div>
 
         <!-- asistencia -->
-        <div class="panel-heading" ng-show="sessions">
+        <div class="panel-heading" ng-show="sessions && !isCreatingCourse()">
           <h3 class="panel-title">Asistencia</h3>
         </div>
-        <div class="panel-body" ng-show="sessions">
+        <div class="panel-body" ng-show="sessions && !isCreatingCourse()">
           <div
             search-attendance course-id="course.id"
             sessions="sessions">
+          </div>
+        </div>
+
+
+        <!-- panel de botones  -->
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-md-offset-2 col-md-4" ng-show="isCreatingCourse()">
+              <button class="btn btn-success btn-block" ng-click="create()">Crear</button>
+            </div>
+
+            <div class="col-md-offset-2 col-md-4" ng-hide="isCreatingCourse()">
+              <button class="btn btn-success btn-block" ng-click="update(course.id)">Actualizar</button>
+            </div>
+
+            <div class="col-md-4">
+              <button class="btn btn-danger btn-block">Cancelar</button>
+            </div>
           </div>
         </div>
       </div>
