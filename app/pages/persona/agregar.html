@@ -262,7 +262,10 @@
                   <div class="col-md-6">
                     <div class="row" style="display: none;" id="latePaymentOption{{debt.id}}">
                       <div class="col-md-12">
-                        <div payment-options model="debt" amount="debt.amount" course="course.id"></div>
+                        <div payment-options
+                          course="debt.course_id"
+                          student="student.id"
+                          amount="debt.amount"></div>
                       </div>
                     </div>
                   </div>

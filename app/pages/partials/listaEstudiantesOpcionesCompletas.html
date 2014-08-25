@@ -24,7 +24,11 @@
 
     <div class="row payment-options" style="display: none;" id="paymentOption{{student.id}}">
       <div class="col-md-12">
-        <div payment-options model="student" amount="student.price" course="course.id" charge="true"></div>
+        <div payment-options
+           course="course.id"
+           student="student.id"
+           amount="student.price"
+           charge="true"></div>
       </div>
     </div>
   </li>
