@@ -206,17 +206,21 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 					fillDateLabels($scope.panels.attendance.sessions);
         }
       };
-
+/*
       $scope.changeToPartialPayment = function(studentId){
-        $scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 2;
+        var student = $scope.students.filter(function(elem){ return elem.id === studentId; })[0];
+        student.payment = "";
+        student.paymentType = 3;
         $("#payment" + studentId).attr("type", "number");
       };
 
       $scope.changeToLaterPayment = function(studentId){
-        $scope.students.filter(function(elem){ return elem.id === studentId; })[0].paymentType = 3;
+        var student = $scope.students.filter(function(elem){ return elem.id === studentId; })[0];
+        student.payment = "";
+        student.paymentType = 3;
         $("#payment" + studentId).attr("type", "date");
       };
-
+*/
       $scope.togglePaymentOptions = function(studentId){
         var section = $("#paymentOption" + studentId);
         if(section.css("display") === "none"){
@@ -383,16 +387,19 @@ function createPaymentChange(paymentType, student, element, styleId, type){
   "use strict";
 
   return function(){
+    student.payment = null;
     student.paymentType = paymentType;
     $(element).find("#" + styleId + student.id).attr("type", type);
   };
 }
 
-function registerPayment(student){
+function registerPayment(student, courseId, DebtService){
   return function(studentId){
-    console.log(student.id);
-    console.log(student.payment);
-    console.log(student.paymentType);
+    if(student.paymentType === 2){ // pago parcial
+      DebtService.makePayment(student.id, courseId, student.payment);
+    } else if(student.paymentType === 3){ // pago posterior
+      DebtService.payLater(student.id, courseId, student.payment);
+    }
   };
 }
 
@@ -402,41 +409,43 @@ function isInputEnabled(student){
   }
 }
 
-app.directive('paymentOptionsCompact', function(){
+app.directive('paymentOptionsCompact', ['DebtService', function(DebtService){
   "use strict";
 
   return {
     replace: true,
     scope: {
-      student: '=model'
+      student: '=model',
+      course: '=course'
     },
     link: function(scope, element, attrs){
       scope.changeToLaterPayment = createPaymentChange(3, scope.student, element, "paymentSmall", "date");
       scope.changeToPartialPayment = createPaymentChange(2, scope.student, element, "paymentSmall", "number");
       scope.isInputEnabled = isInputEnabled(scope.student);
-      scope.registerPayment = registerPayment(scope.student);
+      scope.registerPayment = registerPayment(scope.student, scope.course, DebtService);
     },
     templateUrl: 'pages/partials/opcionesPagoCompacto.html'
   };
-});
+}]);
 
-app.directive('paymentOptions', function(){
+app.directive('paymentOptions', ['DebtService', function(DebtService){
   "use strict";
 
   return {
     replace: true,
     scope: {
-      student: '=model'
+      student: '=model',
+      course: '=course'
     },
     templateUrl: 'pages/partials/opcionesPago.html',
     link: function(scope, element, attrs){
       scope.changeToLaterPayment = createPaymentChange(3, scope.student, element, "payment", "date");
       scope.changeToPartialPayment = createPaymentChange(2, scope.student, element, "payment", "number");
       scope.isInputEnabled = isInputEnabled(scope.student);
-      scope.registerPayment = registerPayment(scope.student);
+      scope.registerPayment = registerPayment(scope.student, scope.course, DebtService);
     }
   };
-});
+}]);
 
 app.directive('searchAttendance', ['CourseService', function(CourseService){
   "use strict";
@@ -474,6 +483,21 @@ app.directive('scholarships', [function(){
 /*
  *   Factory
  */
+app.factory('DebtService', ['$resource', function($resource){
+  "use strict";
+
+  var DebtResource = $resource('http://localhost:4567/debts/:debtId', {debtId: '@id'});
+
+  return {
+    makePayment: function(studentId, courseId, amount){
+      console.log(studentId + ", " + courseId + ", " + amount);
+    },
+    payLater: function(studentId, courseId, date){
+      console.log(studentId + ", " + courseId + ", " + date);
+    }
+  };
+}]);
+
 app.factory('PeopleService', ['$resource', function($resource){
   "use strict";
 
