@@ -1,26 +1,28 @@
-<div class="input-group input-group-sm">
+<div class="input-group input-group-sm" ng-form="paymentForm{{student.id}}">
   <span class="input-group-btn">
     <button
-      ng-class="{'btn': true, 'btn-default':true, 'active': debt.paymentType == 2}"
+      ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 2}"
       type="button"
       ng-click="changeToPartialPayment()">Parcial</button>
     <button
-      ng-class="{'btn': true, 'btn-default':true, 'active': debt.paymentType == 3}"
+      ng-class="{'btn': true, 'btn-default':true, 'active': student.paymentType == 3}"
       type="button"
       ng-click="changeToLaterPayment()">Posterior</button>
   </span>
 
   <span
     class="input-group-addon"
-    ng-show="debt.paymentType == 2">$</span>
+    ng-show="student.paymentType == 2">$</span>
   <input
-    type="number"
-    id="payment{{debt.id}}"
+    type="date"
+    id="payment{{student.id}}"
     class="form-control"
-		ng-disabled="debt.paymentType != 2 && debt.paymentType != 3"
-    ng-model="debt.payment">
+		ng-disabled="!isInputEnabled()"
+    ng-model="student.payment">
   <span class="input-group-btn">
-    <button class="btn btn-default" type="button">
+    <button class="btn btn-default"
+        ng-click="registerPayment()"
+        ng-disabled="!student.payment">
       <span class="glyphicon glyphicon-ok"></span>
     </button>
   </span>

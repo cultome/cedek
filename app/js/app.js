@@ -57,6 +57,7 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 
     return day + " de " + monthName + "  " + year;
   };
+
 }]);
 
 
@@ -158,6 +159,18 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         }
       };
 
+      function fillDateLabels(sessions){
+        sessions.forEach(function(session){
+          session.label = $scope.getDateLabel(session.session_date);
+        });
+      }
+
+      function fillPanelWithCourseInfo(id, panelName){
+        var course = $scope.courses.filter(function(elem){ return elem.id === id; })[0];
+        $scope.panels[panelName].courseName = course.name;
+        $scope.panels[panelName].courseId = course.id;
+      }
+
       $scope.isCreatingCourse = function(){
         return $scope.studentsWithScholarship == null;
       };
@@ -172,12 +185,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.selectStudent = function(studentId){
         $scope.selectedStudent = PeopleService.getCourseStudent($scope.course.id, studentId);
       };
-
-      function fillPanelWithCourseInfo(id, panelName){
-        var course = $scope.courses.filter(function(elem){ return elem.id === id; })[0];
-        $scope.panels[panelName].courseName = course.name;
-        $scope.panels[panelName].courseId = course.id;
-      }
 
       $scope.toggleViewStudents = function(courseId){
         if($scope.panels.students.show  && $scope.panels.students.courseId === courseId){
@@ -230,12 +237,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.initCourseList = function(){
         $scope.courses = CourseService.getCourses();
       };
-
-      function fillDateLabels(sessions){
-        sessions.forEach(function(session){
-          session.label = $scope.getDateLabel(session.session_date);
-        });
-      }
 
       $scope.$watch("$scope.panels.attendance.sessions", function(newValue, oldValue){
         if(newValue){
@@ -378,13 +379,27 @@ app.directive('subscribeCourse', function(){
   };
 });
 
-function createPaymentChange(paymentType, debt, element, styleId, type){
+function createPaymentChange(paymentType, student, element, styleId, type){
   "use strict";
 
   return function(){
-    debt.paymentType = paymentType;
-    $(element).find("#" + styleId + debt.id).attr("type", type);
+    student.paymentType = paymentType;
+    $(element).find("#" + styleId + student.id).attr("type", type);
   };
+}
+
+function registerPayment(student){
+  return function(studentId){
+    console.log(student.id);
+    console.log(student.payment);
+    console.log(student.paymentType);
+  };
+}
+
+function isInputEnabled(student){
+  return function(){
+    return student.paymentType === 2 || student.paymentType === 3;
+  }
 }
 
 app.directive('paymentOptionsCompact', function(){
@@ -393,11 +408,13 @@ app.directive('paymentOptionsCompact', function(){
   return {
     replace: true,
     scope: {
-      debt: '=model'
+      student: '=model'
     },
     link: function(scope, element, attrs){
-      scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "paymentSmall", "date");
-      scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "paymentSmall", "number");
+      scope.changeToLaterPayment = createPaymentChange(3, scope.student, element, "paymentSmall", "date");
+      scope.changeToPartialPayment = createPaymentChange(2, scope.student, element, "paymentSmall", "number");
+      scope.isInputEnabled = isInputEnabled(scope.student);
+      scope.registerPayment = registerPayment(scope.student);
     },
     templateUrl: 'pages/partials/opcionesPagoCompacto.html'
   };
@@ -409,12 +426,14 @@ app.directive('paymentOptions', function(){
   return {
     replace: true,
     scope: {
-      debt: '=model'
+      student: '=model'
     },
     templateUrl: 'pages/partials/opcionesPago.html',
     link: function(scope, element, attrs){
-      scope.changeToLaterPayment = createPaymentChange(3, scope.debt, element, "payment", "date");
-      scope.changeToPartialPayment = createPaymentChange(2, scope.debt, element, "payment", "number");
+      scope.changeToLaterPayment = createPaymentChange(3, scope.student, element, "payment", "date");
+      scope.changeToPartialPayment = createPaymentChange(2, scope.student, element, "payment", "number");
+      scope.isInputEnabled = isInputEnabled(scope.student);
+      scope.registerPayment = registerPayment(scope.student);
     }
   };
 });
