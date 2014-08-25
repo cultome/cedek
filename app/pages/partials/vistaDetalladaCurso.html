@@ -1,11 +1,14 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
+<div class="panel panel-default" id="detailCourseViewPanel">
+  <div class="panel-heading"
+      data-toggle="collapse"
+      data-parent="detailCourseViewPanel"
+      href="#detailCourseViewInfo">
     <h3 class="panel-title">
       {{course.name}}
       <a href="#curso/editar/{{course.id}}"><span class="glyphicon glyphicon-pencil pull-right"></span></a>
     </h3>
   </div>
-  <div class="panel-body">
+  <div class="panel-body panel-collapse collapse" id="detailCourseViewInfo">
     <div>
       <label>Horario</label>
       <span class="pull-right">{{course.schedule}}</span>
