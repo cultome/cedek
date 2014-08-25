@@ -58,7 +58,7 @@
             <div class="col-md-3">
               <select
                 class="form-control"
-                ng-model="student.phones[0].type"
+                ng-model="student.phones[0].phone_type_id"
                 ng-options="type.id as type.name for type in phoneTypes">
               </select>
             </div>
@@ -71,11 +71,11 @@
           </div>
 
           <div class="row" ng-show="student.phones.length > 1">
-            <div class="col-md-offset-3 col-md-3">
+            <div class="col-md-offset-3 col-md-4">
               <ul>
                 <li ng-repeat="phone in student.phones" ng-show="$index > 0">
                   {{phone.number}}
-                  <span class="label label-default pull-right">{{getPhoneTypeName(phone.type)}}</span>
+                  <span class="label label-default pull-right">{{getPhoneTypeName(phone.phone_type_id)}}</span>
                 </li>
               </ul>
             </div>
@@ -262,15 +262,15 @@
                   <div class="col-md-6">
                     <div class="row" style="display: none;" id="latePaymentOption{{debt.id}}">
                       <div class="col-md-12">
-                        <div payment-options model="debt" course="course.id"></div>
+                        <div payment-options model="debt" amount="debt.amount" course="course.id"></div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="row" ng-show="debt.debtPayDate">
+                <div class="row" ng-show="debt.commitment">
                   <div class="col-md-11">
-                    <strong>{{debt.debtPayDate}}</strong>
+                    <strong>{{debt.commitmentLabel}}</strong>
                   </div>
                 </div>
               </li>

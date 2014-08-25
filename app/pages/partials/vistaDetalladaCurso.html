@@ -62,16 +62,16 @@
           </div>
         </div>
 
-        <div class="row" ng-show="student.debtPayDate">
+        <div class="row" ng-show="student.commitment">
           <div class="col-md-11">
-            <strong>{{student.debtPayDate}}</strong>
+            <strong>{{student.commitmentLabel}}</strong>
           </div>
         </div>
 
         <div id="latePaymentOption{{student.id}}" style="display: none;">
           <div class="row payment-options">
             <div class="col-ms-12">
-              <div payment-options-compact model="student" course="course.id"></div>
+              <div payment-options-compact model="student" amount="student.amount" course="course.id"></div>
             </div>
           </div>
         </div>

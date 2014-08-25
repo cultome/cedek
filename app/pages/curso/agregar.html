@@ -201,11 +201,11 @@
             <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
               <div class="row">
                 <div class="col-md-4">
-                  <a href="#persona/editar/{{student.id}}">{{student.name}}</a>
+                  <a href="#persona/editar/{{student.id}}">{{student.student_name}}</a>
                 </div>
                 <div class="col-md-2 remove-padding">
                     <button class="btn btn-default btn-sm">
-                      <strong>{{student.debt | currency}}</strong>
+                      <strong>{{student.amount | currency}}</strong>
                     </button>
                     <button class="btn btn-default btn-sm" ng-click="toggleLatePaymentOptions(student.id)">
                       <img src="img/dollars33.svg" width="20">
@@ -214,14 +214,14 @@
 
                 <div class="col-md-6">
                   <div id="latePaymentOption{{student.id}}" style="display: none;">
-                    <div payment-options model="student" course="course.id"></div>
+                    <div payment-options model="student" amount="student.debt" course="course.id"></div>
                   </div>
                 </div>
               </div>
 
-              <div class="row" ng-show="student.debtPayDate">
+              <div class="row" ng-show="student.commitment">
                 <div class="col-md-4">
-                  <strong>{{student.debtPayDate}}</strong>
+                  <strong>{{student.commitmentLabel}}</strong>
                 </div>
               </div>
 
