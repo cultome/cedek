@@ -17,6 +17,7 @@
     type="number"
     id="payment{{debt.id}}"
     class="form-control"
+		ng-disabled="debt.paymentType != 2 && debt.paymentType != 3"
     ng-model="debt.payment">
   <span class="input-group-btn">
     <button class="btn btn-default" type="button">

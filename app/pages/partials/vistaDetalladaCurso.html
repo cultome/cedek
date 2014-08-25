@@ -16,32 +16,33 @@
     </div>
     <div>
       <label>Inicio</label>
-      <span class="pull-right">{{course.begin}}</span>
+      <span class="pull-right">{{course.beginLabel}}</span>
     </div>
     <div>
       <label>Termino</label>
-      <span class="pull-right">{{course.end}}</span>
+      <span class="pull-right">{{course.endLabel}}</span>
     </div>
   </div>
 
 
   <!-- becados -->
-  <div class="panel-heading">
+  <div class="panel-heading" ng-show="studentsWithScholarship.length > 0">
     <h3 class="panel-title">
       Becas
     </h3>
   </div>
-  <div class="panel-body">
+  <div class="panel-body" ng-show="studentsWithScholarship.length > 0">
+
     <div scholarships model="studentsWithScholarship"></div>
   </div>
 
   <!-- pagos pendientes -->
-  <div class="panel-heading">
+  <div class="panel-heading" ng-show="studentsWithPendingPayments.length > 0">
     <h3 class="panel-title">
       Pagos Pendientes
     </h3>
   </div>
-  <div class="panel-body">
+  <div class="panel-body" ng-show="studentsWithPendingPayments.length > 0">
     <ul class="list-group">
       <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
         <div class="row">

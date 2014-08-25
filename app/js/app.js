@@ -46,6 +46,17 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
       section.css("display", "none");
     }
   };
+
+  $scope.getDateLabel = function(dateStr){
+    var date = dateStr.split("-");
+    var year = parseInt(date[0]);
+    var month = parseInt(date[1]);
+    var day = parseInt(date[2]);
+
+    var monthName = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"][month];
+
+    return day + " de " + monthName + "  " + year;
+  };
 }]);
 
 
@@ -185,6 +196,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
           $scope.panels.attendance.show = true;
           fillPanelWithCourseInfo(courseId, "attendance");
           $scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
+					fillDateLabels($scope.panels.attendance.sessions);
         }
       };
 
@@ -218,6 +230,37 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.initCourseList = function(){
         $scope.courses = CourseService.getCourses();
       };
+
+      function fillDateLabels(sessions){
+        sessions.forEach(function(session){
+          session.label = $scope.getDateLabel(session.session_date);
+        });
+      }
+
+      $scope.$watch("$scope.panels.attendance.sessions", function(newValue, oldValue){
+        if(newValue){
+          fillDateLabels($scope.panels.attendance.sessions);
+        }
+      });
+
+      $scope.$watch("selectedStudent.$resolved", function(newValue, oldValue){
+        if(newValue){
+          fillDateLabels($scope.selectedStudent.unattendance);
+        }
+      });
+
+      $scope.$watch("sessions.$resolved", function(newValue, oldValue){
+        if(newValue){
+          fillDateLabels($scope.sessions);
+        }
+      });
+
+      $scope.$watch("course.$resolved", function(newValue, oldValue){
+        if(newValue){
+          $scope.course.beginLabel = $scope.getDateLabel($scope.course.begin);
+          $scope.course.endLabel = $scope.getDateLabel($scope.course.end);
+        }
+      });
 
       if($routeParams.courseId){
         var courseId = parseInt($routeParams.courseId);
