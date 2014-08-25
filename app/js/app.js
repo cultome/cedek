@@ -419,7 +419,7 @@ function createPaymentChange(paymentType, data, studentId, element, styleId, typ
 function registerPayment(data, studentId, courseId, amount, charge, DebtService){
   return function(){
     if(data.paymentType === 2){ // pago parcial
-      DebtService.makePayment(studentId, courseId, data.payment);
+      DebtService.makePayment(studentId, courseId, data.payment, amount);
     } else if(data.paymentType === 3){ // pago posterior
       DebtService.payLater(studentId, courseId, amount, charge, data.payment);
     }
@@ -518,10 +518,11 @@ app.factory('DebtService', ['$resource', function($resource){
   var DebtResource = $resource('http://localhost:4567/debts/:action', {action: '@action'});
 
   return {
-    makePayment: function(studentId, courseId, amount){
-      console.log("makePayment:::studentId: " + studentId + ", courseId: " + courseId + ", amount: " + amount);
+    makePayment: function(studentId, courseId, payment, amount){
+      console.log("makePayment:::studentId: " + studentId + ", courseId: " + courseId + ", payment: " + payment + ", amount: " + amount);
       DebtResource.save({studentId: studentId, courseId: courseId, amount: amount, action: "pay"});
     },
+
     payLater: function(studentId, courseId, amount, charge, date){
       console.log("payLater:::studentId: " + studentId + ", courseId: " + courseId + ", amount: " + amount + ", charge: " + charge + ", date: " + date);
       var chrgBool = charge === "true";
