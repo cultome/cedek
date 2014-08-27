@@ -47,6 +47,11 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
     }
   };
 
+  $scope.today = function(){
+    var d = new Date();
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+  };
+
   $scope.getDateLabel = function(dateStr){
     if(dateStr == null){
       return "";
@@ -185,6 +190,16 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.panels[panelName].courseName = course.name;
         $scope.panels[panelName].courseId = course.id;
       }
+
+      $scope.thereAreSessionToday = function(){
+        return $scope.course.day === new Date().getDay();
+
+      };
+
+      $scope.checkAttendance = function(courseId, studentId){
+        console.log("s: " + studentId + " => c: " + courseId);
+        CourseService.checkAttendance(courseId, studentId, $scope.today());
+      };
 
       $scope.isCreatingCourse = function(){
         return $scope.studentsWithScholarship == null;
@@ -584,6 +599,11 @@ app.factory('CourseService', ['$resource', function($resource){
   var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
+    checkAttendance: function(courseId, studentId, sessionDate){
+      console.log("checkAttendance(" + courseId + ", " + studentId + ", " + sessionDate + ")");
+      return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate});
+    },
+
     createCourse: function(course){
       console.log(course);
       return CourseResource.save(course);

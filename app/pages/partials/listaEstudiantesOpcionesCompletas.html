@@ -6,18 +6,24 @@
       </div>
       <div class="col-md-5">
         <div class="pull-right">
-          <button class="btn btn-default btn-xs">
+
+          <button
+            class="btn btn-default btn-xs"
+            ng-show="thereAreSessionToday()"
+            ng-click="checkAttendance(course.id, student.id)">
             <img src="img/student52.svg" width="20">
           </button>
-          <button class="btn btn-default btn-xs">
+
+          <button
+            ng-show="thereAreSessionToday()"
+            class="btn btn-default btn-xs">
             <strong>{{student.price | currency}}</strong>
           </button>
+
           <button class="btn btn-default btn-xs" ng-click="togglePaymentOptions(student.id)">
             <img src="img/dollars33.svg" width="20">
           </button>
-          <button class="btn btn-default btn-xs">
-            <img src="img/forms.svg" width="20">
-          </button>
+
         </div>
       </div>
     </div>
