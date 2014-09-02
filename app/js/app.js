@@ -28,6 +28,12 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
   "use strict";
 
   $scope.showFilter = true;
+  $scope.alerts = {
+    "confirmDebtClose": {
+      amount: 0,
+      name: "_none_"
+    }
+  };
 
   $scope.$on("$routeChangeSuccess", function(){
     var path = $route.current.originalPath;
@@ -64,6 +70,17 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
     var monthName = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"][month];
 
     return day + " de " + monthName + "  " + year;
+  };
+
+  $scope.closeDebt = function(debtId){
+    console.log("DebtId: " + debtId);
+  };
+
+  $scope.confirmDebtClose = function(debt){
+    var data = $scope.alerts.confirmDebtClose;
+    data.amount = debt.amount;
+    data.name = debt.student_name;
+    data.id = debt.id;
   };
 
 }]);
