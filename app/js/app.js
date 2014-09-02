@@ -139,6 +139,10 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.courses = CourseService.getOpenCourses();
       };
 
+      //$scope.$on("paymentsUpdated", function(evt, courseId, studentId){
+        //$scope.student = PeopleService.getCourseStudent(courseId, studentId);
+      //});
+
       $scope.$watch("student.$resolved", function(newValue, oldValue){
         if(newValue){
           $scope.student.debts.forEach(function(debt){
@@ -242,12 +246,17 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         }
       };
 
+      $scope.hidePaymentOptions = function(studentId){
+        var section = $("#paymentOption" + studentId);
+        section.css("display", "none");
+      };
+
       $scope.togglePaymentOptions = function(studentId){
         var section = $("#paymentOption" + studentId);
         if(section.css("display") === "none"){
           section.css("display", "");
         } else {
-          section.css("display", "none");
+          $scope.hidePaymentOptions(studentId);
         }
       };
 
@@ -263,14 +272,14 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.courses = CourseService.getCourses();
       };
 
-      $scope.confirmDebtClose = function(debt, courseId){
+      $scope.confirmDebtClose = function(debt){
         var data = $scope.alerts.confirmDebtClose;
         data.amount = debt.amount;
         data.name = debt.student_name;
         data.confirm = function(){
           DebtService.payNow(debt.id,
               function(){
-                $scope.getStudentsWithPendingPayments(courseId);
+                $scope.$emit("paymentsUpdated", debt.course_id, debt.student_id);
                 $("#confirmCloseDebt").modal('hide');
               },
               function(){
@@ -279,9 +288,10 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         };
       };
 
-      $scope.$on("refreshStudentsWithPendingPayments", function(evt, courseId, studentId){
+      $scope.$on("paymentsUpdated", function(evt, courseId, studentId){
         $scope.getStudentsWithPendingPayments(courseId);
-        evt.currentScope.togglePaymentOptions(studentId);
+        $scope.selectStudent(studentId);
+        evt.currentScope.hidePaymentOptions(studentId);
       });
 
       $scope.$watch("$scope.panels.attendance.sessions", function(newValue, oldValue){
@@ -408,7 +418,7 @@ app.directive('studentListFullOpc', function(){
   };
 });
 
-app.directive('studentView', function(){
+app.directive('studentView', ['DebtService', 'PeopleService', function(DebtService, PeopleService){
   "use strict";
 
   return {
@@ -420,9 +430,26 @@ app.directive('studentView', function(){
       showAttendance: '@showAttendance',
       id: '='
     },
-    templateUrl: 'pages/partials/vistaEstudiante.html'
+    templateUrl: 'pages/partials/vistaEstudiante.html',
+    link: function(scope, elem, attr){
+      scope.confirmDebtClose = function(debt){
+        var data = scope.$parent.alerts.confirmDebtClose;
+        data.amount = debt.amount;
+        data.name = debt.student_name;
+        data.confirm = function(){
+          DebtService.payNow(debt.id,
+              function(){
+                scope.$emit("paymentsUpdated", debt.course_id, debt.student_id);
+                $("#confirmCloseDebt").modal('hide');
+              },
+              function(){
+                console.log("Error processing the payment.");
+              });
+        };
+      };
+    },
   };
-});
+}]);
 
 app.directive('subscribeCourse', function(){
   "use strict";
@@ -445,7 +472,7 @@ function createPaymentChange(paymentType, data, studentId, element, styleId, typ
 
 function refreshStudentsWithPendingPaymentsCB(scope, courseId, studentId){
   return function(){
-    scope.$emit("refreshStudentsWithPendingPayments", courseId, studentId);
+    scope.$emit("paymentsUpdated", courseId, studentId);
   };
 }
 

@@ -98,7 +98,12 @@
           <ul class="list-group slim">
             <li class="list-group-item" ng-repeat="debt in student.debts">
               <a href="#/curso/{{debt.course_id}}">{{debt.course_name}}</a>
-              <span class="pull-right">{{debt.amount | currency}}</span>
+              <button
+                class="btn btn-default btn-xs pull-right"
+                data-toggle="modal" data-target="#confirmCloseDebt"
+                ng-click="confirmDebtClose(debt)">
+                <strong>{{debt.amount | currency}}</strong>
+              </button>
             </li>
           </ul>
         </div>
