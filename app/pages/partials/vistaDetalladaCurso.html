@@ -56,7 +56,7 @@
               <button
                 class="btn btn-default btn-xs"
                 data-toggle="modal" data-target="#confirmCloseDebt"
-                ng-click="confirmDebtClose(student)">
+                ng-click="confirmDebtClose(student, course.id)">
                 <strong>{{student.amount | currency}}</strong>
               </button>
               <button class="btn btn-default btn-xs" ng-click="toggleLatePaymentOptions(student.id)">

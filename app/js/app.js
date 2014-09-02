@@ -71,18 +71,6 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 
     return day + " de " + monthName + "  " + year;
   };
-
-  $scope.closeDebt = function(debtId){
-    console.log("DebtId: " + debtId);
-  };
-
-  $scope.confirmDebtClose = function(debt){
-    var data = $scope.alerts.confirmDebtClose;
-    data.amount = debt.amount;
-    data.name = debt.student_name;
-    data.id = debt.id;
-  };
-
 }]);
 
 
@@ -165,8 +153,8 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     }]
 );
 
-app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService',
-    function($scope, $routeParams, PeopleService, CourseService){
+app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'DebtService',
+    function($scope, $routeParams, PeopleService, CourseService, DebtService){
       'use strict';
 
       $scope.students = null;
@@ -273,6 +261,22 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       $scope.initCourseList = function(){
         $scope.courses = CourseService.getCourses();
+      };
+
+      $scope.confirmDebtClose = function(debt, courseId){
+        var data = $scope.alerts.confirmDebtClose;
+        data.amount = debt.amount;
+        data.name = debt.student_name;
+        data.confirm = function(){
+          DebtService.payNow(debt.id,
+              function(){
+                $scope.getStudentsWithPendingPayments(courseId);
+                $("#confirmCloseDebt").modal('hide');
+              },
+              function(){
+                console.log("Error processing the payment.");
+              });
+        };
       };
 
       $scope.$on("refreshStudentsWithPendingPayments", function(evt, courseId, studentId){
@@ -544,7 +548,7 @@ app.directive('scholarships', [function(){
 app.factory('DebtService', ['$resource', function($resource){
   "use strict";
 
-  var DebtResource = $resource('http://localhost:4567/debts/:action', {action: '@action'});
+  var DebtResource = $resource('http://localhost:4567/debts/:action/:actionId', {action: '@action'});
 
   return {
     makePayment: function(studentId, courseId, payment, amount, successCb, failCb){
@@ -556,6 +560,9 @@ app.factory('DebtService', ['$resource', function($resource){
       console.log("payLater:::studentId: " + studentId + ", courseId: " + courseId + ", amount: " + amount + ", charge: " + charge + ", date: " + date);
       var chrgBool = charge === "true";
       return DebtResource.save({studentId: studentId, courseId: courseId, date: date, charge: chrgBool, amount: amount, action: "later"}, successCb, failCb);
+    },
+    payNow: function(debtId, successCb, failCb){
+      return DebtResource.delete({actionId: debtId, action: 'remove'}, successCb, failCb);
     }
   };
 }]);
