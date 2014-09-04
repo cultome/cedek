@@ -3,7 +3,12 @@
     <div class="col-md-offset-1 col-md-8">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Datos del cliente</h3>
+          <h3 class="panel-title">
+            <p>
+              Datos del cliente
+              <button ng-hide="isCreatingPerson()" class="btn btn-default btn-sm pull-right" ng-click="update(student.id)">Actualizar</button>
+            </p>
+          </h3>
         </div>
         <div class="panel-body">
           <div class="row form-group">
@@ -41,46 +46,6 @@
             </div>
           </div>
 
-          <div class="row form-group">
-            <label for="student_phone" class="col-md-3 control-label">Telefono</label>
-            <div ng-class="{'col-md-3': true, 'has-error': studentForm.student_phone.$invalid, 'has-feedback': studentForm.student_phone.$invalid}">
-              <input
-                type="text"
-                class="form-control"
-                name="student_phone"
-                ng-pattern="/^[^a-z^A-Z]+$/"
-                ng-model="student.phones[0].number">
-                <span
-                  class="glyphicon glyphicon-remove form-control-feedback"
-                  ng-show="studentForm.student_phone.$invalid">
-                </span>
-            </div>
-            <div class="col-md-3">
-              <select
-                class="form-control"
-                ng-model="student.phones[0].phone_type_id"
-                ng-options="type.id as type.name for type in phoneTypes">
-              </select>
-            </div>
-            <div class="col-md-1">
-              <button
-                class="btn btn-sm btn-default"
-                ng-click="addAnotherPhone()"
-								ng-disabled="studentForm.student_phone.$invalid || student.phones[0].number === ''"><span class="glyphicon glyphicon-plus"></span></button>
-            </div>
-          </div>
-
-          <div class="row" ng-show="student.phones.length > 1">
-            <div class="col-md-offset-3 col-md-4">
-              <ul>
-                <li ng-repeat="phone in student.phones" ng-show="$index > 0">
-                  {{phone.number}}
-                  <span class="label label-default pull-right">{{getPhoneTypeName(phone.phone_type_id)}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
           <div ng-class="{'row': true, 'form-group': true, 'has-error': studentForm.student_email.$invalid, 'has-feedback': studentForm.student_email.$invalid}">
             <label for="student_email" class="col-md-3 control-label">Correo Electronico</label>
             <div class="col-md-6">
@@ -96,63 +61,84 @@
                 </span>
             </div>
           </div>
+
+          <!-- telefonos -->
+          <div class="row" ng-show="student.phones.length > 1">
+            <label for="student_phone" class="col-md-3 control-label">Telefonos</label>
+            <div class="col-md-4">
+              <ul class="list-group slim">
+                <li class="list-group-item" ng-repeat="phone in student.phones">
+                  <span phone model="phone"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- toggle agregar telefono -->
+          <div class="row" ng-show="!addingPhone()">
+            <div class="col-md-offset-3 col-md-4">
+              <button class="btn btn-sm btn-default btn-block" ng-click="isAddingPhone = true">Agregar Telefono</button>
+            </div>
+          </div>
+
+          <div class="row form-group" ng-show="addingPhone()">
+            <div ng-class="{'col-md-offset-3': true, 'col-md-4': true, 'has-error': studentForm.student_phone.$invalid, 'has-feedback': studentForm.student_phone.$invalid}">
+              <input
+                type="text"
+                class="form-control"
+                name="student_phone"
+                ng-pattern="/^[^a-z^A-Z]+$/"
+                ng-model="phone.number">
+                <span
+                  class="glyphicon glyphicon-remove form-control-feedback"
+                  ng-show="studentForm.student_phone.$invalid">
+                </span>
+            </div>
+            <div class="col-md-2">
+              <select
+                class="form-control"
+                ng-model="phone.phone_type_id"
+                ng-options="type.id as type.name for type in phoneTypes">
+              </select>
+            </div>
+            <div class="col-md-1">
+              <button
+                class="btn btn-sm btn-default"
+                ng-click="addAnotherPhone()"
+								ng-disabled="studentForm.student_phone.$invalid || student.phones[0].number === ''"><span class="glyphicon glyphicon-plus"></span></button>
+            </div>
+          </div>
+
+
         </div>
 
-        <div class="panel-heading" ng-show="hasAcademicHistory()">
-          <h3 class="panel-title">Historial Academico</h3>
-        </div>
-
-        <div class="panel-body" ng-show="hasAcademicHistory()">
-          <div class="row" ng-show="student.enrollments">
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Cursos Inscritos</h3>
-                </div>
-                <div class="panel-body">
-                  <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="course in student.enrollments">
-                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Cursos Reservados</h3>
-                </div>
-                <div class="panel-body">
-                  <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="course in student.reserves">
-                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Cursos Anteriores</h3>
-                </div>
-                <div class="panel-body">
-                  <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="course in student.previous">
-                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-          </div><!-- row -->
-        </div>
 
         <!-- datos extendidos -->
+        <div class="panel-heading">
+          <h3 class="panel-title">Datos Extendidos</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-offset-1 col-md-6">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="student.lead_pray_group">
+                  Dirige un grupo de oracion?
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <!-- becas -->
         <div class="panel-heading">
           <h3 class="panel-title">Becas</h3>
         </div>
@@ -213,30 +199,67 @@
               </div>
             </div>
           </div>
-
         </div>
 
 
 
-        <!-- datos extendidos -->
-        <div class="panel-heading">
-          <h3 class="panel-title">Datos Extendidos</h3>
-        </div>
-        <div class="panel-body">
 
-          <div class="row">
-            <div class="col-md-offset-1 col-md-6">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" ng-model="student.lead_pray_group">
-                  Dirige un grupo de oracion?
-                </label>
+
+
+
+        <div class="panel-heading" ng-show="hasAcademicHistory()">
+          <h3 class="panel-title">Historial Academico</h3>
+        </div>
+
+        <div class="panel-body" ng-show="hasAcademicHistory()">
+          <div class="row" ng-show="student.enrollments">
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Cursos Inscritos</h3>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="course in student.enrollments">
+                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
+
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Cursos Reservados</h3>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="course in student.reserves">
+                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Cursos Anteriores</h3>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="course in student.previous">
+                      <a href="#/curso/{{course.id}}">{{course.name}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- row -->
         </div>
-
-
 
         <!-- pagos pendientes -->
         <div class="panel-heading" ng-show="student.debts">
@@ -283,18 +306,10 @@
 
 
         <!-- panel de botones  -->
-        <div class="panel-heading">
+        <div class="panel-heading" ng-show="isCreatingPerson()">
           <div class="row">
-            <div class="col-md-offset-2 col-md-4" ng-show="isCreatingPerson()">
-              <button class="btn btn-success btn-block" ng-click="create()">Crear</button>
-            </div>
-
-            <div class="col-md-offset-2 col-md-4" ng-hide="isCreatingPerson()">
-              <button class="btn btn-success btn-block" ng-click="update(student.id)">Actualizar</button>
-            </div>
-
-            <div class="col-md-4">
-              <button class="btn btn-danger btn-block">Cancelar</button>
+            <div class="col-md-offset-4 col-md-4">
+              <button class="btn btn-default btn-block" ng-click="create()">Crear</button>
             </div>
           </div>
         </div>

@@ -88,11 +88,10 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         "has_scholarship": false,
         "scholarship_percentage": '',
         "lead_pray_group": false,
-        "phones": [{
-          "number": "",
-          "type": 1
-        }]
+        "phones": []
       };
+      $scope.phone = {"number": "", "phone_type_id": 1};
+      $scope.isAddingPhone = false;
       $scope.phoneTypes = CatalogService.phoneTypes();
 
       // deprecate
@@ -104,21 +103,13 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.update = function(personId){
+        var success = PeopleService.updateStudent(personId, $scope.student);
+        console.log("Updated? ");
+        console.log(success);
       };
 
       $scope.isCreatingPerson = function(){
         return $scope.student.scholarships == null;
-      };
-
-      $scope.getPhoneTypeName = function(id){
-        if($scope.phoneTypes.length <= 1){
-          return "";
-        }
-        var type = $scope.phoneTypes.filter(function(elem){ return elem.id === id; })[0];
-        if(type === undefined){
-          return "Desconocido";
-        }
-        return type.name;
       };
 
       $scope.hasAcademicHistory = function(){
@@ -128,10 +119,12 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.addAnotherPhone = function(){
         if(!$scope.student.phones[0].number.match(/^[\s]*$/)){
           $scope.student.phones.unshift({
-            "number": "",
-            "type": 1
+            "number": $scope.phone.number,
+            "phone_type_id": $scope.phone.phone_type_id
           });
         }
+        $scope.isAddingPhone = false;
+        $scope.phone = {"number": "", "phone_type_id": 1};
       };
 
       $scope.initStudentList = function(){
@@ -139,9 +132,21 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.courses = CourseService.getOpenCourses();
       };
 
+      $scope.addingPhone = function(){
+        return $scope.isAddingPhone;
+      };
+
       //$scope.$on("paymentsUpdated", function(evt, courseId, studentId){
         //$scope.student = PeopleService.getCourseStudent(courseId, studentId);
       //});
+
+      $scope.$on("deletePhone", function(evt, number, phone_type){
+        $scope.student.phones = $scope.student.phones.filter(function(phone){
+          return phone.number !== number && phone.phone_type_id !== phone_type;
+        });
+
+        $scope.$apply($scope.student);
+      });
 
       $scope.$watch("student.$resolved", function(newValue, oldValue){
         if(newValue){
@@ -557,6 +562,45 @@ app.directive('searchAttendance', ['CourseService', function(CourseService){
   };
 }]);
 
+app.directive('phone', ['CatalogService', function(CatalogService){
+  "use strict";
+
+  return {
+    replace: true,
+    scope: {
+      model: '='
+    },
+                  
+    template: '<span><span><strong>{{model.number}}</strong></span><span class="phone-type label label-default pull-right">{{getPhoneTypeName()}}</span></span>',
+    link: function(scope, elem, attr){
+      var phoneTypes = CatalogService.phoneTypes();
+
+      scope.getPhoneTypeName = function(){
+        if(phoneTypes <= 1){
+          return "";
+        }
+
+        var type = phoneTypes.filter(function(elem){ return elem.id === scope.model.phone_type_id; })[0];
+        if(type === undefined){
+          return "Desconocido";
+        }
+
+        return type.name;
+      };
+
+      $(elem).find(".phone-type").hover(function(){
+        $(this).text("X");
+      }).mouseout(function(){
+        var originalText = scope.getPhoneTypeName();
+        $(this).text(originalText);
+      }).click(function(){
+        scope.$emit("deletePhone", scope.model.number, scope.model.phone_type_id);
+      });
+    }
+
+  };
+}]);
+
 app.directive('scholarships', [function(){
   "use strict";
 
@@ -597,10 +641,25 @@ app.factory('DebtService', ['$resource', function($resource){
 app.factory('PeopleService', ['$resource', function($resource){
   "use strict";
 
-  var PersonResource = $resource('http://localhost:4567/people/:personId', {personId: '@id'});
+  var PersonResource = $resource('http://localhost:4567/people/:personId', {personId: '@id'},
+    {'update': { method: 'PUT' }}
+  );
   var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
+    updateStudent: function(personId, studentData){
+      var student = angular.copy(studentData);
+      // removemos propiedades que no sirven
+      delete student.id;
+      delete student.debts;
+      delete student.previous;
+      delete student.reserves;
+      delete student.enrollments;
+      delete student.scholarships;
+      console.log(studentData);
+      return PersonResource.update({personId: personId}, student);
+    },
+
     createStudent: function(student){
       console.log(student);
       return PersonResource.save(student);
@@ -638,8 +697,12 @@ app.factory('CatalogService', ['$resource', function($resource){
   var CatalogResource = $resource('http://localhost:4567/catalogs/:catalogId', {catalogId: '@id'});
 
   return {
+    cache: null,
     phoneTypes: function(){
-      return CatalogResource.query({catalogId: 'phone'});
+      if(this.cache === null){
+        this.cache = CatalogResource.query({catalogId: 'phone'});
+      }
+      return this.cache;
     }
   };
 }]);

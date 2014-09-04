@@ -21,3 +21,12 @@
 .list-group.slim .list-group-item {
   padding: 5px 15px;
 }
+
+.indent {
+  padding: 0px 10px;
+}
+
+.phone-type:hover {
+  background-color: RED;
+  cursor: pointer;
+}
