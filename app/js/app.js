@@ -205,6 +205,9 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         "newScholarship": {
           "studentId": "",
           "amount": 0
+        },
+        "subscribe": {
+          "studentId": ""
         }
       };
 
@@ -219,6 +222,13 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.panels[panelName].courseName = course.name;
         $scope.panels[panelName].courseId = course.id;
       }
+
+      $scope.subscribe = function(courseId, studentId){
+        CourseService.subscribeStudent(courseId, studentId);
+        PeopleService.getStudentsFromCourse(courseId, function(newStudents){
+          $scope.course.students = newStudents;
+        });
+      };
 
       $scope.thereAreSessionToday = function(){
         return $scope.course.day === new Date().getDay();
@@ -704,8 +714,8 @@ app.factory('PeopleService', ['$resource', function($resource){
       return PersonResource.query();
     },
 
-    getStudentsFromCourse: function(courseId){
-      return CourseResource.query({courseId: courseId, action: "students"});
+    getStudentsFromCourse: function(courseId, successCb, failCb){
+      return CourseResource.query({courseId: courseId, action: "students"}, successCb, failCb);
     },
 
     getCourseStudent: function(courseId, personId){

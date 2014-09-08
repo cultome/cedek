@@ -110,7 +110,7 @@
                 No hay estudiantes inscritos a este curso.
               </div>
 
-              <div ng-show="course.students" student-list model="course.students"></div>
+              <div student-list model="course.students" ng-show="course.students"></div>
               <!-- /condicionado a uno u otro -->
             </div>
 
@@ -118,7 +118,11 @@
               <h4>Inscribir estudiante</h4>
               <div class="input-group">
                 <span class="input-group-btn">
-                  <select type="text" id="students" class="form-control">
+                  <select
+                    type="text"
+                    id="students"
+                    ng-model="panels.subscribe.studentId"
+                    class="form-control">
                     <option value="">Seleccione estudiante</option>
                     <option value="1">Noel Soria</option>
                     <option value="2">Carlos Soria</option>
@@ -126,7 +130,7 @@
                     <option value="4">Paloma Alvarado</option>
                     <option value="5">Alfredo Alvarado</option>
                   </select>
-                  <button class="btn btn-default">Inscribir</button>
+                  <button class="btn btn-default" ng-click="subscribe(course.id, panels.subscribe.studentId)">Inscribir</button>
                 </span>
               </div>
             </div>
