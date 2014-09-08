@@ -136,9 +136,14 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         return $scope.isAddingPhone;
       };
 
-      //$scope.$on("paymentsUpdated", function(evt, courseId, studentId){
-        //$scope.student = PeopleService.getCourseStudent(courseId, studentId);
-      //});
+      $scope.$on("paymentsUpdated", function(evt, courseId, studentId){
+        console.log("PeopleCntrl: paymentsUpdated");
+        $scope.student = PeopleService.getCourseStudent(courseId, studentId);
+        if($scope.students != null){
+          var idx = $scope.students.indexOf($scope.students.filter(function(e,idx){return e.id === studentId})[0]);
+          $scope.students[idx] = $scope.student;
+        }
+      });
 
       $scope.$on("deletePhone", function(evt, number, phone_type){
         $scope.student.phones = $scope.student.phones.filter(function(phone){
@@ -150,9 +155,11 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       $scope.$watch("student.$resolved", function(newValue, oldValue){
         if(newValue){
-          $scope.student.debts.forEach(function(debt){
-            debt.commitmentLabel = $scope.getDateLabel(debt.commitment);
-          });
+          if($scope.student.debts){
+            $scope.student.debts.forEach(function(debt){
+              debt.commitmentLabel = $scope.getDateLabel(debt.commitment);
+            });
+          }
         }
       });
 
