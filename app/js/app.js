@@ -262,7 +262,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
           $scope.panels.attendance.show = true;
           fillPanelWithCourseInfo(courseId, "attendance");
           $scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
-					fillDateLabels($scope.panels.attendance.sessions);
         }
       };
 
@@ -314,7 +313,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         evt.currentScope.hidePaymentOptions(studentId);
       });
 
-      $scope.$watch("$scope.panels.attendance.sessions", function(newValue, oldValue){
+      $scope.$watch("panels.attendance.sessions.$resolved", function(newValue, oldValue){
         if(newValue){
           fillDateLabels($scope.panels.attendance.sessions);
         }
