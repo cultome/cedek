@@ -225,6 +225,16 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.panels[panelName].courseId = course.id;
       }
 
+      $scope.giveScholarship = function(){
+        var info = $scope.panels.newScholarship;
+        console.log($scope.course.id + " " + info.studentId + " " + info.amount);
+        CourseService.giveScholarship($scope.course.id, info.studentId, info.amount, function(){
+          PeopleService.getCourseScholarships($scope.course.id, function(students){
+            $scope.studentsWithScholarship = students;
+          });
+        });
+      };
+
       $scope.subscribe = function(courseId, studentId){
         CourseService.subscribeStudent(courseId, studentId);
         PeopleService.getStudentsFromCourse(courseId, function(newStudents){
@@ -738,8 +748,8 @@ app.factory('PeopleService', ['$resource', function($resource){
       return CourseResource.query({courseId: courseId, action: "debts"});
     },
 
-    getCourseScholarships: function(courseId){
-      return CourseResource.query({courseId: courseId, action: "scholarships"});
+    getCourseScholarships: function(courseId, successCb, failCb){
+      return CourseResource.query({courseId: courseId, action: "scholarships"}, successCb, failCb);
     }
   };
 }]);
@@ -766,18 +776,19 @@ app.factory('CourseService', ['$resource', function($resource){
   var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
+    giveScholarship: function(courseId, studentId, amount, successCb, failCb){
+      return CourseResource.save({courseId: courseId, action: "scholarship", actionId: studentId, amount: amount}, successCb, failCb);
+    },
+
     subscribeStudent: function(courseId, studentId){
-      console.log("subscribeStudent: courseId: " + courseId + ", studentId: " + studentId);
       return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId});
     },
 
     checkAttendance: function(courseId, studentId, sessionDate){
-      console.log("checkAttendance(" + courseId + ", " + studentId + ", " + sessionDate + ")");
       return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate});
     },
 
     createCourse: function(course){
-      console.log(course);
       return CourseResource.save(course);
     },
 

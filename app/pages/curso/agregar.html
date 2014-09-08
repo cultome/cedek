@@ -3,7 +3,12 @@
     <div class="col-md-offset-1 col-md-8">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Datos del curso</h3>
+          <h3 class="panel-title">
+            <p>
+              Datos del curso
+              <button ng-hide="isCreatingCourse()" class="btn btn-default btn-sm pull-right" ng-click="update(student.id)">Actualizar</button>
+            </p>
+          </h3>
         </div>
         <div class="panel-body">
           <div class="row">
@@ -165,11 +170,6 @@
                     ng-options="s.id as s.name for s in panels.newScholarship.studentList"
                     ng-model="panels.newScholarship.studentId">
                     <option value="">Seleccione estudiante</option>
-                    <option value="1">Noel Soria</option>
-                    <option value="2">Carlos Soria</option>
-                    <option value="3">Susana Alvarado</option>
-                    <option value="4">Paloma Alvarado</option>
-                    <option value="5">Alfredo Alvarado</option>
                   </select>
                 </div>
                 <div class="col-md-3 remove-left-padding">
@@ -184,7 +184,7 @@
                   </div>
                 </div>
                 <div class="col-md-1 remove-left-padding">
-                <button class="btn btn-default btn-sm">
+                <button class="btn btn-default btn-sm" ng-click="giveScholarship()">
                   <span class="glyphicon glyphicon-plus"></span>
                 </button>
                 </div>
@@ -249,19 +249,12 @@
 
 
         <!-- panel de botones  -->
-        <div class="panel-heading">
+        <div class="panel-heading" ng-show="isCreatingCourse()">
           <div class="row">
-            <div class="col-md-offset-2 col-md-4" ng-show="isCreatingCourse()">
-              <button class="btn btn-success btn-block" ng-click="create()">Crear</button>
+            <div class="col-md-offset-4 col-md-4">
+              <button class="btn btn-default btn-block" ng-click="create()">Crear</button>
             </div>
 
-            <div class="col-md-offset-2 col-md-4" ng-hide="isCreatingCourse()">
-              <button class="btn btn-success btn-block" ng-click="update(course.id)">Actualizar</button>
-            </div>
-
-            <div class="col-md-4">
-              <button class="btn btn-danger btn-block">Cancelar</button>
-            </div>
           </div>
         </div>
       </div>
