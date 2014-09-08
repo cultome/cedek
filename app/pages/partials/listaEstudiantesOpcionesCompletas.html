@@ -8,16 +8,15 @@
         <div class="pull-right">
 
           <button
+            class="btn btn-default btn-xs">
+            <strong>{{student.price | currency}}</strong>
+          </button>
+
+          <button
             class="btn btn-default btn-xs"
             ng-show="thereAreSessionToday()"
             ng-click="checkAttendance(course.id, student.id)">
             <img src="img/student52.svg" width="20">
-          </button>
-
-          <button
-            ng-show="thereAreSessionToday()"
-            class="btn btn-default btn-xs">
-            <strong>{{student.price | currency}}</strong>
           </button>
 
           <button class="btn btn-default btn-xs" ng-click="togglePaymentOptions(student.id)">

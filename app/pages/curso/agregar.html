@@ -208,7 +208,10 @@
                   <a href="#persona/editar/{{student.id}}">{{student.student_name}}</a>
                 </div>
                 <div class="col-md-2 remove-padding">
-                    <button class="btn btn-default btn-sm">
+                    <button
+                      data-toggle="modal" data-target="#confirmCloseDebt"
+                      ng-click="confirmDebtClose(student)"
+                      class="btn btn-default btn-sm">
                       <strong>{{student.amount | currency}}</strong>
                     </button>
                     <button class="btn btn-default btn-sm" ng-click="toggleLatePaymentOptions(student.id)">

@@ -227,7 +227,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       $scope.giveScholarship = function(){
         var info = $scope.panels.newScholarship;
-        console.log($scope.course.id + " " + info.studentId + " " + info.amount);
         CourseService.giveScholarship($scope.course.id, info.studentId, info.amount, function(){
           PeopleService.getCourseScholarships($scope.course.id, function(students){
             $scope.studentsWithScholarship = students;
@@ -310,7 +309,13 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.initCourseList = function(){
-        $scope.courses = CourseService.getCourses();
+        CourseService.getCourses(function(courses){
+          $scope.courses = courses;
+          courses.forEach(function(course){
+            course.beginLabel = $scope.getDateLabel(course.begin);
+            course.endLabel = $scope.getDateLabel(course.end);
+          });
+        });
       };
 
       $scope.initCourseView = function(){
@@ -325,13 +330,14 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         data.name = debt.student_name;
         data.confirm = function(){
           DebtService.payNow(debt.id,
-              function(){
-                $scope.$emit("paymentsUpdated", debt.course_id, debt.student_id);
-                $("#confirmCloseDebt").modal('hide');
-              },
-              function(){
-                console.log("Error processing the payment.");
-              });
+            function(){
+              $scope.$emit("paymentsUpdated", debt.course_id, debt.student_id);
+              $("#confirmCloseDebt").modal('hide');
+            },
+            function(){
+              console.log("Error processing the payment.");
+            }
+          );
         };
       };
 
@@ -618,6 +624,10 @@ app.directive('searchAttendance', ['CourseService', function(CourseService){
       scope.attendanceDate = "";
       scope.attendance = null;
 
+      scope.$watch("courseId()", function(){
+        scope.attendance = [];
+      });
+
       scope.getAttendance = function(){
         scope.attendance = CourseService.getAttendance(scope.courseId(), scope.attendanceDate);
       };
@@ -800,8 +810,8 @@ app.factory('CourseService', ['$resource', function($resource){
       return CourseResource.query({courseId: courseId, action: "sessions"});
     },
 
-    getCourses: function(){
-      return CourseResource.query();
+    getCourses: function(successCb, failCb){
+      return CourseResource.query({}, successCb, failCb);
     },
 
     getOpenCourses: function(){

@@ -11,16 +11,20 @@
   <div class="panel-body panel-collapse collapse" id="courseInfo{{course.id}}">
     <div class="form-group">
       <div class="row">
-        <div class="col-md-6"><strong>Inicio</strong></div>
-        <div class="col-md-6">{{course.begin}}</div>
+        <div class="col-md-4"><strong>Inicio</strong></div>
+        <div class="col-md-8">{{course.beginLabel}}</div>
       </div>
       <div class="row">
-        <div class="col-md-6"><strong>Termino</strong></div>
-        <div class="col-md-6">{{course.end}}</div>
+        <div class="col-md-4"><strong>Termino</strong></div>
+        <div class="col-md-8">{{course.endLabel}}</div>
       </div>
       <div class="row">
-        <div class="col-md-6"><strong>Horario</strong></div>
-        <div class="col-md-6">{{course.schedule}}</div>
+        <div class="col-md-4"><strong>Horario</strong></div>
+        <div class="col-md-8">{{course.schedule}}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"><strong>Costo</strong></div>
+        <div class="col-md-8">{{course.cost | currency}}</div>
       </div>
     </div>
     <div class="row">
