@@ -77,6 +77,7 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService',
     function($scope, $routeParams, PeopleService, CourseService, CatalogService){
       'use strict';
+
       // list students
       $scope.students = null;
       $scope.courses = null;
@@ -136,13 +137,20 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         return $scope.isAddingPhone;
       };
 
-      $scope.$on("paymentsUpdated", function(evt, courseId, studentId){
-        console.log("PeopleCntrl: paymentsUpdated");
-        $scope.student = PeopleService.getCourseStudent(courseId, studentId);
+      function updateStudent(studentId){
+        $scope.student = PeopleService.getStudent(studentId);
         if($scope.students != null){
           var idx = $scope.students.indexOf($scope.students.filter(function(e,idx){return e.id === studentId})[0]);
           $scope.students[idx] = $scope.student;
         }
+      }
+
+      $scope.$on("subscribeStudentToCourse", function(evt, courseId, studentId){
+        updateStudent(studentId);
+      });
+
+      $scope.$on("paymentsUpdated", function(evt, courseId, studentId){
+        updateStudent(studentId);
       });
 
       $scope.$on("deletePhone", function(evt, number, phone_type){
@@ -475,13 +483,15 @@ app.directive('subscribeCourse', ['CourseService', function(CourseService){
     templateUrl: 'pages/partials/inscribeReservaCurso.html',
     link: function(scope, element, attr){
       scope.subscribe = function(){
-        return CourseService.subscribeStudent(scope.courseSelected, scope.student.id);
+        var response = CourseService.subscribeStudent(scope.courseSelected, scope.student.id);
+        scope.$emit("subscribeStudentToCourse", scope.courseSelected, scope.student.id);
+        return response;
       };
 
       scope.coursesAvailableForStudent = function(){
         var filtered = scope.courses.filter(function(c){
-          var enrolled = scope.student.enrollments.filter(function(e){ return e.id === c.id; });
-          var reserved = scope.student.reserves.filter(function(r){ return r.id === c.id; });
+          var enrolled = scope.student.enrollments ? scope.student.enrollments.filter(function(e){ return e.id === c.id; }) : [];
+          var reserved = scope.student.reserves ? scope.student.reserves.filter(function(r){ return r.id === c.id; }) : [];
           return enrolled.length === 0 && reserved.length === 0;
         });
 
@@ -740,7 +750,7 @@ app.factory('CourseService', ['$resource', function($resource){
 
   return {
     subscribeStudent: function(courseId, studentId){
-      console.log("subscribeStudent: " + courseId + ", " + studentId);
+      console.log("subscribeStudent: courseId: " + courseId + ", studentId: " + studentId);
       return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId});
     },
 
