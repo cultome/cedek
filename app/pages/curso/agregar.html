@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-init="initCourseView()">
   <form class="form-horizontal" role="form" name="courseForm" novalidate>
     <div class="col-md-offset-1 col-md-8">
       <div class="panel panel-default">
@@ -122,13 +122,9 @@
                     type="text"
                     id="students"
                     ng-model="panels.subscribe.studentId"
+                    ng-options="s.id as s.name for s in panels.subscribe.studentList"
                     class="form-control">
                     <option value="">Seleccione estudiante</option>
-                    <option value="1">Noel Soria</option>
-                    <option value="2">Carlos Soria</option>
-                    <option value="3">Susana Alvarado</option>
-                    <option value="4">Paloma Alvarado</option>
-                    <option value="5">Alfredo Alvarado</option>
                   </select>
                   <button class="btn btn-default" ng-click="subscribe(course.id, panels.subscribe.studentId)">Inscribir</button>
                 </span>
@@ -163,7 +159,11 @@
               <h4>Nueva Beca</h4>
               <div class="row">
                 <div class="col-md-8 input-group-sm">
-                  <select type="text" class="form-control" ng-model="panels.newScholarship.studentId">
+                  <select
+                    type="text"
+                    class="form-control"
+                    ng-options="s.id as s.name for s in panels.newScholarship.studentList"
+                    ng-model="panels.newScholarship.studentId">
                     <option value="">Seleccione estudiante</option>
                     <option value="1">Noel Soria</option>
                     <option value="2">Carlos Soria</option>

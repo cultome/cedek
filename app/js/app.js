@@ -204,10 +204,12 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         },
         "newScholarship": {
           "studentId": "",
-          "amount": 0
+          "amount": 0,
+          "studentList": []
         },
         "subscribe": {
-          "studentId": ""
+          "studentId": "",
+          "studentList": []
         }
       };
 
@@ -299,6 +301,12 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       $scope.initCourseList = function(){
         $scope.courses = CourseService.getCourses();
+      };
+
+      $scope.initCourseView = function(){
+       var studentList = PeopleService.listStudents();
+        $scope.panels.subscribe.studentList = studentList;
+        $scope.panels.newScholarship.studentList = studentList;
       };
 
       $scope.confirmDebtClose = function(debt){
