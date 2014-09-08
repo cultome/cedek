@@ -463,14 +463,33 @@ app.directive('studentView', ['DebtService', 'PeopleService', function(DebtServi
   };
 }]);
 
-app.directive('subscribeCourse', function(){
+app.directive('subscribeCourse', ['CourseService', function(CourseService){
   "use strict";
 
   return {
     replace: true,
-    templateUrl: 'pages/partials/inscribeReservaCurso.html'
+    scope: {
+      student: "=",
+      courses: "="
+    },
+    templateUrl: 'pages/partials/inscribeReservaCurso.html',
+    link: function(scope, element, attr){
+      scope.subscribe = function(){
+        return CourseService.subscribeStudent(scope.courseSelected, scope.student.id);
+      };
+
+      scope.coursesAvailableForStudent = function(){
+        var filtered = scope.courses.filter(function(c){
+          var enrolled = scope.student.enrollments.filter(function(e){ return e.id === c.id; });
+          var reserved = scope.student.reserves.filter(function(r){ return r.id === c.id; });
+          return enrolled.length === 0 && reserved.length === 0;
+        });
+
+        return filtered;
+      };
+    }
   };
-});
+}]);
 
 function createPaymentChange(paymentType, data, studentId, element, styleId, type){
   "use strict";
@@ -720,6 +739,11 @@ app.factory('CourseService', ['$resource', function($resource){
   var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
+    subscribeStudent: function(courseId, studentId){
+      console.log("subscribeStudent: " + courseId + ", " + studentId);
+      return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId});
+    },
+
     checkAttendance: function(courseId, studentId, sessionDate){
       console.log("checkAttendance(" + courseId + ", " + studentId + ", " + sessionDate + ")");
       return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate});
