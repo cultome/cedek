@@ -118,8 +118,8 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.addAnotherPhone = function(){
-        if(!$scope.student.phones[0].number.match(/^[\s]*$/)){
-          $scope.student.phones.unshift({
+        if(!$scope.phone.number.match(/^[\s]*$/)){
+          $scope.student.phones.push({
             "number": $scope.phone.number,
             "phone_type_id": $scope.phone.phone_type_id
           });
@@ -607,7 +607,7 @@ app.directive('phone', ['CatalogService', function(CatalogService){
       model: '='
     },
                   
-    template: '<span><span><strong>{{model.number}}</strong></span><span class="phone-type label label-default pull-right">{{getPhoneTypeName()}}</span></span>',
+    template: '<span><span><strong>{{model.number}}</strong></span><span class="phone-type label label-default pull-right" style="width: 50px;">{{getPhoneTypeName()}}</span></span>',
     link: function(scope, elem, attr){
       var phoneTypes = CatalogService.phoneTypes();
 
