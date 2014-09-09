@@ -11,7 +11,9 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-          'app/js/app.js'
+          'app/js/app.js',
+          'app/js/course_ctrl.js',
+          'app/js/people_ctrl.js'
         ],
         dest: 'build/cedek.js',
       }

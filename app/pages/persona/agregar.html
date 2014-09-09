@@ -77,7 +77,7 @@
           <!-- toggle agregar telefono -->
           <div class="row" ng-show="!addingPhone()">
             <div class="col-md-offset-3 col-md-4">
-              <button class="btn btn-sm btn-default btn-block" ng-click="isAddingPhone = true">Agregar Telefono</button>
+              <button class="btn btn-sm btn-default btn-block" ng-click="panels.phone.isAddingPhone = true">Agregar Telefono</button>
             </div>
           </div>
 
@@ -88,7 +88,7 @@
                 class="form-control"
                 name="student_phone"
                 ng-pattern="/^[^a-z^A-Z]+$/"
-                ng-model="phone.number">
+                ng-model="panels.phone.number">
                 <span
                   class="glyphicon glyphicon-remove form-control-feedback"
                   ng-show="studentForm.student_phone.$invalid">
@@ -97,8 +97,8 @@
             <div class="col-md-2">
               <select
                 class="form-control"
-                ng-model="phone.phone_type_id"
-                ng-options="type.id as type.name for type in phoneTypes">
+                ng-model="panels.phone.phone_type_id"
+                ng-options="type.id as type.name for type in panels.phone.phoneTypes">
               </select>
             </div>
             <div class="col-md-1">
@@ -309,7 +309,7 @@
         <div class="panel-heading" ng-show="isCreatingPerson()">
           <div class="row">
             <div class="col-md-offset-4 col-md-4">
-              <button class="btn btn-default btn-block" ng-click="create()">Crear</button>
+              <button class="btn btn-default btn-block" ng-click="create(student)">Crear</button>
             </div>
           </div>
         </div>
