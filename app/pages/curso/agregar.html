@@ -148,15 +148,15 @@
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
                 Estudiantes con Beca
-                <span class="label label-default pull-right">{{studentsWithScholarship.length}}</span>
+                <span class="label label-default pull-right">{{panels.scholarships.students.length}}</span>
               </h4>
 
               <!-- condicionado a uno u otro -->
-              <div ng-hide="studentsWithScholarship.length > 0">
+              <div ng-hide="panels.scholarship.students.length > 0">
                 No hay estudiantes becados en este curso.
               </div>
 
-              <div scholarships model="studentsWithScholarship"></div>
+              <div scholarships model="panels.scholarship.students"></div>
               <!-- /condicionado a uno u otro -->
             </div>
 
@@ -167,19 +167,19 @@
                   <select
                     type="text"
                     class="form-control"
-                    ng-options="s.id as s.name for s in panels.newScholarship.studentList"
-                    ng-model="panels.newScholarship.studentId">
+                    ng-options="s.id as s.name for s in panels.scholarship.students"
+                    ng-model="panels.scholarship.studentId">
                     <option value="">Seleccione estudiante</option>
                   </select>
                 </div>
                 <div class="col-md-3 remove-left-padding">
-                  <div ng-class="{'input-group': true, 'input-group-sm': true, 'has-error': courseForm.newScholarship_amount.$invalid, 'has-feedback': courseForm.newScholarship_amount.$invalid}">
+                  <div ng-class="{'input-group': true, 'input-group-sm': true, 'has-error': courseForm.scholarship_amount.$invalid, 'has-feedback': courseForm.scholarship_amount.$invalid}">
                     <input
                       type="number"
                       class="form-control"
                       min="0" max="100"
-                      ng-model="panels.newScholarship.amount"
-                      name="newScholarship_amount">
+                      ng-model="panels.scholarship.amount"
+                      name="scholarship_amount">
                     <span class="input-group-addon">%</span>
                   </div>
                 </div>
@@ -195,14 +195,14 @@
         </div>
 
         <!-- pagos pendientes -->
-        <div class="panel-heading" ng-show="studentsWithPendingPayments.length > 0 && !isCreatingCourse()">
+        <div class="panel-heading" ng-show="panels.payment.students.length > 0 && !isCreatingCourse()">
           <h3 class="panel-title">
             Pagos Pendientes
           </h3>
         </div>
-        <div class="panel-body" ng-show="studentsWithPendingPayments.length > 0 && !isCreatingCourse()">
+        <div class="panel-body" ng-show="panels.payment.students.length > 0 && !isCreatingCourse()">
           <ul class="list-group">
-            <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
+            <li class="list-group-item" ng-repeat="student in panels.payment.students">
               <div class="row">
                 <div class="col-md-4">
                   <a href="#persona/editar/{{student.id}}">{{student.student_name}}</a>

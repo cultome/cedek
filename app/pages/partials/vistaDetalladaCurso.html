@@ -33,25 +33,25 @@
 
 
   <!-- becados -->
-  <div class="panel-heading" ng-show="studentsWithScholarship.length > 0">
+  <div class="panel-heading" ng-show="panels.scholarship.students.length > 0">
     <h3 class="panel-title">
       Becas
     </h3>
   </div>
-  <div class="panel-body" ng-show="studentsWithScholarship.length > 0">
+  <div class="panel-body" ng-show="panels.scholarship.students.length > 0">
 
-    <div scholarships model="studentsWithScholarship"></div>
+    <div scholarships model="panels.scholarship.students"></div>
   </div>
 
   <!-- pagos pendientes -->
-  <div class="panel-heading" ng-show="studentsWithPendingPayments.length > 0">
+  <div class="panel-heading" ng-show="panels.payment.students.length > 0">
     <h3 class="panel-title">
       Pagos Pendientes
     </h3>
   </div>
-  <div class="panel-body" ng-show="studentsWithPendingPayments.length > 0">
+  <div class="panel-body" ng-show="panels.payment.students.length > 0">
     <ul class="list-group">
-      <li class="list-group-item" ng-repeat="student in studentsWithPendingPayments">
+      <li class="list-group-item" ng-repeat="student in panels.payment.students">
         <div class="row">
           <div class="col-md-7">
             <a href="#persona/editar/{{student.id}}">{{student.student_name}}</a>

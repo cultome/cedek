@@ -97,6 +97,23 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.isAddingPhone = false;
       $scope.phoneTypes = CatalogService.phoneTypes();
 
+      function onStudentUpdate(student){
+        if($scope.students != null){
+          var idx = $scope.students.indexOf($scope.students.filter(function(e,idx){return e.id === student.id})[0]);
+          $scope.students[idx] = student;
+        }
+
+        if(student.debts){
+          student.debts.forEach(function(debt){
+            debt.commitmentLabel = $scope.getDateLabel(debt.commitment);
+          });
+        }
+      }
+
+      function getStudent(studentId){
+        $scope.student = PeopleService.getStudent(studentId, onStudentUpdate);
+      }
+
       // deprecate
       $scope.create = function(){
         console.log($scope.studentForm);
@@ -139,20 +156,12 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         return $scope.isAddingPhone;
       };
 
-      function updateStudent(studentId){
-        $scope.student = PeopleService.getStudent(studentId);
-        if($scope.students != null){
-          var idx = $scope.students.indexOf($scope.students.filter(function(e,idx){return e.id === studentId})[0]);
-          $scope.students[idx] = $scope.student;
-        }
-      }
-
       $scope.$on("subscribeStudentToCourse", function(evt, courseId, studentId){
-        updateStudent(studentId);
+        getStudent(studentId);
       });
 
       $scope.$on("paymentsUpdated", function(evt, courseId, studentId){
-        updateStudent(studentId);
+        getStudent(studentId);
       });
 
       $scope.$on("deletePhone", function(evt, number, phone_type){
@@ -163,18 +172,8 @@ app.controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.$apply($scope.student);
       });
 
-      $scope.$watch("student.$resolved", function(newValue, oldValue){
-        if(newValue){
-          if($scope.student.debts){
-            $scope.student.debts.forEach(function(debt){
-              debt.commitmentLabel = $scope.getDateLabel(debt.commitment);
-            });
-          }
-        }
-      });
-
       if($routeParams.personId){
-        $scope.student = PeopleService.getStudent(parseInt($routeParams.personId));
+        getStudent(parseInt($routeParams.personId));
       }
     }]
 );
@@ -185,12 +184,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       $scope.students = null;
       $scope.course = null;
-      //$scope.sessions = null;
-      $scope.selectedStudent = null;
-      $scope.studentsWithScholarship = null;
-      $scope.studentsWithPendingPayments = null;
       $scope.courses = null;
-      $scope.attendanceDate = 0;
       $scope.attendanceToday = [];
 
       // panel de la izquierda en detalles
@@ -200,17 +194,40 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
           "courseName": "",
           "show": false,
         },
+
         "attendance": {
           "courseId": 0,
           "courseName": "",
           "show": false,
-          "sessions": []
+          "sessions": [],
+          "getSessions": function(courseId){
+            return CourseService.getCourseSessions(courseId, function(sessions){
+              fillDateLabels(sessions);
+              $scope.panels.attendance.sessions = sessions;
+            });
+          }
         },
-        "newScholarship": {
+
+        "courseStudent": {
+          "student": null,
+          "getStudent": function(courseId, studentId){
+            PeopleService.getCourseStudent(courseId, studentId, function(student){
+              fillDateLabels(student.unattendance);
+              $scope.panels.courseStudent.student = student;
+            });
+          }
+        },
+
+        "payment": {
+          "students": null
+        },
+
+        "scholarship": {
           "studentId": "",
           "amount": 0,
-          "studentList": []
+          "students": null
         },
+
         "subscribe": {
           "studentId": "",
           "studentList": []
@@ -230,10 +247,10 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       }
 
       $scope.giveScholarship = function(){
-        var info = $scope.panels.newScholarship;
+        var info = $scope.panels.scholarship;
         CourseService.giveScholarship($scope.course.id, info.studentId, info.amount, function(){
           PeopleService.getCourseScholarships($scope.course.id, function(students){
-            $scope.studentsWithScholarship = students;
+            $scope.panels.scholarship.students = students;
           });
         });
       };
@@ -259,11 +276,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
           });
 
           if(todaySessions.length === 0){
-            CourseService.getCourseSessions(courseId, function(sessions){
-              $scope.panels.attendance.sessions = sessions;
-              fillDateLabels($scope.panels.attendance.sessions);
-            });
-            
+            $scope.panels.attendance.getSessions(courseId);
             $scope.attendanceToday = CourseService.getAttendance(courseId, $scope.today());
           }
 
@@ -278,7 +291,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.isCreatingCourse = function(){
-        return $scope.studentsWithScholarship == null;
+        return $scope.panels.scholarship.students == null;
       };
 
       $scope.create = function(){
@@ -289,7 +302,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.selectStudent = function(studentId){
-        $scope.selectedStudent = PeopleService.getCourseStudent($scope.course.id, studentId);
+        $scope.panels.courseStudent.getStudent($scope.course.id, studentId);
       };
 
       $scope.toggleViewStudents = function(courseId){
@@ -308,7 +321,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         } else {
           $scope.panels.attendance.show = true;
           fillPanelWithCourseInfo(courseId, "attendance");
-          $scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
+          $scope.panels.attendance.getSessions(courseId);
         }
       };
 
@@ -327,11 +340,16 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.getStudentsWithScholarship = function(courseId){
-        $scope.studentsWithScholarship = PeopleService.getCourseScholarships(courseId);
+        $scope.panels.scholarship.students = PeopleService.getCourseScholarships(courseId);
       };
 
       $scope.getStudentsWithPendingPayments = function(courseId){
-        $scope.studentsWithPendingPayments = PeopleService.getCourseDebts(courseId);
+        PeopleService.getCourseDebts(courseId, function(students){
+          students.forEach(function(student){
+            student.commitmentLabel = $scope.getDateLabel(student.commitment);
+          });
+          $scope.panels.payment.students = students;
+        });
       };
 
       $scope.initCourseList = function(){
@@ -347,7 +365,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.initCourseView = function(){
        var studentList = PeopleService.listStudents();
         $scope.panels.subscribe.studentList = studentList;
-        $scope.panels.newScholarship.studentList = studentList;
+        $scope.panels.scholarship.students = studentList;
       };
 
       $scope.confirmDebtClose = function(debt){
@@ -377,31 +395,11 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         evt.currentScope.hidePaymentOptions(studentId);
       });
 
-      $scope.$watch("panels.attendance.sessions.$resolved", function(newValue, oldValue){
-        if(newValue){
-          fillDateLabels($scope.panels.attendance.sessions);
-        }
-      });
-
-      $scope.$watch("selectedStudent.$resolved", function(newValue, oldValue){
-        if(newValue){
-          fillDateLabels($scope.selectedStudent.unattendance);
-        }
-      });
-
-      //$scope.$watch("sessions.$resolved", function(newValue, oldValue){
+      //$scope.$watch("selectedStudent.$resolved", function(newValue, oldValue){
         //if(newValue){
-          //fillDateLabels($scope.sessions);
+          //fillDateLabels($scope.selectedStudent.unattendance);
         //}
       //});
-
-      $scope.$watch("studentsWithPendingPayments.$resolved", function(newValue, oldValue){
-        if(newValue){
-          $scope.studentsWithPendingPayments.forEach(function(student){
-            student.commitmentLabel = $scope.getDateLabel(student.commitment);
-          });
-        }
-      });
 
       $scope.$watch("course.$resolved", function(newValue, oldValue){
         if(newValue){
@@ -419,8 +417,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         });
         $scope.getStudentsWithScholarship(courseId);
         $scope.getStudentsWithPendingPayments(courseId);
-        //$scope.sessions = CourseService.getCourseSessions(courseId);
-        $scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
+        $scope.panels.attendance.getSessions(courseId);
       } else {
         $scope.course = {
           "name": "",
@@ -781,16 +778,16 @@ app.factory('PeopleService', ['$resource', function($resource){
       return CourseResource.query({courseId: courseId, action: "students"}, successCb, failCb);
     },
 
-    getCourseStudent: function(courseId, personId){
-      return CourseResource.get({courseId: courseId, action: "students", actionId: personId});
+    getCourseStudent: function(courseId, personId, successCb, failCb){
+      return CourseResource.get({courseId: courseId, action: "students", actionId: personId}, successCb, failCb);
     },
 
-    getStudent: function(personId){
-      return PersonResource.get({personId: personId});
+    getStudent: function(personId, successCb, failCb){
+      return PersonResource.get({personId: personId}, successCb, failCb);
     },
 
-    getCourseDebts: function(courseId){
-      return CourseResource.query({courseId: courseId, action: "debts"});
+    getCourseDebts: function(courseId, successCb, failCb){
+      return CourseResource.query({courseId: courseId, action: "debts"}, successCb, failCb);
     },
 
     getCourseScholarships: function(courseId, successCb, failCb){
