@@ -13,8 +13,8 @@
           </button>
 
           <button
-            class="btn btn-default btn-xs"
-            ng-show="thereAreSessionToday()"
+            ng-class="{'btn': true, 'btn-xs': true, 'btn-success': attendToday(student.id), 'btn-default': !attendToday(student.id)}"
+            ng-show="thereAreSessionToday(course.day)"
             ng-click="checkAttendance(course.id, student.id)">
             <img src="img/student52.svg" width="20">
           </button>

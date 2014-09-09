@@ -240,13 +240,13 @@
         </div>
 
         <!-- asistencia -->
-        <div class="panel-heading" ng-show="sessions && !isCreatingCourse()">
+        <div class="panel-heading" ng-show="panels.attendance.sessions && !isCreatingCourse()">
           <h3 class="panel-title">Asistencia</h3>
         </div>
-        <div class="panel-body" ng-show="sessions && !isCreatingCourse()">
+        <div class="panel-body" ng-show="panels.attendance.sessions && !isCreatingCourse()">
           <div
             search-attendance course-id="course.id"
-            sessions="sessions">
+            sessions="panels.attendance.sessions">
           </div>
         </div>
 

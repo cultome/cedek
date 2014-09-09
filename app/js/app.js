@@ -55,7 +55,9 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 
   $scope.today = function(){
     var d = new Date();
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    var month = (d.getMonth() + 1);
+    var date = d.getDate();
+    return d.getFullYear() + "-" + ( month < 10 ? "0" + month : month) + "-" +(  date < 10 ? "0" + date : date);
   };
 
   $scope.getDateLabel = function(dateStr){
@@ -183,24 +185,26 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       $scope.students = null;
       $scope.course = null;
-      $scope.sessions = null;
+      //$scope.sessions = null;
       $scope.selectedStudent = null;
       $scope.studentsWithScholarship = null;
       $scope.studentsWithPendingPayments = null;
       $scope.courses = null;
       $scope.attendanceDate = 0;
+      $scope.attendanceToday = [];
 
       // panel de la izquierda en detalles
       $scope.panels = {
         "students": {
           "courseId": 0,
           "courseName": "",
-          "show": false
+          "show": false,
         },
         "attendance": {
           "courseId": 0,
           "courseName": "",
-          "show": false
+          "show": false,
+          "sessions": []
         },
         "newScholarship": {
           "studentId": "",
@@ -241,14 +245,36 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         });
       };
 
-      $scope.thereAreSessionToday = function(){
-        return $scope.course.day === new Date().getDay();
+      $scope.thereAreSessionToday = function(courseDay){
+        return courseDay === new Date().getDay();
 
       };
 
       $scope.checkAttendance = function(courseId, studentId){
-        console.log("s: " + studentId + " => c: " + courseId);
-        CourseService.checkAttendance(courseId, studentId, $scope.today());
+        var today = $scope.today();
+        CourseService.checkAttendance(courseId, studentId,  $scope.today(), function(){
+          // checamos si tenemos que actualizar las sessions
+          var todaySessions = $scope.panels.attendance.sessions.filter(function(s){
+            return s.session_date === today;
+          });
+
+          if(todaySessions.length === 0){
+            CourseService.getCourseSessions(courseId, function(sessions){
+              $scope.panels.attendance.sessions = sessions;
+              fillDateLabels($scope.panels.attendance.sessions);
+            });
+            
+            $scope.attendanceToday = CourseService.getAttendance(courseId, $scope.today());
+          }
+
+          $scope.attendanceToday.forEach(function(session){
+            if(session.id === studentId){
+              session.attend = true;
+            }
+            return session;
+          });
+
+        });
       };
 
       $scope.isCreatingCourse = function(){
@@ -341,6 +367,10 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         };
       };
 
+      $scope.attendToday = function(studentId){
+        return $scope.attendanceToday.filter(function(session){ return session.id === studentId && session.attend; }).length > 0;
+      };
+
       $scope.$on("paymentsUpdated", function(evt, courseId, studentId){
         $scope.getStudentsWithPendingPayments(courseId);
         $scope.selectStudent(studentId);
@@ -359,11 +389,11 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         }
       });
 
-      $scope.$watch("sessions.$resolved", function(newValue, oldValue){
-        if(newValue){
-          fillDateLabels($scope.sessions);
-        }
-      });
+      //$scope.$watch("sessions.$resolved", function(newValue, oldValue){
+        //if(newValue){
+          //fillDateLabels($scope.sessions);
+        //}
+      //});
 
       $scope.$watch("studentsWithPendingPayments.$resolved", function(newValue, oldValue){
         if(newValue){
@@ -382,10 +412,15 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       if($routeParams.courseId){
         var courseId = parseInt($routeParams.courseId);
-        $scope.course = CourseService.getCourse(courseId);
+        $scope.course = CourseService.getCourse(courseId, function(course){
+          if($scope.thereAreSessionToday(course.day)){
+            $scope.attendanceToday = CourseService.getAttendance(course.id, $scope.today());
+          }
+        });
         $scope.getStudentsWithScholarship(courseId);
         $scope.getStudentsWithPendingPayments(courseId);
-        $scope.sessions = CourseService.getCourseSessions(courseId);
+        //$scope.sessions = CourseService.getCourseSessions(courseId);
+        $scope.panels.attendance.sessions = CourseService.getCourseSessions(courseId);
       } else {
         $scope.course = {
           "name": "",
@@ -794,20 +829,20 @@ app.factory('CourseService', ['$resource', function($resource){
       return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId});
     },
 
-    checkAttendance: function(courseId, studentId, sessionDate){
-      return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate});
+    checkAttendance: function(courseId, studentId, sessionDate, successCb, failCb){
+      return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate}, successCb, failCb);
     },
 
     createCourse: function(course){
       return CourseResource.save(course);
     },
 
-    getCourse: function(courseId){
-      return CourseResource.get({courseId: courseId});
+    getCourse: function(courseId, successCb, failCb){
+      return CourseResource.get({courseId: courseId}, successCb, failCb);
     },
 
-    getCourseSessions: function(courseId){
-      return CourseResource.query({courseId: courseId, action: "sessions"});
+    getCourseSessions: function(courseId, successCb, failCb){
+      return CourseResource.query({courseId: courseId, action: "sessions"}, successCb, failCb);
     },
 
     getCourses: function(successCb, failCb){
