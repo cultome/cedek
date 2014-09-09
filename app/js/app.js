@@ -182,8 +182,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
     function($scope, $routeParams, PeopleService, CourseService, DebtService){
       'use strict';
 
-      $scope.students = null;
-      $scope.course = null;
+      //$scope.course = null;
       $scope.courses = null;
       $scope.attendanceToday = [];
 
@@ -223,9 +222,11 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         },
 
         "scholarship": {
-          "studentId": "",
+          "studentId": null,
+          "courseId": null,
           "amount": 0,
-          "students": null
+          "students": null,
+          "studentsWithNoScholarship": null
         },
 
         "subscribe": {
@@ -246,12 +247,9 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         $scope.panels[panelName].courseId = course.id;
       }
 
-      $scope.giveScholarship = function(){
-        var info = $scope.panels.scholarship;
-        CourseService.giveScholarship($scope.course.id, info.studentId, info.amount, function(){
-          PeopleService.getCourseScholarships($scope.course.id, function(students){
-            $scope.panels.scholarship.students = students;
-          });
+      $scope.giveScholarship = function(courseId){
+        CourseService.giveScholarship(courseId, $scope.panels.scholarship.studentId, $scope.panels.scholarship.amount, function(){
+          $scope.getStudentsWithScholarship(courseId);
         });
       };
 
@@ -295,7 +293,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.create = function(){
-        console.log($scope.courseForm);
         var success = CourseService.createCourse($scope.course);
         console.log("Saved? ");
         console.log(success);
@@ -339,10 +336,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         }
       };
 
-      $scope.getStudentsWithScholarship = function(courseId){
-        $scope.panels.scholarship.students = PeopleService.getCourseScholarships(courseId);
-      };
-
       $scope.getStudentsWithPendingPayments = function(courseId){
         PeopleService.getCourseDebts(courseId, function(students){
           students.forEach(function(student){
@@ -350,22 +343,6 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
           });
           $scope.panels.payment.students = students;
         });
-      };
-
-      $scope.initCourseList = function(){
-        CourseService.getCourses(function(courses){
-          $scope.courses = courses;
-          courses.forEach(function(course){
-            course.beginLabel = $scope.getDateLabel(course.begin);
-            course.endLabel = $scope.getDateLabel(course.end);
-          });
-        });
-      };
-
-      $scope.initCourseView = function(){
-       var studentList = PeopleService.listStudents();
-        $scope.panels.subscribe.studentList = studentList;
-        $scope.panels.scholarship.students = studentList;
       };
 
       $scope.confirmDebtClose = function(debt){
@@ -385,6 +362,30 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         };
       };
 
+      $scope.getStudentsWithScholarship = function(courseId){
+        PeopleService.getCourseScholarships(courseId, function(students){
+          $scope.panels.scholarship.courseId = courseId;
+          $scope.panels.scholarship.students = students;
+        });
+      };
+
+      $scope.initCourseList = function(){
+        CourseService.getCourses(function(courses){
+          $scope.courses = courses;
+          courses.forEach(function(course){
+            course.beginLabel = $scope.getDateLabel(course.begin);
+            course.endLabel = $scope.getDateLabel(course.end);
+          });
+        });
+      };
+
+      $scope.initCourseView = function(){
+        PeopleService.listStudents(function(students){
+          $scope.panels.subscribe.studentList = students;
+          $scope.panels.scholarship.studentsWithNoScholarship = students;
+        });
+      };
+
       $scope.attendToday = function(studentId){
         return $scope.attendanceToday.filter(function(session){ return session.id === studentId && session.attend; }).length > 0;
       };
@@ -395,29 +396,22 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
         evt.currentScope.hidePaymentOptions(studentId);
       });
 
-      //$scope.$watch("selectedStudent.$resolved", function(newValue, oldValue){
-        //if(newValue){
-          //fillDateLabels($scope.selectedStudent.unattendance);
-        //}
-      //});
-
-      $scope.$watch("course.$resolved", function(newValue, oldValue){
-        if(newValue){
-          $scope.course.beginLabel = $scope.getDateLabel($scope.course.begin);
-          $scope.course.endLabel = $scope.getDateLabel($scope.course.end);
-        }
-      });
-
       if($routeParams.courseId){
         var courseId = parseInt($routeParams.courseId);
-        $scope.course = CourseService.getCourse(courseId, function(course){
+        CourseService.getCourse(courseId, function(course){
           if($scope.thereAreSessionToday(course.day)){
             $scope.attendanceToday = CourseService.getAttendance(course.id, $scope.today());
           }
+          course.beginLabel = $scope.getDateLabel(course.begin);
+          course.endLabel = $scope.getDateLabel(course.end);
+
+          $scope.course = course;
         });
+
         $scope.getStudentsWithScholarship(courseId);
         $scope.getStudentsWithPendingPayments(courseId);
         $scope.panels.attendance.getSessions(courseId);
+
       } else {
         $scope.course = {
           "name": "",
@@ -770,8 +764,8 @@ app.factory('PeopleService', ['$resource', function($resource){
       return PersonResource.save(student);
     },
 
-    listStudents: function(){
-      return PersonResource.query();
+    listStudents: function(successCb, failCb){
+      return PersonResource.query({}, successCb, failCb);
     },
 
     getStudentsFromCourse: function(courseId, successCb, failCb){
