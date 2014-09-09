@@ -198,6 +198,7 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
           "courseId": 0,
           "courseName": "",
           "show": false,
+          "sessionDate": null,
           "sessions": [],
           "getSessions": function(courseId){
             return CourseService.getCourseSessions(courseId, function(sessions){
@@ -266,25 +267,8 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       };
 
       $scope.checkAttendance = function(courseId, studentId){
-        var today = $scope.today();
         CourseService.checkAttendance(courseId, studentId,  $scope.today(), function(){
-          // checamos si tenemos que actualizar las sessions
-          var todaySessions = $scope.panels.attendance.sessions.filter(function(s){
-            return s.session_date === today;
-          });
-
-          if(todaySessions.length === 0){
-            $scope.panels.attendance.getSessions(courseId);
-            $scope.attendanceToday = CourseService.getAttendance(courseId, $scope.today());
-          }
-
-          $scope.attendanceToday.forEach(function(session){
-            if(session.id === studentId){
-              session.attend = true;
-            }
-            return session;
-          });
-
+          $scope.$broadcast("attendanceUpdated", courseId, studentId, $scope.today(), $scope.panels.attendance.sessionDate);
         });
       };
 
@@ -371,11 +355,11 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
 
       $scope.initCourseList = function(){
         CourseService.getCourses(function(courses){
-          $scope.courses = courses;
           courses.forEach(function(course){
             course.beginLabel = $scope.getDateLabel(course.begin);
             course.endLabel = $scope.getDateLabel(course.end);
           });
+          $scope.courses = courses;
         });
       };
 
@@ -389,6 +373,31 @@ app.controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'Course
       $scope.attendToday = function(studentId){
         return $scope.attendanceToday.filter(function(session){ return session.id === studentId && session.attend; }).length > 0;
       };
+
+      $scope.$on("attendanceDateUpdated", function(evt, courseId, sessionDate){
+        $scope.panels.attendance.sessionDate = sessionDate;
+      });
+
+      $scope.$on("attendanceUpdated", function(evt, courseId, studentId, sessionDate){
+        // checamos si tenemos que actualizar las sessions
+        var todaySessions = $scope.panels.attendance.sessions.filter(function(s){
+          return s.session_date === sessionDate;
+        });
+
+        if(todaySessions.length === 0){
+          $scope.panels.attendance.getSessions(courseId);
+          $scope.attendanceToday = CourseService.getAttendance(courseId, sessionDate);
+        }
+
+        $scope.attendanceToday.forEach(function(session){
+          if(session.id === studentId){
+            session.attend = true;
+          }
+          return session;
+        });
+
+        $scope.selectStudent(studentId);
+      });
 
       $scope.$on("paymentsUpdated", function(evt, courseId, studentId){
         $scope.getStudentsWithPendingPayments(courseId);
@@ -655,8 +664,17 @@ app.directive('searchAttendance', ['CourseService', function(CourseService){
       });
 
       scope.getAttendance = function(){
-        scope.attendance = CourseService.getAttendance(scope.courseId(), scope.attendanceDate);
+        CourseService.getAttendance(scope.courseId(), scope.attendanceDate, function(attendance){
+          scope.attendance = attendance;
+          scope.$emit("attendanceDateUpdated", scope.courseId(), scope.attendanceDate);
+        });
       };
+
+      scope.$on("attendanceUpdated", function(evt, courseId, studentId, sessionDate, currentSessionDate){
+        if(currentSessionDate === sessionDate){
+          scope.getAttendance();
+        }
+      });
     }
   };
 }]);
@@ -844,8 +862,8 @@ app.factory('CourseService', ['$resource', function($resource){
       return CourseResource.query({action: "open"});
     },
 
-    getAttendance: function(courseId, date){
-      return CourseResource.query({courseId: courseId, action: "attendance", date: date});
+    getAttendance: function(courseId, date, successCb, failCb){
+      return CourseResource.query({courseId: courseId, action: "attendance", date: date}, successCb, failCb);
     },
   };
 }]);
