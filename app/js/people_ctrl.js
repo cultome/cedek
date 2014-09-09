@@ -1,3 +1,4 @@
+/* jshint strict: true */
 angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService',
     function($scope, $routeParams, PeopleService, CourseService, CatalogService){
       'use strict';
