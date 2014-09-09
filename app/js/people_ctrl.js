@@ -22,7 +22,7 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', 'Peo
 
       function onStudentUpdate(student){
         if($scope.students != null){
-          var idx = $scope.students.indexOf($scope.students.filter(function(e,idx){return e.id === student.id})[0]);
+          var idx = $scope.students.indexOf($scope.students.filter(function(e,idx){return e.id === student.id;})[0]);
           $scope.students[idx] = student;
         }
 

@@ -12,12 +12,14 @@ function createPaymentChange(paymentType, data, studentId, element, styleId, typ
 }
 
 function refreshStudentsWithPendingPaymentsCB(scope, courseId, studentId){
+  "use strict";
   return function(){
     scope.$emit("paymentsUpdated", courseId, studentId);
   };
 }
 
 function registerPayment(scope, DebtService){
+  "use strict";
   return function(){
     if(scope.data.paymentType === 2){ // pago parcial
       return DebtService.makePayment(scope.student, scope.course, scope.data.payment, scope.amount, refreshStudentsWithPendingPaymentsCB(scope, scope.course, scope.student));
@@ -28,11 +30,11 @@ function registerPayment(scope, DebtService){
 }
 
 function isInputEnabled(student){
+  "use strict";
   return function(){
     return student.paymentType === 2 || student.paymentType === 3;
-  }
+  };
 }
-
 
 app.directive('navigation', function(){
   "use strict";
