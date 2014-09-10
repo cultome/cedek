@@ -43,9 +43,8 @@ app.factory('PeopleService', ['$resource', function($resource){
       return PersonResource.update({personId: personId}, student);
     },
 
-    createStudent: function(student){
-      console.log(student);
-      return PersonResource.save(student);
+    createStudent: function(student, successCb, failCb){
+      return PersonResource.save(student, successCb, failCb);
     },
 
     listStudents: function(successCb, failCb){
@@ -113,19 +112,19 @@ app.factory('CourseService', ['$resource', function($resource){
     },
 
     getComingCourses: function(){
-      return CourseResource.query({action: "coming"});
+      return CourseResource.query({coming: true});
     },
 
     getTodayCourses: function(successCb, failCb){
-      return CourseResource.query({action: "today"}, successCb, failCb);
+      return CourseResource.query({today: true}, successCb, failCb);
     },
 
     getActiveCourses: function(){
-      return CourseResource.query({action: "active"});
+      return CourseResource.query({active: true});
     },
 
     getOpenCourses: function(){
-      return CourseResource.query({action: "open"});
+      return CourseResource.query({open: true});
     },
 
     getAttendance: function(courseId, date, successCb, failCb){

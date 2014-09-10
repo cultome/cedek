@@ -1,6 +1,6 @@
 /* jshint strict: true */
-angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'CatalogService',
-    function($scope, $routeParams, PeopleService, CourseService, CatalogService){
+angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', '$location', 'PeopleService', 'CourseService', 'CatalogService',
+    function($scope, $routeParams, $location, PeopleService, CourseService, CatalogService){
       'use strict';
 
       // list students
@@ -38,7 +38,9 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', 'Peo
       }
 
       $scope.create = function(student){
-        return PeopleService.createStudent(student);
+        PeopleService.createStudent(student, function(res){
+          $location.path("personas/listar");
+        });
       };
 
       $scope.update = function(personId){
@@ -62,8 +64,9 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', 'Peo
             "phone_type_id": $scope.panels.phone.phone_type_id
           });
         }
+        // reseteamos el campo
         $scope.panels.phone.isAddingPhone = false;
-        $scope.panels.phone = {"number": "", "phone_type_id": 1};
+        $scope.panels.phone.number = "";
       };
 
       $scope.initStudentList = function(){

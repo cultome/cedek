@@ -55,6 +55,28 @@
 
           <div class="row">
             <div class="form-group">
+              <label for="dia" class="col-md-2 control-label">Dia</label>
+              <div class="col-md-3">
+                <select class="form-control" id="dia" ng-model="course.day">
+                  <option value="0">Domingo</option>
+                  <option value="1">Lunes</option>
+                  <option value="2">Martes</option>
+                  <option value="3">Miercoles</option>
+                  <option value="4">Jueves</option>
+                  <option value="5">Viernes</option>
+                  <option value="6">Sabado</option>
+                </select>
+              </div>
+
+              <label for="hora" class="col-md-2 control-label">Hora</label>
+              <div class="col-md-3">
+                <input type="time" class="form-control" id="hora" ng-model="course.hour">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
               <label for="inicio" class="col-md-2 control-label">Inicio</label>
               <div class="col-md-3">
                 <input
@@ -75,27 +97,6 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="form-group">
-              <label for="dia" class="col-md-2 control-label">Dia</label>
-              <div class="col-md-3">
-                <select class="form-control" id="dia" ng-model="course.day">
-                  <option value="0">Domingo</option>
-                  <option value="1">Lunes</option>
-                  <option value="2">Martes</option>
-                  <option value="3">Miercoles</option>
-                  <option value="4">Jueves</option>
-                  <option value="5">Viernes</option>
-                  <option value="6">Sabado</option>
-                </select>
-              </div>
-
-              <label for="hora" class="col-md-2 control-label">Hora</label>
-              <div class="col-md-3">
-                <input type="time" class="form-control" id="hora" ng-model="course.hour">
-              </div>
-            </div>
-          </div>
         </div><!-- body -->
 
         <!-- inscripcion -->
