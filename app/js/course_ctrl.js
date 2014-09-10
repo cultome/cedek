@@ -232,6 +232,8 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
           if($scope.thereAreSessionToday(course.day)){
             $scope.panels.attendance.attendanceToday = CourseService.getAttendance(course.id, $scope.today());
           }
+          course.cost = parseFloat(course.cost);
+          course.hour = course.hour.substring(11, 16);
           course.beginLabel = $scope.getDateLabel(course.begin);
           course.endLabel = $scope.getDateLabel(course.end);
 
