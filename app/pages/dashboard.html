@@ -1,46 +1,64 @@
-<div class="row">
-  <div class="row">
-    <div class="col-md-offset-1 col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <h3><img src="img/teach.svg"> Cursos para hoy</h3>
-          <ul>
-            <li ng-repeat="course in todayCourses"><a href="#/curso/{{course.id}}">{{course.scheduleTime}} | {{course.name}}</a></li>
-          </ul>
+<div class="row" ng-init="initDashboard()">
+  <div class="col-md-offset-1 col-md-4">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3><img src="img/teach.svg"> Cursos para hoy</h3>
+            <ul>
+              <li ng-repeat="course in todayCourses"><a href="#/curso/{{course.id}}">{{course.scheduleTime}} | {{course.name}}</a></li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div><!-- row -->
 
-  <div class="row">
-    <div class="col-md-offset-1 col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <h3><img src="img/calendar6.svg"> Proximos cursos</h3>
-          <ul class="col-md-offset-1 col-md-9">
-            <li ng-repeat="course in comingCourses">
-              <a href="#/curso/{{course.id}}">{{course.name}}</a>
-              <span class="pull-right">{{course.beginDate}}</span>
-            </li>
-          </ul>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3><img src="img/calendar6.svg"> Cumpleaños de hoy</h3>
+            <ul class="col-md-offset-1 col-md-9">
+              <li ng-repeat="student in todayBirthdays">
+                <a href="#/persona/{{student.id}}">{{student.name}}</a>
+                <span class="pull-right">{{student.age}} años</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div><!-- rown -->
+  </div><!-- col -->
 
-  <div class="row">
-    <div class="col-md-offset-1 col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <h3><img src="img/calendar6.svg"> Cumpleaños de hoy</h3>
-          <ul class="col-md-offset-1 col-md-9">
-            <li ng-repeat="student in todayBirthdays">
-              <a href="#/persona/{{student.id}}">{{student.name}}</a>
-              <span class="pull-right">{{student.age}} años</span>
-            </li>
-          </ul>
+  <div class="col-md-offset-1 col-md-4">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3><img src="img/calendar6.svg"> Proximos cursos</h3>
+            <ul class="col-md-offset-1 col-md-9">
+              <li ng-repeat="course in comingCourses">
+                <a href="#/curso/{{course.id}}">{{course.name}}</a>
+                <span class="pull-right">{{course.beginDate}}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div><!-- rown -->
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h3><img src="img/teach.svg"> Cursos activos</h3>
+            <ul>
+              <li ng-repeat="course in activeCourses"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div><!-- row -->
+  </div><!-- col -->
+
 </div>

@@ -1,6 +1,6 @@
 /* jshint strict: true */
-angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', 'PeopleService', 'CourseService', 'DebtService',
-    function($scope, $routeParams, PeopleService, CourseService, DebtService){
+angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$location', 'PeopleService', 'CourseService', 'DebtService',
+    function($scope, $routeParams, $location, PeopleService, CourseService, DebtService){
       'use strict';
 
       $scope.course = null;
@@ -98,7 +98,9 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', 'Peo
       };
 
       $scope.create = function(course){
-        return CourseService.createCourse(course);
+        CourseService.createCourse(course, function(res){
+          $location.path("/curso/editar/" + res.id);
+        });
       };
 
       $scope.selectStudent = function(studentId){

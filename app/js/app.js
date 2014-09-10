@@ -19,6 +19,12 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/dashboard'});
 }]);
 
+
+
+
+
+
+
 var app = angular.module('CEDEK');
 
 /*
@@ -75,20 +81,35 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
   };
 }]);
 
-app.controller('DashboardCtrl', ['$scope',
-    function($scope){
-      'use strict';
 
-      $scope.todayCourses = [
-      {"id": 1, "scheduleTime": "13:00", "name": "Esperanto Basico"}
-      ];
 
-      $scope.comingCourses = [
-      {"id": 2, "name": "Curso I", "beginDate": "20 junio 2014"}
-      ];
 
-      $scope.todayBirthdays = [
-      {"id": 1, "name": "Susana Alvarado", "age": 31}
-      ];
-    }]
-    );
+
+
+
+app.controller('DashboardCtrl', ['$scope', 'PeopleService', 'CourseService', function($scope, PeopleService, CourseService){
+  'use strict';
+
+  $scope.todayCourses = null;
+  $scope.comingCourses = null;
+  $scope.todayBirthdays = null;
+
+  $scope.initDashboard = function(){
+    $scope.comingCourses = CourseService.getComingCourses();
+    $scope.activeCourses = CourseService.getActiveCourses();
+
+    CourseService.getTodayCourses(function(courses){
+      courses.forEach(function(course){
+        course.scheduleTime = course.hour.substring(11, 16);
+      });
+      $scope.todayCourses = courses;
+    });
+
+    PeopleService.birthdaysToday(function(birthdays){
+      birthdays.forEach(function(birthday){
+        birthday.age = (new Date()).getFullYear() - parseInt(birthday.birthday.split("-")[0]);
+      });
+      $scope.todayBirthdays = birthdays;
+    });
+  };
+}]);

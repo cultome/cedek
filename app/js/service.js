@@ -70,22 +70,10 @@ app.factory('PeopleService', ['$resource', function($resource){
 
     getCourseScholarships: function(courseId, successCb, failCb){
       return CourseResource.query({courseId: courseId, action: "scholarships"}, successCb, failCb);
-    }
-  };
-}]);
+    },
 
-app.factory('CatalogService', ['$resource', function($resource){
-  "use strict";
-
-  var CatalogResource = $resource('http://localhost:4567/catalogs/:catalogId', {catalogId: '@id'});
-
-  return {
-    cache: null,
-    phoneTypes: function(){
-      if(this.cache === null){
-        this.cache = CatalogResource.query({catalogId: 'phone'});
-      }
-      return this.cache;
+    birthdaysToday: function(successCb, failCb){
+      return PersonResource.query({birthday: "today"}, successCb, failCb);
     }
   };
 }]);
@@ -108,8 +96,8 @@ app.factory('CourseService', ['$resource', function($resource){
       return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate}, successCb, failCb);
     },
 
-    createCourse: function(course){
-      return CourseResource.save(course);
+    createCourse: function(course, successCb, failCb){
+      return CourseResource.save(course, successCb, failCb);
     },
 
     getCourse: function(courseId, successCb, failCb){
@@ -124,6 +112,18 @@ app.factory('CourseService', ['$resource', function($resource){
       return CourseResource.query({}, successCb, failCb);
     },
 
+    getComingCourses: function(){
+      return CourseResource.query({action: "coming"});
+    },
+
+    getTodayCourses: function(successCb, failCb){
+      return CourseResource.query({action: "today"}, successCb, failCb);
+    },
+
+    getActiveCourses: function(){
+      return CourseResource.query({action: "active"});
+    },
+
     getOpenCourses: function(){
       return CourseResource.query({action: "open"});
     },
@@ -131,6 +131,22 @@ app.factory('CourseService', ['$resource', function($resource){
     getAttendance: function(courseId, date, successCb, failCb){
       return CourseResource.query({courseId: courseId, action: "attendance", date: date}, successCb, failCb);
     },
+  };
+}]);
+
+app.factory('CatalogService', ['$resource', function($resource){
+  "use strict";
+
+  var CatalogResource = $resource('http://localhost:4567/catalogs/:catalogId', {catalogId: '@id'});
+
+  return {
+    cache: null,
+    phoneTypes: function(){
+      if(this.cache === null){
+        this.cache = CatalogResource.query({catalogId: 'phone'});
+      }
+      return this.cache;
+    }
   };
 }]);
 
