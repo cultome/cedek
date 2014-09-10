@@ -39,7 +39,6 @@ app.factory('PeopleService', ['$resource', function($resource){
       delete student.reserves;
       delete student.enrollments;
       delete student.scholarships;
-      console.log(studentData);
       return PersonResource.update({personId: personId}, student);
     },
 
@@ -80,7 +79,9 @@ app.factory('PeopleService', ['$resource', function($resource){
 app.factory('CourseService', ['$resource', function($resource){
   "use strict";
 
-  var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
+  var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'},
+      {'update': { method: 'PUT' }}
+      );
 
   return {
     giveScholarship: function(courseId, studentId, amount, successCb, failCb){
@@ -97,6 +98,17 @@ app.factory('CourseService', ['$resource', function($resource){
 
     createCourse: function(course, successCb, failCb){
       return CourseResource.save(course, successCb, failCb);
+    },
+
+    updateCourse: function(courseId, courseData){
+      var course = angular.copy(courseData);
+      delete course.scholarships;
+      delete course.students;
+      delete course.beginLabel;
+      delete course.endLabel;
+      delete course.id;
+      delete course.schedule;
+      return CourseResource.update({courseId: courseId}, course);
     },
 
     getCourse: function(courseId, successCb, failCb){
