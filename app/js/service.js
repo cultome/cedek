@@ -1,26 +1,6 @@
 /* jshint strict: true */
 var app = angular.module('CEDEK');
 
-app.factory('DebtService', ['$resource', function($resource){
-  "use strict";
-
-  var DebtResource = $resource('http://localhost:4567/debts/:action/:actionId', {action: '@action'});
-
-  return {
-    makePayment: function(studentId, courseId, payment, amount, successCb, failCb){
-      return DebtResource.save({studentId: studentId, courseId: courseId, payment: payment, amount: amount, action: "pay"}, successCb, failCb);
-    },
-
-    payLater: function(studentId, courseId, amount, charge, date, successCb, failCb){
-      var chrgBool = charge === "true";
-      return DebtResource.save({studentId: studentId, courseId: courseId, date: date, charge: chrgBool, amount: amount, action: "later"}, successCb, failCb);
-    },
-    payNow: function(debtId, successCb, failCb){
-      return DebtResource.delete({actionId: debtId, action: 'remove'}, successCb, failCb);
-    }
-  };
-}]);
-
 app.factory('PeopleService', ['$resource', function($resource){
   "use strict";
 
@@ -75,6 +55,21 @@ app.factory('PeopleService', ['$resource', function($resource){
     }
   };
 }]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.factory('CourseService', ['$resource', function($resource){
   "use strict";
@@ -142,6 +137,65 @@ app.factory('CourseService', ['$resource', function($resource){
     getAttendance: function(courseId, date, successCb, failCb){
       return CourseResource.query({courseId: courseId, action: "attendance", date: date}, successCb, failCb);
     },
+  };
+}]);
+
+
+
+
+
+
+
+
+
+
+
+
+app.factory('ScholarshipService', ['$resource', function($resource){
+  "use strict";
+
+  var ScholarshipResource = $resource('http://localhost:4567/scholarship/:scholarshipId', {scholarshipId: '@id'});
+
+  return {
+    revoke: function(scholarshipId, successCb, failCb){
+      return ScholarshipResource.delete({scholarshipId: scholarshipId}, successCb, failCb);
+    }
+  }
+}]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.factory('DebtService', ['$resource', function($resource){
+  "use strict";
+
+  var DebtResource = $resource('http://localhost:4567/debts/:action/:actionId', {action: '@action'});
+
+  return {
+    makePayment: function(studentId, courseId, payment, amount, successCb, failCb){
+      return DebtResource.save({studentId: studentId, courseId: courseId, payment: payment, amount: amount, action: "pay"}, successCb, failCb);
+    },
+
+    payLater: function(studentId, courseId, amount, charge, date, successCb, failCb){
+      var chrgBool = charge === "true";
+      return DebtResource.save({studentId: studentId, courseId: courseId, date: date, charge: chrgBool, amount: amount, action: "later"}, successCb, failCb);
+    },
+    payNow: function(debtId, successCb, failCb){
+      return DebtResource.delete({actionId: debtId, action: 'remove'}, successCb, failCb);
+    }
   };
 }]);
 

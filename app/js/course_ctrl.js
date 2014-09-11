@@ -1,6 +1,6 @@
 /* jshint strict: true */
-angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$location', 'PeopleService', 'CourseService', 'DebtService',
-    function($scope, $routeParams, $location, PeopleService, CourseService, DebtService){
+angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$location', 'PeopleService', 'CourseService', 'DebtService', 'ScholarshipService',
+    function($scope, $routeParams, $location, PeopleService, CourseService, DebtService, ScholarshipService){
       'use strict';
 
       $scope.course = null;
@@ -202,6 +202,24 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
       $scope.attendToday = function(studentId){
         return $scope.panels.attendance.attendanceToday.filter(function(session){ return session.id === studentId && session.attend; }).length > 0;
       };
+
+      $scope.$on("deleteScholarship", function(evt, scholarshipId, courseId, studentName){
+        var data = $scope.alerts.confirmDeleteScholarship;
+        data.name = studentName;
+        data.confirm = function(){
+          ScholarshipService.revoke(scholarshipId,
+            function(){
+              $scope.getStudentsWithScholarship(courseId);
+              $("#confirmDeleteScholarship").modal('hide');
+            },
+            function(){
+              console.log("Error processing the scholarship revocation.");
+              $("#confirmDeleteScholarship").modal('hide');
+            }
+          );
+        };
+        $scope.$apply($scope.alerts.confirmDeleteScholarship);
+      });
 
       $scope.$on("attendanceDateUpdated", function(evt, courseId, sessionDate){
         $scope.panels.attendance.sessionDate = sessionDate;

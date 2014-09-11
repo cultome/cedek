@@ -235,11 +235,11 @@ app.directive('phone', ['CatalogService', function(CatalogService){
       model: '='
     },
 
-    template: '<span><span><strong>{{model.number}}</strong></span><span class="phone-type label label-default pull-right" style="width: 50px;">{{getPhoneTypeName()}}</span></span>',
+    template: '<span><span><strong>{{model.number}}</strong></span><span class="deletable label label-default pull-right" style="width: 50px;">{{getPhoneTypeName}}</span></span>',
     link: function(scope, elem, attr){
       var phoneTypes = CatalogService.phoneTypes();
 
-      scope.getPhoneTypeName = function(){
+      function getTypeName(){
         if(phoneTypes <= 1){
           return "";
         }
@@ -252,11 +252,12 @@ app.directive('phone', ['CatalogService', function(CatalogService){
         return type.name;
       };
 
-      $(elem).find(".phone-type").hover(function(){
+      scope.getPhoneTypeName = getTypeName();
+
+      $(elem).find(".deletable").hover(function(){
         $(this).text("X");
       }).mouseout(function(){
-        var originalText = scope.getPhoneTypeName();
-        $(this).text(originalText);
+        $(this).text(scope.getPhoneTypeName);
       }).click(function(){
         scope.$emit("deletePhone", scope.model.number, scope.model.phone_type_id);
       });
@@ -271,7 +272,8 @@ app.directive('scholarships', [function(){
   return {
     replace: true,
     scope: {
-      scholarships: '=model'
+      scholarships: '=model',
+      editable: "@"
     },
     templateUrl: 'pages/partials/becas.html'
   };
@@ -284,6 +286,40 @@ app.directive('alerts', [function(){
   return {
     replace: true,
     templateUrl: 'pages/partials/alertas.html'
+  };
+}]);
+
+app.directive('studentScholarshipPercentage', [function(){
+  "use strict";
+
+  return {
+    replace: true,
+    scope: {
+      scholarship: "=",
+      editable: "@"
+    },
+
+    template: '<li class="list-group-item"><a href="#/persona/editar/{{scholarship.student_id}}">{{scholarship.student_name}}</a><span class="deletable label label-default pull-right" style="width: 50px;"data-toggle="modal" data-target="#confirmDeleteScholarship">{{scholarship.percentage}}%</span></li>',
+
+    link: function(scope, elem, attrs){
+      if(scope.editable === "true"){
+        // editable
+        $(elem).find(".deletable").hover(function(){
+          $(this).text("X");
+        }).mouseout(function(){
+          $(this).text(scope.scholarship.percentage + "%");
+        }).click(function(){
+          scope.$emit("deleteScholarship", scope.scholarship.id, scope.scholarship.course_id, scope.scholarship.student_name);
+        });
+
+      } else {
+        // no editable
+        var e = $(elem).find(".deletable");
+        e.attr("data-toggle", "");
+        e.attr("data-target", "");
+        e.toggleClass("deletable");
+      }
+    }
   };
 }]);
 

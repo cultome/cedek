@@ -35,6 +35,10 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 
   $scope.showFilter = true;
   $scope.alerts = {
+    "confirmDeleteScholarship": {
+      name: "_none_"
+    },
+
     "confirmDebtClose": {
       amount: 0,
       name: "_none_"

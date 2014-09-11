@@ -26,8 +26,9 @@
   padding: 0px 10px;
 }
 
-.phone-type:hover {
+.deletable:hover {
   background-color: RED;
+  color: #FFF;
   cursor: pointer;
 }
 

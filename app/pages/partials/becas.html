@@ -1,11 +1,9 @@
 <div>
   <ul class="list-group slim">
-    <li class="list-group-item" ng-repeat="student in scholarships">
-      <a href="#/persona/editar/{{student.id}}">{{student.student_name}}</a>
-      <span class="pull-right">
-        <strong>{{student.percentage}}%</strong>
-      </span>
-    </li>
+    <li student-scholarship-percentage
+      scholarship="scholarship"
+      editable="{{editable}}"
+      ng-repeat="scholarship in scholarships"></li>
   </ul>
 </div>
 

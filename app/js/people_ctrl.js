@@ -88,7 +88,7 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', '$lo
 
       $scope.$on("deletePhone", function(evt, number, phone_type){
         $scope.student.phones = $scope.student.phones.filter(function(phone){
-          return phone.number !== number && phone.phone_type_id !== phone_type;
+          return phone.number !== number || phone.phone_type_id !== phone_type;
         });
 
         $scope.$apply($scope.student);

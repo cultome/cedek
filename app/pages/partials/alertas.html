@@ -1,4 +1,18 @@
 <div>
+  <!-- revoke scholarship -->
+  <div class="modal fade" id="confirmDeleteScholarship" tabindex="-1" role="dialog" aria-labelledby="revokeScholarship" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="alert alert-danger">
+        <h4>Confirmar Beca Revocada</h4>
+        <p>Se le revocada la beca a <strong>{{alerts.confirmDeleteScholarship.name}}</strong>. Esto es correcto?</p>
+        <p>
+        <button type="button" class="btn btn-danger" ng-click="alerts.confirmDeleteScholarship.confirm()">Revocar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- Confirm payment -->
   <div class="modal fade" id="confirmCloseDebt" tabindex="-1" role="dialog" aria-labelledby="confirmCloseDebt" aria-hidden="true">
     <div class="modal-dialog">
