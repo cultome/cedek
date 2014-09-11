@@ -55,3 +55,63 @@
 .thanks-modal blockquote {
   border-right-color: #CCC;
 }
+
+.color-info:hover {
+  border-color: #39b3d7;
+}
+
+.color-info:active {
+  color: #FFF;
+  background-color: #39b3d7;
+  border-color: #46b8da;
+}
+
+.color-info {
+  border-color: #46b8da;
+}
+
+.color-warning:hover {
+  border-color: #ed9c28;
+}
+
+.color-warning:active {
+  color: #FFF;
+  background-color: #ed9c28;
+  border-color: #eea236;
+}
+
+.color-warning {
+  border-color: #eea236;
+}
+
+.color-danger:hover {
+  border-color: #d2322d;
+}
+
+.color-danger:active {
+  color: #FFF;
+  background-color: #d2322d;
+  border-color: #d43f3a;
+}
+
+.color-danger {
+  border-color: #d43f3a;
+}
+
+.color-success:hover {
+  border-color: #398439;
+}
+
+.color-success:active {
+  color: #FFF;
+  background-color:  #398439;
+  border-color: #4cae4c;
+}
+
+.color-success {
+  border-color: #4cae4c;
+}
+
+.header-button-group button {
+  margin-left: 20px;
+}

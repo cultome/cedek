@@ -6,7 +6,9 @@
           <h3 class="panel-title">
             <p>
               Datos del cliente
-              <button ng-hide="isCreatingPerson()" class="btn btn-default btn-sm pull-right" ng-click="update(student.id)">Actualizar</button>
+              <span class="header-button-group" ng-hide="isCreatingPerson()">
+                <button class="btn btn-default btn-sm pull-right color-success" ng-click="update(student.id)">Actualizar</button>
+              </span>
             </p>
           </h3>
         </div>
@@ -213,7 +215,7 @@
 
         <div class="panel-body" ng-show="hasAcademicHistory()">
           <div class="row" ng-show="student.enrollments">
-            <div class="col-md-4">
+            <div class="col-md-4" ng-show="student.enrollments">
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <h3 class="panel-title">Cursos Inscritos</h3>
@@ -228,7 +230,7 @@
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" ng-show="student.reserves">
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <h3 class="panel-title">Cursos Reservados</h3>
@@ -243,7 +245,7 @@
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" ng-show="student.previous">
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <h3 class="panel-title">Cursos Anteriores</h3>

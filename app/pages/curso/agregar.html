@@ -6,7 +6,11 @@
           <h3 class="panel-title">
             <p>
               Datos del curso
-              <button ng-hide="isCreatingCourse()" class="btn btn-default btn-sm pull-right" ng-click="update(course.id, course)">Actualizar</button>
+              <span class="header-button-group" ng-hide="isCreatingCourse()">
+                <button class="btn btn-default btn-sm pull-right color-success" ng-click="update(course.id, course)">Actualizar</button>
+
+                <button class="btn btn-default btn-sm pull-right color-info" ng-click="goToDetails(course.id)">Ir a Detalles</button>
+              </span>
             </p>
           </h3>
         </div>
@@ -132,7 +136,7 @@
                     class="form-control">
                     <option value="">Seleccione estudiante</option>
                   </select>
-                  <button class="btn btn-default" ng-click="subscribe(course.id, panels.subscribe.studentId)">Inscribir</button>
+                  <button class="btn btn-default color-success" ng-click="subscribe(course.id, panels.subscribe.studentId)">Inscribir</button>
                 </span>
               </div>
             </div>
@@ -185,7 +189,7 @@
                   </div>
                 </div>
                 <div class="col-md-1 remove-left-padding">
-                <button class="btn btn-default btn-sm" ng-click="giveScholarship(course.id)">
+                <button class="btn btn-default btn-sm color-success" ng-click="giveScholarship(course.id)">
                   <span class="glyphicon glyphicon-plus"></span>
                 </button>
                 </div>

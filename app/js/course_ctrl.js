@@ -103,6 +103,10 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         });
       };
 
+      $scope.goToDetails = function(courseId){
+        $location.path("/curso/" + courseId);
+      };
+
       $scope.update = function(courseId, course){
         return CourseService.updateCourse(courseId, course);
       };
