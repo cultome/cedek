@@ -299,7 +299,7 @@ app.directive('studentScholarshipPercentage', [function(){
       editable: "@"
     },
 
-    template: '<li class="list-group-item"><a href="#/persona/editar/{{scholarship.student_id}}">{{scholarship.student_name}}</a><span class="deletable label label-default pull-right" style="width: 50px;"data-toggle="modal" data-target="#confirmDeleteScholarship">{{scholarship.percentage}}%</span></li>',
+    template: '<li class="list-group-item"><a href="#/persona/editar/{{scholarship.student_id}}">{{scholarship.student_name}}</a><span class="deletable label label-default pull-right wire-label-success" style="width: 50px;"data-toggle="modal" data-target="#confirmDeleteScholarship">{{scholarship.percentage}}%</span></li>',
 
     link: function(scope, elem, attrs){
       if(scope.editable === "true"){
@@ -318,6 +318,8 @@ app.directive('studentScholarshipPercentage', [function(){
         e.attr("data-toggle", "");
         e.attr("data-target", "");
         e.toggleClass("deletable");
+        e.toggleClass("wire-label-success");
+        e.toggleClass("wire-label-default");
       }
     }
   };

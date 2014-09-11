@@ -27,6 +27,7 @@
 }
 
 .deletable:hover {
+  border-color: RED;
   background-color: RED;
   color: #FFF;
   cursor: pointer;
@@ -115,4 +116,22 @@
 
 .header-button-group button {
   margin-left: 20px;
+}
+
+.wire-label-default {
+  background-color:  #FFF;
+  color: #000;
+  border: 1px solid #999;
+}
+
+.wire-label-success {
+  background-color:  #FFF;
+  color: #000;
+  border: 1px solid #398439;
+}
+
+.wire-label-info {
+  background-color: #FFF;
+  color: #000;
+  border: 1px solid #3984d7;
 }
