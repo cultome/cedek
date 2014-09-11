@@ -277,3 +277,13 @@ app.directive('scholarships', [function(){
   };
 }]);
 
+
+app.directive('alerts', [function(){
+  "use strict";
+
+  return {
+    replace: true,
+    templateUrl: 'pages/partials/alertas.html'
+  };
+}]);
+

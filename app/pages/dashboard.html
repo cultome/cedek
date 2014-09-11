@@ -5,9 +5,14 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <h3><img src="img/teach.svg"> Cursos para hoy</h3>
-            <ul>
+
+            <ul ng-show="todayCourses">
               <li ng-repeat="course in todayCourses"><a href="#/curso/{{course.id}}">{{course.scheduleTime}} | {{course.name}}</a></li>
             </ul>
+
+            <div ng-hide="todayCourses">
+              <h5>No hay cursos programador para el dia de hoy</h5>
+            </div>
           </div>
         </div>
       </div>
@@ -18,12 +23,17 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <h3><img src="img/calendar6.svg"> Cumpleaños de hoy</h3>
-            <ul class="col-md-offset-1 col-md-9">
+
+            <ul class="col-md-offset-1 col-md-9" ng-show="todayBirthdays">
               <li ng-repeat="student in todayBirthdays">
                 <a href="#/persona/{{student.id}}">{{student.name}}</a>
                 <span class="pull-right">{{student.age}} años</span>
               </li>
             </ul>
+
+            <div ng-hide="todayBirthdays">
+              <h5>No hay cumpleaños hoy</h5>
+            </div>
           </div>
         </div>
       </div>
@@ -36,12 +46,17 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <h3><img src="img/calendar6.svg"> Proximos cursos</h3>
-            <ul class="col-md-offset-1 col-md-9">
+
+            <ul class="col-md-offset-1 col-md-9" ng-show="comingCourses">
               <li ng-repeat="course in comingCourses">
                 <a href="#/curso/{{course.id}}">{{course.name}}</a>
                 <span class="pull-right">{{course.beginDate}}</span>
               </li>
             </ul>
+
+            <div ng-hide="comingCourses">
+              <h5>No hay cursos programados</h5>
+            </div>
           </div>
         </div>
       </div>
@@ -52,9 +67,13 @@
         <div class="panel panel-default">
           <div class="panel-body">
             <h3><img src="img/teach.svg"> Cursos activos</h3>
-            <ul>
+            <ul ng-show="activeCourses">
               <li ng-repeat="course in activeCourses"><a href="#/curso/{{course.id}}">{{course.name}}</a></li>
             </ul>
+
+            <div ng-hide="activeCourses">
+              <h5>No hay cursos en progreso</h5>
+            </div>
           </div>
         </div>
       </div>

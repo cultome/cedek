@@ -30,3 +30,28 @@
   background-color: RED;
   cursor: pointer;
 }
+
+.footer hr {
+  margin: 5px 0px;
+}
+
+.footer p {
+  text-align: center;
+  color: #AAA;
+  font-size: 0.8em;
+  margin-bottom: 1px;
+}
+
+.thanks-modal {
+  background-color: #d9edf7 !important;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+
+.thanks-modal p {
+  font-size: 1.2em;
+}
+
+.thanks-modal blockquote {
+  border-right-color: #CCC;
+}

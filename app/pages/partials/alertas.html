@@ -1,0 +1,71 @@
+<div>
+  <!-- Confirm payment -->
+  <div class="modal fade" id="confirmCloseDebt" tabindex="-1" role="dialog" aria-labelledby="confirmCloseDebt" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="alert alert-danger">
+        <h4>Confirmar pago de adeudo</h4>
+        <p>Se cerrara el adeudo de <strong>{{ alerts.confirmDebtClose.amount | currency }}</strong> con <strong>{{ alerts.confirmDebtClose.name }}</strong>. Esto es correcto?</p>
+        <p>
+        <button type="button" class="btn btn-danger" ng-click="alerts.confirmDebtClose.confirm()">Saldar Deuda</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thanks -->
+  <div class="modal fade" id="thanks" tabindex="-1" role="dialog" aria-labelledby="thanks" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content thanks-modal">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+              Este es un pequeño esfuerzo por corresponder un poco de todo el amor y el apoyo que siempre nos han brindado.<br>Siempre estaran en nuestros corazones y pensamientos.
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+              <blockquote class="blockquote-reverse">
+                <p>Gracias... Totales!</p>
+                <footer>Gustavo Cerati</footer>
+              </blockquote>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+              Estos son los gigantes en cuyos hombros esta parado este esfuerzo:
+            </div>
+            <div class="row">
+              <div class="col-md-offset-1 col-md-5">
+                <ul>
+                  <li><a href="http://getbootstrap.com">Bootstrap</a></li>
+                  <li><a href="https://angularjs.org/">AngularJS</a></li>
+                  <li><a href="http://www.flaticon.com/">Flaticon</a></li>
+                  <li><a href="http://gruntjs.com/">Grunt</a></li>
+                </ul>
+              </div>
+
+              <div class="col-md-offset-1 col-md-5">
+                <ul>
+                  <li><a href="http://www.sinatrarb.com/">Sinatra</a></li>
+                  <li><a href="http://code.macournoyer.com/thin/">Thin</a></li>
+                  <li><a href="https://mariadb.org/">MariaDB</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-offset-10 col-md-1">
+              <button type="button" class="btn btn-info" data-dismiss="modal">
+                <span class="glyphicon glyphicon-thumbs-up"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
