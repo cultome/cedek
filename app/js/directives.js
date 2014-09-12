@@ -52,9 +52,16 @@ app.directive('studentList', function(){
     replace: true,
     scope: {
       students: '=model',
-      showAttendance: '@showAttendance'
+      showAttendance: '@showAttendance',
+      course: "=",
+      editable: "@"
     },
-    templateUrl: 'pages/partials/listaEstudiantes.html'
+    templateUrl: 'pages/partials/listaEstudiantes.html',
+    link: function(scope, elem, attr){
+      scope.removeStudentFromCourse = function(courseId, studentId, studentName){
+        scope.$emit("removeStudentFromCourse", courseId, studentId, studentName);
+      };
+    }
   };
 });
 

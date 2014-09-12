@@ -53,7 +53,13 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
 
         "subscribe": {
           "studentId": "",
-          "studentList": []
+          "studentList": [],
+          "fullStudentList": [],
+          "sync": function(currentStudents){
+            $scope.panels.subscribe.studentList = $scope.panels.subscribe.fullStudentList.filter(function(s){
+              return currentStudents.filter(function(x){ return s.id === x.id; }).length === 0;
+            });
+          }
         }
       };
 
@@ -77,9 +83,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
 
       $scope.subscribe = function(courseId, studentId){
         CourseService.subscribeStudent(courseId, studentId);
-        PeopleService.getStudentsFromCourse(courseId, function(newStudents){
-          $scope.course.students = newStudents;
-        });
+        $scope.$emit("enrollmentUpdated");
       };
 
       $scope.thereAreSessionToday = function(courseDay){
@@ -121,7 +125,8 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         } else {
           $scope.panels.students.show = true;
           fillPanelWithCourseInfo(courseId, "students");
-          $scope.panels.students.studentsList = PeopleService.getStudentsFromCourse(courseId);
+          $scope.panels.students.courseId = courseId;
+          $scope.$emit("enrollmentUpdated");
         }
       };
 
@@ -192,16 +197,34 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         });
       };
 
-      $scope.initCourseView = function(){
-        PeopleService.listStudents(function(students){
-          $scope.panels.subscribe.studentList = students;
-          $scope.panels.scholarship.studentsWithNoScholarship = students;
-        });
-      };
-
       $scope.attendToday = function(studentId){
         return $scope.panels.attendance.attendanceToday.filter(function(session){ return session.id === studentId && session.attend; }).length > 0;
       };
+
+      $scope.$on("removeStudentFromCourse", function(evt, courseId, studentId, studentName){
+        var data = $scope.alerts.confirmRemoveStudentFromCourse;
+        data.name = studentName;
+        data.confirm = function(){
+          CourseService.unrollStudent(courseId, studentId,
+              function(){
+                $scope.$emit("enrollmentUpdated");
+                $("#confirmRemoveStudentFromCourse").modal('hide');
+              },
+              function(){
+                console.log("Error processing the unrollment.");
+                $("#confirmRemoveStudentFromCourse").modal('hide');
+              }
+              );
+        };
+      });
+
+      $scope.$on("enrollmentUpdated", function(){
+        PeopleService.getStudentsFromCourse(courseId, function(newStudents){
+          $scope.course.students = newStudents;
+          $scope.panels.students.studentsList = newStudents;
+          $scope.panels.subscribe.sync(newStudents);
+        });
+      });
 
       $scope.$on("deleteScholarship", function(evt, scholarshipId, courseId, studentName){
         var data = $scope.alerts.confirmDeleteScholarship;
@@ -254,16 +277,24 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
 
       if($routeParams.courseId){
         var courseId = parseInt($routeParams.courseId);
-        CourseService.getCourse(courseId, function(course){
-          if($scope.thereAreSessionToday(course.day)){
-            $scope.panels.attendance.attendanceToday = CourseService.getAttendance(course.id, $scope.today());
-          }
-          course.cost = parseFloat(course.cost);
-          course.hour = course.hour.substring(11, 16);
-          course.beginLabel = $scope.getDateLabel(course.begin);
-          course.endLabel = $scope.getDateLabel(course.end);
 
-          $scope.course = course;
+        PeopleService.listStudents(function(students){
+          $scope.panels.subscribe.fullStudentList = students;
+          $scope.panels.scholarship.studentsWithNoScholarship = students;
+
+          CourseService.getCourse(courseId, function(course){
+            if($scope.thereAreSessionToday(course.day)){
+              $scope.panels.attendance.attendanceToday = CourseService.getAttendance(course.id, $scope.today());
+            }
+            course.cost = parseFloat(course.cost);
+            course.hour = course.hour.substring(11, 16);
+            course.beginLabel = $scope.getDateLabel(course.begin);
+            course.endLabel = $scope.getDateLabel(course.end);
+
+            $scope.course = course;
+
+            $scope.panels.subscribe.sync(course.students);
+          });
         });
 
         $scope.getStudentsWithScholarship(courseId);

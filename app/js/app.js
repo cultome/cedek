@@ -35,6 +35,10 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 
   $scope.showFilter = true;
   $scope.alerts = {
+    "confirmRemoveStudentFromCourse": {
+      name: "_none_"
+    },
+
     "confirmDeleteScholarship": {
       name: "_none_"
     },
@@ -97,6 +101,7 @@ app.controller('DashboardCtrl', ['$scope', 'PeopleService', 'CourseService', fun
   $scope.todayCourses = null;
   $scope.comingCourses = null;
   $scope.todayBirthdays = null;
+  $scope.activeCourses = null;
 
   $scope.initDashboard = function(){
     $scope.comingCourses = CourseService.getComingCourses();

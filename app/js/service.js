@@ -79,12 +79,17 @@ app.factory('CourseService', ['$resource', function($resource){
       );
 
   return {
+
+    unrollStudent: function(courseId, studentId, successCb, failCb){
+      return CourseResource.delete({courseId: courseId, action: "unroll", actionId: studentId}, successCb, failCb);
+    },
+
     giveScholarship: function(courseId, studentId, amount, successCb, failCb){
       return CourseResource.save({courseId: courseId, action: "scholarship", actionId: studentId, amount: amount}, successCb, failCb);
     },
 
-    subscribeStudent: function(courseId, studentId){
-      return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId});
+    subscribeStudent: function(courseId, studentId, successCb, failCb){
+      return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId}, successCb, failCb);
     },
 
     checkAttendance: function(courseId, studentId, sessionDate, successCb, failCb){
@@ -118,16 +123,16 @@ app.factory('CourseService', ['$resource', function($resource){
       return CourseResource.query({}, successCb, failCb);
     },
 
-    getComingCourses: function(){
-      return CourseResource.query({coming: true});
+    getComingCourses: function(successCb, failCb){
+      return CourseResource.query({coming: true}), successCb, failCb;
     },
 
     getTodayCourses: function(successCb, failCb){
       return CourseResource.query({today: true}, successCb, failCb);
     },
 
-    getActiveCourses: function(){
-      return CourseResource.query({active: true});
+    getActiveCourses: function(successCb, failCb){
+      return CourseResource.query({active: true}, successCb, failCb);
     },
 
     getOpenCourses: function(){

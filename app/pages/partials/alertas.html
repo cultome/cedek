@@ -1,4 +1,18 @@
 <div>
+  <!-- remove student from course -->
+  <div class="modal fade" id="confirmRemoveStudentFromCourse" tabindex="-1" role="dialog" aria-labelledby="revokeScholarship" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="alert alert-danger">
+        <h4>Confirmar de baja estudiante</h4>
+        <p>Vas a dar de baja a <strong>{{alerts.confirmRemoveStudentFromCourse.name}}</strong> de este curso. Esto es correcto?</p>
+        <p>
+        <button type="button" class="btn btn-danger" ng-click="alerts.confirmRemoveStudentFromCourse.confirm()">Dar de Baja</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- revoke scholarship -->
   <div class="modal fade" id="confirmDeleteScholarship" tabindex="-1" role="dialog" aria-labelledby="revokeScholarship" aria-hidden="true">
     <div class="modal-dialog">

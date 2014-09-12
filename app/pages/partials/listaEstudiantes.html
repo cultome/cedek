@@ -4,6 +4,10 @@
       <span class="glyphicon glyphicon-ok" style="color: #0C0;" ng-show="student.attend"></span>
       <span class="glyphicon glyphicon-remove" style="color: #C00;" ng-hide="student.attend"></span>
     </span>
+
     <a href="#/persona/editar/{{student.id}}">{{student.name}}</a>
+    <button class="close" data-toggle="modal" data-target="#confirmRemoveStudentFromCourse" ng-click="removeStudentFromCourse(course, student.id, student.name)" ng-show="{{editable}}">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </li>
 </ul>
