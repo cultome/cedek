@@ -135,3 +135,8 @@
   color: #000;
   border: 1px solid #3984d7;
 }
+
+.filter-alert {
+  color: #ed9c28 !important;
+  font-size: 1.3em;
+}
