@@ -1,40 +1,45 @@
-<ul class="list-group">
-  <li class="list-group-item" ng-repeat="student in course.students | filter:name">
-    <div class="row">
-      <div class="col-md-7">
-        <a ng-click="selectStudent(student.id)">{{student.name}}</a>
-      </div>
-      <div class="col-md-5">
-        <div class="pull-right">
+<div>
+  <div ng-hide="course.students.length > 0">No hay estudiantes inscritos.</div>
 
-          <button
-            class="btn btn-default btn-xs">
-            <strong>{{student.price | currency}}</strong>
-          </button>
+  <ul class="list-group" ng-show="course.students.length > 0">
+    <li class="list-group-item" ng-repeat="student in course.students | filter:name">
+      <div class="row">
+        <div class="col-md-7">
+          <a ng-click="selectStudent(student.id)">{{student.name}}</a>
+        </div>
+        <div class="col-md-5">
+          <div class="pull-right">
 
-          <button
-            ng-class="{'btn': true, 'btn-xs': true, 'btn-success': attendToday(student.id), 'btn-default': !attendToday(student.id)}"
-            ng-show="thereAreSessionToday(course.day)"
-            ng-click="checkAttendance(course.id, student.id)">
-            <img src="img/student52.svg" width="20">
-          </button>
+            <button
+               class="btn btn-default btn-xs">
+              <strong>{{student.price | currency}}</strong>
+            </button>
 
-          <button class="btn btn-default btn-xs" ng-click="togglePaymentOptions(student.id)">
-            <img src="img/dollars33.svg" width="20">
-          </button>
+            <button
+               ng-class="{'btn': true, 'btn-xs': true, 'btn-success': attendToday(student.id), 'btn-default': !attendToday(student.id)}"
+               ng-show="thereAreSessionToday(course.day)"
+               ng-click="checkAttendance(course.id, student.id)">
+              <img src="img/student52.svg" width="20">
+            </button>
 
+            <button class="btn btn-default btn-xs" ng-click="togglePaymentOptions(student.id)">
+              <img src="img/dollars33.svg" width="20">
+            </button>
+
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row payment-options" style="display: none;" id="paymentOption{{student.id}}">
-      <div class="col-md-12">
-        <div payment-options
-           course="course.id"
-           student="student.id"
-           amount="student.price"
-           charge="true"></div>
+      <div class="row payment-options" style="display: none;" id="paymentOption{{student.id}}">
+        <div class="col-md-12">
+          <div payment-options
+             course="course.id"
+             student="student.id"
+             amount="student.price"
+             charge="true"></div>
+        </div>
       </div>
-    </div>
-  </li>
-</ul>
+    </li>
+  </ul>
+
+</div>

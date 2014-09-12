@@ -9,7 +9,11 @@
         </h3>
       </div>
       <div class="panel-body">
-        <div student-list
+        <div ng-hide="panels.students.studentsList.length > 0">
+          No hay estudiantes inscritos.
+        </div>
+
+        <div student-list ng-show="panels.students.studentsList.length > 0"
           model="panels.students.studentsList"
           editable="false"
           course="panels.students.courseId"></div>

@@ -83,7 +83,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
 
       $scope.subscribe = function(courseId, studentId){
         CourseService.subscribeStudent(courseId, studentId);
-        $scope.$emit("enrollmentUpdated");
+        $scope.$emit("enrollmentUpdated", courseId);
       };
 
       $scope.thereAreSessionToday = function(courseDay){
@@ -125,8 +125,8 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         } else {
           $scope.panels.students.show = true;
           fillPanelWithCourseInfo(courseId, "students");
-          $scope.panels.students.courseId = courseId;
-          $scope.$emit("enrollmentUpdated");
+          //$scope.panels.students.courseId = courseId;
+          $scope.$emit("enrollmentUpdated", courseId);
         }
       };
 
@@ -207,7 +207,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         data.confirm = function(){
           CourseService.unrollStudent(courseId, studentId,
               function(){
-                $scope.$emit("enrollmentUpdated");
+                $scope.$emit("enrollmentUpdated", courseId);
                 $("#confirmRemoveStudentFromCourse").modal('hide');
               },
               function(){
@@ -218,7 +218,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         };
       });
 
-      $scope.$on("enrollmentUpdated", function(){
+      $scope.$on("enrollmentUpdated", function(evt, courseId){
         PeopleService.getStudentsFromCourse(courseId, function(newStudents){
           $scope.course.students = newStudents;
           $scope.panels.students.studentsList = newStudents;

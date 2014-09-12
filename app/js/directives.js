@@ -218,6 +218,11 @@ app.directive('searchAttendance', ['CourseService', function(CourseService){
       });
 
       scope.getAttendance = function(){
+        if(!scope.attendanceDate.match("^[\\d]{4}-[\\d]{1,2}-[\\d]{1,2}$")){
+          console.log("Fecha de sesion invalida!");
+          return ;
+        }
+
         CourseService.getAttendance(scope.courseId(), scope.attendanceDate, function(attendance){
           scope.attendance = attendance;
           scope.$emit("attendanceDateUpdated", scope.courseId(), scope.attendanceDate);

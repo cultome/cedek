@@ -124,7 +124,7 @@ app.factory('CourseService', ['$resource', function($resource){
     },
 
     getComingCourses: function(successCb, failCb){
-      return CourseResource.query({coming: true}), successCb, failCb;
+      return CourseResource.query({coming: true}, successCb, failCb);
     },
 
     getTodayCourses: function(successCb, failCb){
