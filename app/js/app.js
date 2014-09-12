@@ -50,6 +50,8 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
   };
 
   $scope.$on("$routeChangeSuccess", function(){
+    // limpiamos el filtro
+    $scope.name = "";
     var path = $route.current.originalPath;
     if(path !== undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
       $scope.showFilter = true;
