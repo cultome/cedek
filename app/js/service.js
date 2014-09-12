@@ -165,7 +165,7 @@ app.factory('ScholarshipService', ['$resource', function($resource){
     revoke: function(scholarshipId, successCb, failCb){
       return ScholarshipResource.delete({scholarshipId: scholarshipId}, successCb, failCb);
     }
-  }
+  };
 }]);
 
 

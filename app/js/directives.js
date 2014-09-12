@@ -257,7 +257,7 @@ app.directive('phone', ['CatalogService', function(CatalogService){
         }
 
         return type.name;
-      };
+      }
 
       scope.getPhoneTypeName = getTypeName();
 
