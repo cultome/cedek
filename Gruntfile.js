@@ -54,7 +54,7 @@ module.exports = function(grunt) {
       },
       build: {
         files: {
-          'target/js/cedek.min.js': ['build/cedek.js']
+          'public/js/cedek.min.js': ['build/cedek.js']
         }
       }
     },
@@ -62,7 +62,7 @@ module.exports = function(grunt) {
     cssmin: {
       minify: {
         files: {
-          'target/css/cedek.min.css': ['app/css/app.css']
+          'public/css/cedek.min.css': ['app/css/app.css']
         }
       }
     },
@@ -85,7 +85,7 @@ module.exports = function(grunt) {
       },
       main: {
         src: ['app/pages/**/*.html'],
-        dest: 'target/js/templates.js'
+        dest: 'public/js/templates.js'
       },
     },
 
@@ -98,14 +98,14 @@ module.exports = function(grunt) {
             src: [
               'img/**',
             ],
-            dest: 'target/'
+            dest: 'public/'
           },
           {
             expand: true, cwd: 'bower_components/bootstrap/',
             src: [
               'fonts/*'
             ],
-            dest: 'target/',
+            dest: 'public/',
           },
           {
             expand: true, cwd: 'bower_components/',
@@ -121,7 +121,7 @@ module.exports = function(grunt) {
               'bootstrap/dist/js/bootstrap.min.js',
               'bootstrap/dist/css/bootstrap.min.css',
             ],
-            dest: 'target/lib',
+            dest: 'public/lib',
             flatten: true
           }
         ],
@@ -131,7 +131,7 @@ module.exports = function(grunt) {
           {
             expand: true, cwd: 'app/',
             src: ['*.html'],
-            dest: 'target/',
+            dest: 'public/',
           }
         ],
 
@@ -182,7 +182,7 @@ module.exports = function(grunt) {
 
     clean: {
       all: {
-        src: ["build", "target"]
+        src: ["build", "public"]
       }
     }
 
