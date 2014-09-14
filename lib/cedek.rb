@@ -11,7 +11,12 @@ module Cedek
 		include Cedek::Utils
 
 		configure do
+      set :public_folder, File.dirname(__FILE__) + '/../public'
 		end
+
+    get '/' do
+      redirect '/index.html'
+    end
 
 		put '/people/:personId' do |personId|
 			return with_connection do
