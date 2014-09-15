@@ -1,6 +1,6 @@
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['javascript/course_spec.js'],
+  specs: ['course_spec.js'],
   capabilities: {
     'browserName': 'chrome',
     'chromeOptions': {

@@ -2,7 +2,7 @@
   <div class="col-md-3">
 
     <!-- lista de estudiantes -->
-    <div class="panel panel-default" ng-show="panels.students.show">
+    <div class="panel panel-default students-panel" ng-show="panels.students.show">
       <div class="panel-heading">
         <h3 class="panel-title">
           Estudiantes de <strong>{{panels.students.courseName}}</strong>
@@ -21,7 +21,7 @@
     </div>
 
     <!-- sesiones -->
-    <div class="panel panel-default" ng-show="panels.attendance.show">
+    <div class="panel panel-default attendance-panel" ng-show="panels.attendance.show">
       <div class="panel-heading">
         <h3 class="panel-title">
           Asistencia de <strong>{{panels.attendance.courseName}}</strong>
@@ -41,7 +41,7 @@
   <!-- listado de cursos -->
   <div class="col-md-9">
     <div class="row" id="buscarCursos">
-      <div class="col-md-4" ng-repeat="course in courses  | filter:name">
+      <div class="col-md-4" ng-repeat="course in courses | filter:name">
         <div course-view></div>
       </div>
     </div>

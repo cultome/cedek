@@ -104,10 +104,10 @@
         </div><!-- body -->
 
         <!-- inscripcion -->
-        <div class="panel-heading" ng-hide="isCreatingCourse()">
+        <div class="panel-heading students-panel" ng-hide="isCreatingCourse()">
           <h3 class="panel-title">Estudiantes</h3>
         </div>
-        <div class="panel-body" ng-hide="isCreatingCourse()">
+        <div class="panel-body students-panel" ng-hide="isCreatingCourse()">
           <div class="row">
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
@@ -149,10 +149,10 @@
         </div>
 
         <!-- becas -->
-        <div class="panel-heading" ng-hide="isCreatingCourse()">
+        <div class="panel-heading scholarship-panel" ng-hide="isCreatingCourse()">
           <h3 class="panel-title">Becas</h3>
         </div>
-        <div class="panel-body" ng-hide="isCreatingCourse()">
+        <div class="panel-body scholarship-panel" ng-hide="isCreatingCourse()">
           <div class="row">
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
@@ -204,12 +204,12 @@
         </div>
 
         <!-- pagos pendientes -->
-        <div class="panel-heading" ng-show="panels.payment.students.length > 0 && !isCreatingCourse()">
+        <div class="panel-heading pendingPayments-panel" ng-show="panels.payment.students.length > 0 && !isCreatingCourse()">
           <h3 class="panel-title">
             Pagos Pendientes
           </h3>
         </div>
-        <div class="panel-body" ng-show="panels.payment.students.length > 0 && !isCreatingCourse()">
+        <div class="panel-body pendingPayments-panel" ng-show="panels.payment.students.length > 0 && !isCreatingCourse()">
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="student in panels.payment.students">
               <div class="row">
@@ -249,10 +249,10 @@
         </div>
 
         <!-- asistencia -->
-        <div class="panel-heading" ng-show="panels.attendance.sessions && !isCreatingCourse()">
+        <div class="panel-heading attendance-panel" ng-show="panels.attendance.sessions && !isCreatingCourse()">
           <h3 class="panel-title">Asistencia</h3>
         </div>
-        <div class="panel-body" ng-show="panels.attendance.sessions && !isCreatingCourse()">
+        <div class="panel-body attendance-panel" ng-show="panels.attendance.sessions && !isCreatingCourse()">
           <div
             search-attendance course-id="course.id"
             sessions="panels.attendance.sessions">
