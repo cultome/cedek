@@ -9,7 +9,7 @@
               <span class="header-button-group" ng-hide="isCreatingCourse()">
                 <button class="btn btn-default btn-sm pull-right color-success" ng-click="update(course.id, course)">Actualizar</button>
 
-                <button class="btn btn-default btn-sm pull-right" ng-click="goToDetails(course.id)">Ir a Detalles</button>
+                <button id="goToDetailsBtn" class="btn btn-default btn-sm pull-right" ng-click="goToDetails(course.id)">Ir a Detalles</button>
               </span>
             </p>
           </h3>
@@ -112,7 +112,7 @@
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
                 Estudiantes inscritos
-                <span class="label label-default pull-right wire-label-default">{{course.students.length}}</span>
+                <span id="enrolledStudentsCount" class="label label-default pull-right wire-label-default">{{course.students.length}}</span>
               </h4>
 
               <!-- condicionado a uno u otro -->
@@ -140,7 +140,7 @@
                     class="form-control">
                     <option value="">Seleccione estudiante</option>
                   </select>
-                  <button class="btn btn-default color-success" ng-click="subscribe(course.id, panels.subscribe.studentId)">Inscribir</button>
+                  <button id="enrollBtn" class="btn btn-default color-success" ng-click="subscribe(course.id, panels.subscribe.studentId)">Inscribir</button>
                 </span>
               </div>
             </div>
@@ -157,7 +157,7 @@
             <div class="col-md-5" style="border-right: solid 1px #ddd">
               <h4>
                 Estudiantes con Beca
-                <span class="label label-default pull-right wire-label-default">{{panels.scholarship.students.length}}</span>
+                <span id="courseScholarshipsCount" class="label label-default pull-right wire-label-default">{{panels.scholarship.students.length}}</span>
               </h4>
 
               <!-- condicionado a uno u otro -->
@@ -193,7 +193,7 @@
                   </div>
                 </div>
                 <div class="col-md-1 remove-left-padding">
-                <button class="btn btn-default btn-sm color-success" ng-click="giveScholarship(course.id)">
+                <button id="giveScholarshipBtn" class="btn btn-default btn-sm color-success" ng-click="giveScholarship(course.id)">
                   <span class="glyphicon glyphicon-plus"></span>
                 </button>
                 </div>
