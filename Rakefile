@@ -19,7 +19,7 @@ namespace :test do
       end
 
       sinatra_server_pid = fork do
-        Rake::Task['run'].invoke
+        #Rake::Task['run'].invoke
       end
 
       puts "[*] webdriver PID: #{webdriver_pid}"
