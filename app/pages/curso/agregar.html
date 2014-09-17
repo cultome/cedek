@@ -7,7 +7,7 @@
             <p>
               Datos del curso
               <span class="header-button-group" ng-hide="isCreatingCourse()">
-                <button class="btn btn-default btn-sm pull-right color-success" ng-click="update(course.id, course)">Actualizar</button>
+                <button id="updateCourseBtn" class="btn btn-default btn-sm pull-right color-success" ng-click="update(course.id, course)">Actualizar</button>
 
                 <button id="goToDetailsBtn" class="btn btn-default btn-sm pull-right" ng-click="goToDetails(course.id)">Ir a Detalles</button>
               </span>
@@ -264,7 +264,7 @@
         <div class="panel-heading" ng-show="isCreatingCourse()">
           <div class="row">
             <div class="col-md-offset-4 col-md-4">
-              <button class="btn btn-default btn-block" ng-click="create(course)">Crear</button>
+              <button id="createPersonBtn" class="btn btn-default btn-block" ng-click="create(course)">Crear</button>
             </div>
 
           </div>

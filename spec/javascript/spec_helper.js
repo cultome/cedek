@@ -95,7 +95,7 @@ function createCourse(courseName){
       element(by.model("course.code")).sendKeys(prefix + "-SAB");
       break;
   }
-  element(by.css(".btn-block")).click();
+  element(by.id("createPersonBtn")).click();
   // checamos que se haya actualizado la pagina
   expect(element.all(by.css(".attendance-panel")).first().getText()).toEqual("Asistencia");
   expect(element.all(by.css(".scholarship-panel")).first().getText()).toEqual("Becas");

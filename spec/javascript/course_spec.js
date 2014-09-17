@@ -70,8 +70,30 @@ describe('Course', function(){
 
   describe("updating", function(){
     it("person information", function(){
-      // Implements!!
-      expect(1).toEqual(2);
+      common.createCourse("Autoestima");
+      common.selectLastCourse().element(by.css(".go-to-edit")).click();
+      // limpiamos y actualizamos
+      element(by.model("course.name")).clear();
+      element(by.model("course.cost")).clear();
+      element(by.model("course.code")).clear();
+
+      element(by.model("course.name")).sendKeys("Curso Recuperacion V");
+      element(by.model("course.cost")).sendKeys("300");
+      element(by.cssContainingText("option", "Lunes")).click();
+      element(by.model("course.code")).sendKeys("REC-LUN");
+      element(by.model("course.hour")).sendKeys("1030A");
+      element(by.model("course.begin")).sendKeys("03012010");
+      element(by.model("course.end")).sendKeys("03032010");
+      element(by.id("updateCourseBtn")).click();
+      // checamos la actualizacion
+      common.selectLastCourse().element(by.css(".go-to-edit")).click();
+      expect(element(by.model("course.name")).getAttribute("value")).toEqual("Curso Recuperacion V");
+      expect(element(by.model("course.cost")).getAttribute("value")).toEqual("300");
+      //expect(element(by.cssContainingText("option", "Lunes")));
+      expect(element(by.model("course.code")).getAttribute("value")).toEqual("REC-LUN");
+      expect(element(by.model("course.hour")).getAttribute("value")).toEqual("10:30");
+      expect(element(by.model("course.begin")).getAttribute("value")).toEqual("2010-03-01");
+      expect(element(by.model("course.end")).getAttribute("value")).toEqual("2010-03-03");
     });
   });
 
