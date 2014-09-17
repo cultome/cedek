@@ -58,6 +58,13 @@ task :run do
   Cedek::App.send(:run!)
 end
 
+desc "Prepare and start the system"
+task :setup do
+  system "grunt"
+  Rake::Task['run'].invoke
+  system "rm -fr build/ public/"
+end
+
 desc "Run interatively"
 task :console do
   require 'irb'
