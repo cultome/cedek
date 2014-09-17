@@ -7,7 +7,11 @@
             <p>
               Datos del curso
               <span class="header-button-group" ng-hide="isCreatingCourse()">
-                <button id="updateCourseBtn" class="btn btn-default btn-sm pull-right color-success" ng-click="update(course.id, course)">Actualizar</button>
+                <button
+                  id="updateCourseBtn"
+                  class="btn btn-default btn-sm pull-right color-success"
+                  ng-disabled="courseForm.$invalid"
+                  ng-click="update(course.id, course)">Actualizar</button>
 
                 <button id="goToDetailsBtn" class="btn btn-default btn-sm pull-right" ng-click="goToDetails(course.id)">Ir a Detalles</button>
               </span>
@@ -16,29 +20,35 @@
         </div>
         <div class="panel-body">
           <div class="row">
-            <div class="form-group">
+            <div ng-class="getInputClass(courseForm.name)">
               <label for="nombre" class="col-md-2 control-label">Nombre</label>
               <div class="col-md-8">
                 <input
-                  type="text"
-                  class="form-control"
-                  id="nombre"
-                  ng-model="course.name"
-                  placeholder="Nombre completo">
+                 type="text"
+                 name="name"
+                 id="nombre"
+                 class="form-control"
+                 ng-required="true"
+                 ng-model="course.name"
+                 placeholder="Nombre completo">
+                <span ng-show="isInputInvalid(courseForm.name)" class="glyphicon glyphicon-remove form-control-feedback"></span>
               </div>
             </div>
           </div>
 
           <div class="row">
-            <div class="form-group">
+            <div ng-class="getInputClass(courseForm.code)">
               <label for="clave" class="col-md-2 control-label">Clave</label>
               <div class="col-md-3">
                 <input
                   type="text"
                   class="form-control"
                   id="clave"
+                  name="code"
+                  ng-required="true"
                   ng-model="course.code"
                   placeholder="HOM-JU">
+                <span ng-show="isInputInvalid(courseForm.code)" class="glyphicon glyphicon-remove form-control-feedback"></span>
               </div>
 
               <label for="clave" class="col-md-2 control-label">Costo</label>
@@ -264,7 +274,11 @@
         <div class="panel-heading" ng-show="isCreatingCourse()">
           <div class="row">
             <div class="col-md-offset-4 col-md-4">
-              <button id="createPersonBtn" class="btn btn-default btn-block" ng-click="create(course)">Crear</button>
+              <button
+                id="createPersonBtn"
+                class="btn btn-default btn-block"
+                ng-disabled="courseForm.$invalid"
+                ng-click="create(course)">Crear</button>
             </div>
 
           </div>

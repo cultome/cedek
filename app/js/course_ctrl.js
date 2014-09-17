@@ -201,6 +201,19 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         return $scope.panels.attendance.attendanceToday.filter(function(session){ return session.id === studentId && session.attend; }).length > 0;
       };
 
+      $scope.getInputClass = function(input){
+        var classes = ["form-group"];
+        if($scope.isInputInvalid(input)){
+          classes.push('has-feedback');
+          classes.push('has-error');
+        }
+        return classes;
+      };
+
+      $scope.isInputInvalid = function(input){
+        return input.$invalid && input.$dirty;
+      };
+
       $scope.$on("removeStudentFromCourse", function(evt, courseId, studentId, studentName){
         var data = $scope.alerts.confirmRemoveStudentFromCourse;
         data.name = studentName;

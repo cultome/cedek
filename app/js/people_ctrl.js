@@ -78,6 +78,19 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', '$lo
         return $scope.panels.phone.isAddingPhone;
       };
 
+      $scope.getInputClass = function(input){
+        var classes = ["row", "form-group"];
+        if($scope.isInputInvalid(input)){
+          classes.push('has-feedback');
+          classes.push('has-error');
+        }
+        return classes;
+      };
+
+      $scope.isInputInvalid = function(input){
+        return input.$invalid && input.$dirty;
+      };
+
       $scope.$on("subscribeStudentToCourse", function(evt, courseId, studentId){
         getStudent(studentId);
       });

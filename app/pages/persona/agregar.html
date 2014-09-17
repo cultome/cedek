@@ -7,21 +7,28 @@
             <p>
               Datos del cliente
               <span class="header-button-group" ng-hide="isCreatingPerson()">
-                <button id="updatePersonBtn" class="btn btn-default btn-sm pull-right color-success" ng-click="update(student.id)">Actualizar</button>
+                <button
+                  id="updatePersonBtn"
+                  class="btn btn-default btn-sm pull-right color-success"
+                  ng-disabled="studentForm.$invalid"
+                  ng-click="update(student.id)">Actualizar</button>
               </span>
             </p>
           </h3>
         </div>
         <div class="panel-body">
-          <div class="row form-group">
+          <div ng-class="getInputClass(studentForm.name)">
             <label for="nombre" class="col-md-3 control-label">Nombre</label>
             <div class="col-md-6">
               <input
-                type="text"
-                class="form-control"
-                id="nombre"
-                placeholder="Nombre completo"
-                ng-model="student.name">
+                 type="text"
+                 class="form-control"
+                 id="nombre"
+                 name="name"
+                 ng-required="true"
+                 placeholder="Nombre completo"
+                 ng-model="student.name">
+              <span ng-show="isInputInvalid(studentForm.name)" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
           </div>
 
@@ -29,10 +36,10 @@
             <label for="fechaNacimiento" class="col-md-3 control-label">Fecha de Nacimiento</label>
             <div class="col-md-6">
               <input
-                type="date"
-                class="form-control"
-                id="fechaNacimiento"
-                ng-model="student.birthday">
+                 type="date"
+                 class="form-control"
+                 id="fechaNacimiento"
+                 ng-model="student.birthday">
             </div>
           </div>
 
@@ -40,11 +47,11 @@
             <label for="direccion" class="col-md-3 control-label">Direccion</label>
             <div class="col-md-6">
               <input
-                type="text"
-                class="form-control"
-                id="direccion"
-                placeholder="Direccion"
-                ng-model="student.address">
+                 type="text"
+                 class="form-control"
+                 id="direccion"
+                 placeholder="Direccion"
+                 ng-model="student.address">
             </div>
           </div>
 
@@ -52,15 +59,15 @@
             <label for="student_email" class="col-md-3 control-label">Correo Electronico</label>
             <div class="col-md-6">
               <input
-                type="email"
-                class="form-control"
-                name="student_email"
-                placeholder="Correo electronico"
-                ng-model="student.email">
-                <span
-                  class="glyphicon glyphicon-remove form-control-feedback"
-                  ng-show="studentForm.student_email.$invalid">
-                </span>
+                 type="email"
+                 class="form-control"
+                 name="student_email"
+                 placeholder="Correo electronico"
+                 ng-model="student.email">
+              <span
+                 class="glyphicon glyphicon-remove form-control-feedback"
+                 ng-show="studentForm.student_email.$invalid">
+              </span>
             </div>
           </div>
 
@@ -86,28 +93,28 @@
           <div class="row form-group" ng-show="addingPhone()">
             <div ng-class="{'col-md-offset-3': true, 'col-md-4': true, 'has-error': studentForm.student_phone.$invalid, 'has-feedback': studentForm.student_phone.$invalid}">
               <input
-                type="text"
-                class="form-control"
-                name="student_phone"
-                ng-pattern="/^[^a-z^A-Z]+$/"
-                ng-model="panels.phone.number">
-                <span
-                  class="glyphicon glyphicon-remove form-control-feedback"
-                  ng-show="studentForm.student_phone.$invalid">
-                </span>
+                 type="text"
+                 class="form-control"
+                 name="student_phone"
+                 ng-pattern="/^[^a-z^A-Z]+$/"
+                 ng-model="panels.phone.number">
+              <span
+                 class="glyphicon glyphicon-remove form-control-feedback"
+                 ng-show="studentForm.student_phone.$invalid">
+              </span>
             </div>
             <div class="col-md-2">
               <select
-                class="form-control"
-                ng-model="panels.phone.phone_type_id"
-                ng-options="type.id as type.name for type in panels.phone.phoneTypes">
+                 class="form-control"
+                 ng-model="panels.phone.phone_type_id"
+                 ng-options="type.id as type.name for type in panels.phone.phoneTypes">
               </select>
             </div>
             <div class="col-md-1">
               <button
-                class="btn btn-sm btn-default"
-                ng-click="addAnotherPhone()"
-								ng-disabled="studentForm.student_phone.$invalid || student.phones[0].number === ''"><span class="glyphicon glyphicon-plus"></span></button>
+                 class="btn btn-sm btn-default"
+                 ng-click="addAnotherPhone()"
+                 ng-disabled="studentForm.student_phone.$invalid || student.phones[0].number === ''"><span class="glyphicon glyphicon-plus"></span></button>
             </div>
           </div>
 
@@ -156,19 +163,19 @@
               </div>
             </div>
             <div
-              ng-show="student.has_scholarship"
-              ng-class="{'has-error': studentForm.student_scholarshipPercentage.$invalid, 'has-feedback': studentForm.student_scholarshipPercentage.$invalid}">
+                                         ng-show="student.has_scholarship"
+                                         ng-class="{'has-error': studentForm.student_scholarshipPercentage.$invalid, 'has-feedback': studentForm.student_scholarshipPercentage.$invalid}">
               <label for="porcentajeBeca" class="col-md-3 control-label">Porcentaje de Beca</label>
               <div class="col-md-2 input-group">
                 <input
-                  type="number"
-                  class="form-control"
-                  placeholder="25"
-                  name="student_scholarshipPercentage"
-                  min="0" max="100"
-                  ng-model="student.scholarship_percentage">
+                   type="number"
+                   class="form-control"
+                   placeholder="25"
+                   name="student_scholarshipPercentage"
+                   min="0" max="100"
+                           ng-model="student.scholarship_percentage">
 
-               <span class="input-group-addon">%</span>
+                <span class="input-group-addon">%</span>
               </div>
             </div>
           </div>
@@ -276,21 +283,21 @@
                     {{debt.course_name}}
                   </div>
                   <div class="col-md-2 remove-padding">
-                      <button class="btn btn-default btn-sm">
-                        <strong>{{debt.amount | currency}}</strong>
-                      </button>
-                      <button class="btn btn-default btn-sm" ng-click="toggleLatePaymentOptions(debt.id)">
-                        <img src="img/dollars33.svg" width="20">
-                      </button>
+                    <button class="btn btn-default btn-sm">
+                      <strong>{{debt.amount | currency}}</strong>
+                    </button>
+                    <button class="btn btn-default btn-sm" ng-click="toggleLatePaymentOptions(debt.id)">
+                      <img src="img/dollars33.svg" width="20">
+                    </button>
                   </div>
 
                   <div class="col-md-6">
                     <div class="row" style="display: none;" id="latePaymentOption{{debt.id}}">
                       <div class="col-md-12">
                         <div payment-options
-                          course="debt.course_id"
-                          student="student.id"
-                          amount="debt.amount"></div>
+                           course="debt.course_id"
+                           student="student.id"
+                           amount="debt.amount"></div>
                       </div>
                     </div>
                   </div>
@@ -311,7 +318,11 @@
         <div class="panel-heading" ng-show="isCreatingPerson()">
           <div class="row">
             <div class="col-md-offset-4 col-md-4">
-              <button id="createPersonBtn" class="btn btn-default btn-block" ng-click="create(student)">Crear</button>
+              <button
+                id="createPersonBtn"
+                class="btn btn-default btn-block"
+                ng-disabled="studentForm.$invalid"
+                ng-click="create(student)">Crear</button>
             </div>
           </div>
         </div>
