@@ -68,6 +68,13 @@ describe('Course', function(){
     });
   });
 
+  describe("updating", function(){
+    it("person information", function(){
+      // Implements!!
+      expect(1).toEqual(2);
+    });
+  });
+
   describe("listing", function(){
     it("all courses", function(){
       common.createCourse("Esperanto");

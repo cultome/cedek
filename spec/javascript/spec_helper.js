@@ -39,6 +39,13 @@ function selectLastCourse(){
   return course;
 }
 
+function selectLastPerson(){
+  goTo("listPeople");
+  var student = element.all(by.repeater("student in students | filter:name")).last();
+  student.element(by.css(".panel-heading")).click();
+  return student;
+}
+
 function countPeopleListed(){
   goTo("listPeople");
   return element.all(by.repeater("student in students | filter:name")).count();
@@ -115,4 +122,5 @@ exports.createCourse = createCourse;
 exports.countCoursesListed = countCoursesListed;
 exports.countPeopleListed = countPeopleListed;
 exports.selectLastCourse = selectLastCourse;
+exports.selectLastPerson = selectLastPerson;
 exports.goHome = goHome;
