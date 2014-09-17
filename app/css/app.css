@@ -140,3 +140,7 @@
   color: #ed9c28 !important;
   font-size: 1.3em;
 }
+
+hr.vertical-separator {
+  margin: 10px 0px;
+}

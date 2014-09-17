@@ -1,0 +1,48 @@
+<div class="row">
+<form class="form-horizontal" role="form" name="courseForm" novalidate>
+  <div class="col-md-offset-1 col-md-8">
+    <div class="panel panel-default">
+      <!-- datos del paciente -->
+      <div class="panel-heading">
+        <h3 class="panel-title">Datos del paciente</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-2"><strong>Nombre</strong></div>
+          <div class="col-md-4">{{person.name}}</div>
+
+          <div class="col-md-2"><strong>Edad</strong></div>
+          <div class="col-md-4">{{getAge(person.birthday)}} años <em class="pull-right">{{getDateLabel(person.birthday)}}</em></div>
+        </div>
+      </div>
+
+      <!-- consultas -->
+      <div class="panel-heading">
+        <h3 class="panel-title">Historial</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="active"><a class="tab-switch" href="#home" role="tab" data-toggle="tab">Hoy</a></li>
+              <li><a class="tab-switch" href="#profile" role="tab" data-toggle="tab">20 Sept 2014</a></li>
+              <li><a class="tab-switch" href="#messages" role="tab" data-toggle="tab">2 Ago 2014</a></li>
+              <li><a class="tab-switch" href="#settings" role="tab" data-toggle="tab">28 Ene 2014</a></li>
+              <li><a class="tab-switch" href="#settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-forward"></span></a></li>
+            </ul>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane active" id="home">one</div>
+              <div class="tab-pane" id="profile">two</div>
+              <div class="tab-pane" id="messages">three</div>
+              <div class="tab-pane" id="settings">four</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,6 +15,8 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/curso/:courseId', {templateUrl: 'pages/curso/detalles.html', controller: 'CourseCtrl'});
   $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl'});
 
+  $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'ConsultCtrl'});
+
   $routeProvider.when('/dashboard', {templateUrl: 'pages/dashboard.html', controller: 'DashboardCtrl'});
   $routeProvider.otherwise({redirectTo: '/dashboard'});
 }]);
@@ -69,6 +71,13 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
     }
   };
 
+  $scope.getAge = function(birthday){
+    if(birthday){
+      return (new Date()).getFullYear() - parseInt(birthday.split("-")[0]);
+    }
+    return 0;
+  };
+
   $scope.today = function(){
     var d = new Date();
     var month = (d.getMonth() + 1);
@@ -118,7 +127,7 @@ app.controller('DashboardCtrl', ['$scope', 'PeopleService', 'CourseService', fun
 
     PeopleService.birthdaysToday(function(birthdays){
       birthdays.forEach(function(birthday){
-        birthday.age = (new Date()).getFullYear() - parseInt(birthday.birthday.split("-")[0]);
+        birthday.age = $scope.getAge(birthday.birthday);
       });
       $scope.todayBirthdays = birthdays;
     });

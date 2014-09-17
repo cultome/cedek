@@ -14,6 +14,7 @@ module.exports = function(grunt) {
           'app/js/app.js',
           'app/js/course_ctrl.js',
           'app/js/people_ctrl.js',
+          'app/js/consult_ctrl.js',
           'app/js/directives.js',
           'app/js/service.js'
         ],

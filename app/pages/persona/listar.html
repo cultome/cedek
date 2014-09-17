@@ -2,6 +2,8 @@
   <div class="col-md-3" ng-repeat="student in students | filter:name">
     <div student-view model="student" can-collapse="true" id="'studentInfo' + student.id">
       <div subscribe-course student="student" courses="panels.subscribe.courses"></div>
+      <hr class="vertical-separator">
+      <a href="#/consulta/nueva/{{student.id}}" class="btn btn-default btn-block">Nueva Consulta</a>
     </div>
   </div>
 </div>
