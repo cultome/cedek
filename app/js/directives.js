@@ -109,11 +109,11 @@ app.directive('studentView', ['DebtService', 'PeopleService', function(DebtServi
       scope.confirmDebtClose = function(debt){
         var data = scope.$parent.alerts.confirmDebtClose;
         data.amount = debt.amount;
-        data.name = debt.student_name;
+        data.name = debt.person_name;
         data.confirm = function(){
           DebtService.payNow(debt.id,
               function(){
-                scope.$emit("paymentsUpdated", debt.course_id, debt.student_id);
+                scope.$emit("paymentsUpdated", debt.course_id, debt.person_id);
                 $("#confirmCloseDebt").modal('hide');
               },
               function(){
@@ -311,7 +311,7 @@ app.directive('studentScholarshipPercentage', [function(){
       editable: "@"
     },
 
-    template: '<li class="list-group-item"><a href="#/persona/editar/{{scholarship.student_id}}">{{scholarship.student_name}}</a><span class="deletable label label-default pull-right wire-label-success" style="width: 50px;"data-toggle="modal" data-target="#confirmDeleteScholarship">{{scholarship.percentage}}%</span></li>',
+    template: '<li class="list-group-item"><a href="#/persona/editar/{{scholarship.person_id}}">{{scholarship.student_name}}</a><span class="deletable label label-default pull-right wire-label-success" style="width: 50px;"data-toggle="modal" data-target="#confirmDeleteScholarship">{{scholarship.percentage}}%</span></li>',
 
     link: function(scope, elem, attrs){
       if(scope.editable === "true"){

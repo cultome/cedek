@@ -20,7 +20,7 @@ module Cedek
 
 		put '/people/:personId' do |personId|
 			return with_connection do
-        student = Student.find(personId)
+        student = Person.find(personId)
         student_attrs = JSON.parse request.body.read
         phone_attrs = student_attrs.delete("phones")
         phone_attrs.each do |phone|
@@ -56,14 +56,14 @@ module Cedek
         return with_connection do
           course = Course.find(courseId.to_i)
           raise "El curso no existe!" if course.nil?
-          student = Student.find(actionId.to_i)
+          student = Person.find(actionId.to_i)
           raise "El estudiante no existe!" if student.nil?
           amount = req["amount"].to_f
           raise "Porcentage invalido!" if amount < 0 || amount > 100
 
           scholarships = course.scholarships.select{|s| s.student == student }
           if scholarships.empty?
-            Scholarship.create!(course: course, student: student, percentage: amount)
+            Scholarship.create!(course: course, person_id: student.id, percentage: amount)
             return true
 
           else
@@ -77,7 +77,7 @@ module Cedek
         return with_connection do
           course = Course.find(courseId)
           raise "El curso no existe!" if course.nil?
-          student = Student.find(actionId)
+          student = Person.find(actionId)
           raise "El estudiante no existe!" if student.nil?
           if course.students.include?(student)
             puts "El estudiante ya esta registrado en el curso."
@@ -92,7 +92,7 @@ module Cedek
         return with_connection do
           course = Course.find(courseId.to_i)
           raise "El curso no existe!" if course.nil?
-          student = Student.find(actionId.to_i)
+          student = Person.find(actionId.to_i)
           raise "El estudiante no existe!" if student.nil?
           session_date = Time.new(*req["sessionDate"].split("-"))
 
@@ -101,7 +101,7 @@ module Cedek
             session = Session.create!(course_id: course.id, session_date: session_date)
           end
 
-          Attendance.where(student_id: student.id, session_id: session.id).first_or_create!
+          Attendance.where(person_id: student.id, session_id: session.id).first_or_create!
 
           return true
         end
@@ -119,7 +119,7 @@ module Cedek
       return with_connection do
         student = JSON.parse request.body.read
         student["phones"] = student["phones"].map{|p| Phone.new(p) }
-        return Student.create!(student).to_json(only: :id, methods: [:persisted?])
+        return Person.create!(student).to_json(only: :id, methods: [:persisted?])
       end
 		end
 
@@ -131,10 +131,10 @@ module Cedek
         amount = debt["amount"].to_f
         payment = debt["payment"].to_f
 
-				debt = Debt.where(student_id: student_id, course_id: course_id).first
+				debt = Debt.where(person_id: student_id, course_id: course_id).first
         if debt.nil?
           if amount - payment > 0
-            return Debt.create!(student_id: student_id, course_id: course_id, amount: amount - payment)
+            return Debt.create!(person_id: student_id, course_id: course_id, amount: amount - payment)
           end
         else
           debt.amount -= payment
@@ -158,9 +158,9 @@ module Cedek
         commitment = Time.new(*debt["date"].split("-"))
         add_amount = debt["charge"]
 
-				debt = Debt.where(student_id: student_id, course_id: course_id).first
+				debt = Debt.where(person_id: student_id, course_id: course_id).first
         if debt.nil?
-          return Debt.create!(student_id: student_id, course_id: course_id, amount: amount, commitment: commitment)
+          return Debt.create!(person_id: student_id, course_id: course_id, amount: amount, commitment: commitment)
         else
           props = { commitment: commitment }
           props[:amount] = debt.amount + amount if add_amount
@@ -172,13 +172,13 @@ module Cedek
 
 		get '/people/:personId' do |personId|
       return with_connection do
-        Student.find(personId).to_json(include: {
+        Person.find(personId).to_json(include: {
           phones: { only: [:id, :number, :phone_type_id] },
           scholarships: { only: [:course_id, :id, :percentage], methods: [:course_name] },
           enrollments: { only: [:id, :name] },
           reserves: { only: [:id, :name] },
           previous: { only: [:id, :name] },
-          debts: { only: [:id, :amount, :commitment, :course_id, :student_id], methods: [:student_name, :course_name] }
+          debts: { only: [:id, :amount, :commitment, :course_id, :person_id], methods: [:person_name, :course_name] }
         })
       end
 		end
@@ -187,26 +187,26 @@ module Cedek
 
       return with_connection do
         if params.empty?
-          Student.all.to_json(include: {
+          Person.all.to_json(include: {
             phones: { only: [:id, :number, :phone_type_id] },
             scholarships: { only: [:course_id, :id, :percentage], methods: [:course_name] },
             enrollments: { only: [:id, :name] },
             reserves: { only: [:id, :name] },
             previous: { only: [:id, :name] },
-            debts: { only: [:id, :amount, :commitment, :course_id, :student_id], methods: [:student_name, :course_name] }
+            debts: { only: [:id, :amount, :commitment, :course_id, :person_id], methods: [:person_name, :course_name] }
           })
 
         else
           # crear criterio para diferentes fechas
           date = Time.now.to_date
 
-          Student.all.select{|s| s.birthday.month == date.month && s.birthday.day == date.day}.to_json(include: {
+          Person.all.select{|s| s.birthday.month == date.month && s.birthday.day == date.day}.to_json(include: {
             phones: { only: [:id, :number, :phone_type_id] },
             scholarships: { only: [:course_id, :id, :percentage], methods: [:course_name] },
             enrollments: { only: [:id, :name] },
             reserves: { only: [:id, :name] },
             previous: { only: [:id, :name] },
-            debts: { only: [:id, :amount, :commitment, :course_id, :student_id], methods: [:student_name, :course_name] }
+            debts: { only: [:id, :amount, :commitment, :course_id, :person_id], methods: [:person_name, :course_name] }
           })
 
         end
@@ -216,13 +216,13 @@ module Cedek
 		get '/courses/:courseId/students/:studentId' do |courseId, studentId|
 			return with_connection do
 				course = Course.find(courseId)
-				student = Student.find(studentId)
+				student = Person.find(studentId)
 				if course.students.include?(student)
-					student.unattendance = course.sessions.select{|s| !s.students.include?(student) }
+					student.unattendance = course.sessions.select{|s| !s.people.include?(student) }
 					student.to_json(include: {
 						scholarships: { only: [:course_id, :id, :percentage], methods: [:course_name] },
 						enrollments: { only: [:id, :name] },
-						debts: { only: [:id, :amount, :commitment, :course_id, :student_id], methods: [:student_name, :course_name] },
+						debts: { only: [:id, :amount, :commitment, :course_id, :person_id], methods: [:person_name, :course_name] },
 						unattendance: {}
 					})
 				else
@@ -236,9 +236,9 @@ module Cedek
 			when "students" then
 				return with_connection{ Course.find(courseId).students.to_json(only: [:id, :name]) }
 			when "debts" then
-				return with_connection{ Course.find(courseId).debts.to_json(only: [:id, :amount, :commitment, :student_id, :course_id], methods: [:student_name]) }
+				return with_connection{ Course.find(courseId).debts.to_json(only: [:id, :amount, :commitment, :person_id, :course_id], methods: [:person_name]) }
 			when "scholarships" then
-				return with_connection{ Course.find(courseId).scholarships.to_json(only: [:id, :percentage, :student_id, :course_id], methods: [:student_name]) }
+				return with_connection{ Course.find(courseId).scholarships.to_json(only: [:id, :percentage, :person_id, :course_id], methods: [:student_name]) }
 			when "sessions" then
 				return with_connection{ Course.find(courseId).sessions.to_json(only: [:id, :session_date]) }
 			when "attendance" then
@@ -253,7 +253,7 @@ module Cedek
           return [] if session.nil?
 
 					students = course.students.map do |s|
-						s.attend = session.students.include?(s)
+						s.attend = session.people.include?(s)
 						s
 					end
 
@@ -270,7 +270,7 @@ module Cedek
 						s.price = course.cost - course.cost * s.scholarship_percentage / 100
           end
 
-          scholarship = Scholarship.where(course_id: course.id, student_id: s.id).first
+          scholarship = Scholarship.where(course_id: course.id, person_id: s.id).first
           if scholarship.nil?
             if !s.has_scholarship
               s.price = course.cost

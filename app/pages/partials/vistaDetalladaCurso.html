@@ -54,7 +54,7 @@
       <li class="list-group-item" ng-repeat="student in panels.payment.students">
         <div class="row">
           <div class="col-md-7">
-            <a href="#persona/editar/{{student.id}}">{{student.student_name}}</a>
+            <a href="#persona/editar/{{student.id}}">{{student.person_name}}</a>
           </div>
           <div class="col-md-5 remove-padding">
               <button
@@ -80,7 +80,7 @@
             <div class="col-ms-12">
               <div payment-options-compact
                 course="course.id"
-                student="student.student_id"
+                student="student.person_id"
                 amount="student.amount"></div>
             </div>
           </div>

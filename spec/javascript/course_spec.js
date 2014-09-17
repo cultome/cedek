@@ -25,7 +25,6 @@ describe('Course', function(){
 
       var afterCount = element(by.id("enrolledStudentsCount")).getText();
       var afterStudents = element.all(by.repeater("student in students")).count();
-
       expect(afterCount).toBeGreaterThan(beforeCount);
       expect(afterStudents).toBeGreaterThan(beforeStudents);
     });
@@ -69,7 +68,7 @@ describe('Course', function(){
   });
 
   describe("updating", function(){
-    it("person information", function(){
+    it("course information", function(){
       common.createCourse("Autoestima");
       common.selectLastCourse().element(by.css(".go-to-edit")).click();
       // limpiamos y actualizamos

@@ -23,10 +23,10 @@ module Cedek
 				begin
 					ActiveRecord::Schema.drop_table('scholarships')
 					ActiveRecord::Schema.drop_table('debts')
-					ActiveRecord::Schema.drop_table('courses_students')
+					ActiveRecord::Schema.drop_table('courses_people')
 					ActiveRecord::Schema.drop_table('sessions')
 					ActiveRecord::Schema.drop_table('attendances')
-					ActiveRecord::Schema.drop_table('students')
+					ActiveRecord::Schema.drop_table('people')
 					ActiveRecord::Schema.drop_table('courses')
 					ActiveRecord::Schema.drop_table('phones')
 					ActiveRecord::Schema.drop_table('phone_types')
@@ -35,7 +35,7 @@ module Cedek
 
 				begin
 					ActiveRecord::Schema.define do
-						create_table :students do |t|
+						create_table :people do |t|
 							t.string :name
 							t.date :birthday
 							t.string :address
@@ -60,24 +60,24 @@ module Cedek
 						end
 
 						create_table :phones do |t|
-							t.integer :student_id
+							t.integer :person_id
 							t.integer :phone_type_id
 							t.string :number
 						end
 
-						create_table :courses_students do |t|
-							t.integer :student_id
+						create_table :courses_people do |t|
+							t.integer :person_id
 							t.integer :course_id
 						end
 
 						create_table :scholarships do |t|
-							t.integer :student_id
+							t.integer :person_id
 							t.integer :course_id
 							t.integer :percentage
 						end
 
 						create_table :debts do |t|
-							t.integer :student_id
+							t.integer :person_id
 							t.integer :course_id
 							t.decimal :amount
 							t.date :commitment
@@ -90,7 +90,7 @@ module Cedek
 
 						create_table :attendances do |t|
 							t.integer :session_id
-							t.integer :student_id
+							t.integer :person_id
 						end
 
 					end
@@ -107,11 +107,11 @@ module Cedek
 
     def fixtures
       return with_connection do
-				s1 = Student.create!(id: 1, name: "Susana Alvarado", birthday: Time.new(1983, 10, 2), address: "Av Iman 580, Coyoacan, D.F.", email: "susana@gmail.com", lead_pray_group: true, has_scholarship: true, scholarship_percentage: 75)
-				s2 = Student.create!(id: 2, name: "Noel Soria", birthday: Time.new(2010, 3, 1), address: "Av Iman 580, Coyoacan, D.F.", email: "noel@gmail.com", lead_pray_group: false, has_scholarship: false, scholarship_percentage: 0)
-				s3 = Student.create!(id: 3, name: "Carlos Soria", birthday: Time.new(1983, 9, 10), address: "Av Iman 580, Coyoacan, D.F.", email: "carlos@gmail.com", lead_pray_group: false, has_scholarship: true, scholarship_percentage: 50)
-				s4 = Student.create!(id: 4, name: "Alfredo Alvarado", birthday: Time.new(1987, 9, 10), address: "Cerquita de la diana", email: "alfredo@gmail.com", lead_pray_group: true, has_scholarship: false, scholarship_percentage: 0)
-				s5 = Student.create!(id: 5, name: "Paloma Alvarado", birthday: Time.new(1981, 9, 11), address: "Con el compadre", email: "paloma@gmail.com", lead_pray_group: true, has_scholarship: true, scholarship_percentage: 25)
+				s1 = Person.create!(id: 1, name: "Susana Alvarado", birthday: Time.new(1983, 10, 2), address: "Av Iman 580, Coyoacan, D.F.", email: "susana@gmail.com", lead_pray_group: true, has_scholarship: true, scholarship_percentage: 75)
+				s2 = Person.create!(id: 2, name: "Noel Soria", birthday: Time.new(2010, 3, 1), address: "Av Iman 580, Coyoacan, D.F.", email: "noel@gmail.com", lead_pray_group: false, has_scholarship: false, scholarship_percentage: 0)
+				s3 = Person.create!(id: 3, name: "Carlos Soria", birthday: Time.new(1983, 9, 10), address: "Av Iman 580, Coyoacan, D.F.", email: "carlos@gmail.com", lead_pray_group: false, has_scholarship: true, scholarship_percentage: 50)
+				s4 = Person.create!(id: 4, name: "Alfredo Alvarado", birthday: Time.new(1987, 9, 10), address: "Cerquita de la diana", email: "alfredo@gmail.com", lead_pray_group: true, has_scholarship: false, scholarship_percentage: 0)
+				s5 = Person.create!(id: 5, name: "Paloma Alvarado", birthday: Time.new(1981, 9, 11), address: "Con el compadre", email: "paloma@gmail.com", lead_pray_group: true, has_scholarship: true, scholarship_percentage: 25)
 
 				c1 = Course.create!(id: 1, name: "Curso I", code: "CUR1", begin: Time.now, end: Time.now + 60*60*24*160, hour: Time.now, day: 0, cost: 300)
 				c2 = Course.create!(id: 2, name: "Curso II", code: "CUR2", begin: Time.now, end: Time.now + 60*60*24*360, hour: Time.now, day: 1, cost: 250)
@@ -155,37 +155,37 @@ module Cedek
 				c6.sessions << Session.create!(id: 11, session_date: Time.now + 60*60*24*6)
 				c6.sessions << Session.create!(id: 12, session_date: Time.now + 60*60*24*8)
 
-				Attendance.create!(session_id: 1, student_id: 1)
-				Attendance.create!(session_id: 2, student_id: 1)
-				Attendance.create!(session_id: 1, student_id: 2)
-				Attendance.create!(session_id: 2, student_id: 2)
-				Attendance.create!(session_id: 1, student_id: 3)
-				Attendance.create!(session_id: 2, student_id: 3)
-				Attendance.create!(session_id: 1, student_id: 4)
-				Attendance.create!(session_id: 2, student_id: 5)
+				Attendance.create!(session_id: 1, person_id: 1)
+				Attendance.create!(session_id: 2, person_id: 1)
+				Attendance.create!(session_id: 1, person_id: 2)
+				Attendance.create!(session_id: 2, person_id: 2)
+				Attendance.create!(session_id: 1, person_id: 3)
+				Attendance.create!(session_id: 2, person_id: 3)
+				Attendance.create!(session_id: 1, person_id: 4)
+				Attendance.create!(session_id: 2, person_id: 5)
 
-				Attendance.create!(session_id: 3, student_id: 1)
-				Attendance.create!(session_id: 4, student_id: 1)
-				Attendance.create!(session_id: 4, student_id: 2)
-				Attendance.create!(session_id: 3, student_id: 3)
-				Attendance.create!(session_id: 4, student_id: 3)
-				Attendance.create!(session_id: 3, student_id: 4)
+				Attendance.create!(session_id: 3, person_id: 1)
+				Attendance.create!(session_id: 4, person_id: 1)
+				Attendance.create!(session_id: 4, person_id: 2)
+				Attendance.create!(session_id: 3, person_id: 3)
+				Attendance.create!(session_id: 4, person_id: 3)
+				Attendance.create!(session_id: 3, person_id: 4)
 
-				Attendance.create!(session_id: 5, student_id: 1)
-				Attendance.create!(session_id: 6, student_id: 1)
-				Attendance.create!(session_id: 5, student_id: 4)
-				Attendance.create!(session_id: 6, student_id: 4)
-				Attendance.create!(session_id: 5, student_id: 5)
-				Attendance.create!(session_id: 6, student_id: 5)
+				Attendance.create!(session_id: 5, person_id: 1)
+				Attendance.create!(session_id: 6, person_id: 1)
+				Attendance.create!(session_id: 5, person_id: 4)
+				Attendance.create!(session_id: 6, person_id: 4)
+				Attendance.create!(session_id: 5, person_id: 5)
+				Attendance.create!(session_id: 6, person_id: 5)
 
-				Attendance.create!(session_id: 7, student_id: 5)
-				Attendance.create!(session_id: 8, student_id: 5)
+				Attendance.create!(session_id: 7, person_id: 5)
+				Attendance.create!(session_id: 8, person_id: 5)
 
-				Attendance.create!(session_id: 10, student_id: 4)
-				Attendance.create!(session_id: 9, student_id: 5)
+				Attendance.create!(session_id: 10, person_id: 4)
+				Attendance.create!(session_id: 9, person_id: 5)
 
-				Attendance.create!(session_id: 11, student_id: 2)
-				Attendance.create!(session_id: 12, student_id: 5)
+				Attendance.create!(session_id: 11, person_id: 2)
+				Attendance.create!(session_id: 12, person_id: 5)
 
       end
     end # fixtures

@@ -3,7 +3,7 @@ require 'active_record'
 module Cedek
 	module Model
 		class Course < ActiveRecord::Base
-			has_and_belongs_to_many :students
+			has_and_belongs_to_many :students, class_name: "Person"
 			scope :can_subscribe, ->{ where("? between begin and end or begin > ?", Time.now, Time.now) }
 			scope :active, ->{ where("? between begin and end", Time.now) }
 			scope :closed, ->{ where("end < ?", Time.now) }
@@ -37,15 +37,15 @@ module Cedek
     end
 
 		class Debt < ActiveRecord::Base
-			belongs_to :student
+			belongs_to :person
 			belongs_to :course
 
 			def course_name
 				return course.name
 			end
 
-			def student_name
-				return student.name
+			def person_name
+				return person.name
 			end
 		end
 
@@ -58,8 +58,12 @@ module Cedek
 		end
 
 		class Scholarship < ActiveRecord::Base
-			belongs_to :student
+			belongs_to :person
 			belongs_to :course
+
+      def student
+        return person
+      end
 
 			def course_name
 				return course.name
@@ -73,16 +77,24 @@ module Cedek
 		class Session < ActiveRecord::Base
 			belongs_to :course
 			has_many :attendances
-			has_many :students, :through => :attendances
+			has_many :people, :through => :attendances
+
+      def students
+        return people
+      end
 		end
 
 		class Attendance < ActiveRecord::Base
 			belongs_to :session
-			belongs_to :student
+			belongs_to :person
 			has_one :course, :through => :sessions
+
+      def student
+        return person
+      end
 		end
 
-		class Student < ActiveRecord::Base
+		class Person < ActiveRecord::Base
 			has_and_belongs_to_many :courses
 			has_many :phones
 			has_many :scholarships

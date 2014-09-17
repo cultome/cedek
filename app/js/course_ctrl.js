@@ -166,11 +166,11 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
       $scope.confirmDebtClose = function(debt){
         var data = $scope.alerts.confirmDebtClose;
         data.amount = debt.amount;
-        data.name = debt.student_name;
+        data.name = debt.person_name;
         data.confirm = function(){
           DebtService.payNow(debt.id,
               function(){
-                $scope.$emit("paymentsUpdated", debt.course_id, debt.student_id);
+                $scope.$emit("paymentsUpdated", debt.course_id, debt.person_id);
                 $("#confirmCloseDebt").modal('hide');
               },
               function(){
