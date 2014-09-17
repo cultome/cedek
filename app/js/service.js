@@ -1,13 +1,15 @@
 /* jshint strict: true */
 var app = angular.module('CEDEK');
 
+var serviceEndpoint = "http://localhost:4567";
+
 app.factory('PeopleService', ['$resource', function($resource){
   "use strict";
 
-  var PersonResource = $resource('http://localhost:4567/people/:personId', {personId: '@id'},
+  var PersonResource = $resource(serviceEndpoint + '/people/:personId', {personId: '@id'},
       {'update': { method: 'PUT' }}
       );
-  var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
+  var CourseResource = $resource(serviceEndpoint + '/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
     updateStudent: function(personId, studentData){
@@ -74,7 +76,7 @@ app.factory('PeopleService', ['$resource', function($resource){
 app.factory('CourseService', ['$resource', function($resource){
   "use strict";
 
-  var CourseResource = $resource('http://localhost:4567/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'},
+  var CourseResource = $resource(serviceEndpoint + '/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'},
       {'update': { method: 'PUT' }}
       );
 
@@ -159,7 +161,7 @@ app.factory('CourseService', ['$resource', function($resource){
 app.factory('ScholarshipService', ['$resource', function($resource){
   "use strict";
 
-  var ScholarshipResource = $resource('http://localhost:4567/scholarship/:scholarshipId', {scholarshipId: '@id'});
+  var ScholarshipResource = $resource(serviceEndpoint + '/scholarship/:scholarshipId', {scholarshipId: '@id'});
 
   return {
     revoke: function(scholarshipId, successCb, failCb){
@@ -187,7 +189,7 @@ app.factory('ScholarshipService', ['$resource', function($resource){
 app.factory('DebtService', ['$resource', function($resource){
   "use strict";
 
-  var DebtResource = $resource('http://localhost:4567/debts/:action/:actionId', {action: '@action'});
+  var DebtResource = $resource(serviceEndpoint + '/debts/:action/:actionId', {action: '@action'});
 
   return {
     makePayment: function(studentId, courseId, payment, amount, successCb, failCb){
@@ -204,10 +206,20 @@ app.factory('DebtService', ['$resource', function($resource){
   };
 }]);
 
+
+
+
+
+
+
+
+
+
+
 app.factory('CatalogService', ['$resource', function($resource){
   "use strict";
 
-  var CatalogResource = $resource('http://localhost:4567/catalogs/:catalogId', {catalogId: '@id'});
+  var CatalogResource = $resource(serviceEndpoint + '/catalogs/:catalogId', {catalogId: '@id'});
 
   return {
     cache: null,
