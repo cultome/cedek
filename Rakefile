@@ -19,7 +19,7 @@ namespace :test do
       end
 
       sinatra_server_pid = fork do
-        #Rake::Task['run'].invoke
+        Rake::Task['run'].invoke
       end
 
       puts "[*] webdriver PID: #{webdriver_pid}"
@@ -39,11 +39,17 @@ namespace :test do
       sleep 5
     rescue Exception => e
       puts e
-      system "ps aux | grep -ie 'node /usr/bin/protractor spec/javascript/conf.js' | awk '{print $2}' | xargs kill -9"
-      system "ps aux | grep -ie 'node /usr/bin/webdriver-manager start' | awk '{print $2}' | xargs kill -9"
-      system "ps aux | grep -ie 'ruby /home/csoria/.rvm/rubies/default/bin/rake run' | awk '{print $2}' | xargs kill -9"
+      Rake::Task['test:killall'].invoke
+    ensure
+      Rake::Task['test:killall'].invoke
       exit success
     end
+  end
+
+  task :killall do
+    system "ps aux | grep -ie '-Dwebdriver' | awk '{print $2}' | xargs kill -9"
+    system "ps aux | grep -ie 'node /usr/bin/protractor spec/javascript/conf.js' | awk '{print $2}' | xargs kill -9"
+    system "ps aux | grep -ie 'ruby /home/csoria/.rvm/rubies/default/bin/rake run' | awk '{print $2}' | xargs kill -9"
   end
 end
 

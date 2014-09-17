@@ -13,7 +13,7 @@ describe("Person", function(){
     expect(students.count()).toBeGreaterThan(before);
   });
 
-  iit("updates person information", function(){
+  it("updates person information", function(){
     common.createStudent("Mama Lucha");
     common.selectLastPerson().element(by.css(".go-to-edit")).click();
     // limpiamos los campos
@@ -29,8 +29,8 @@ describe("Person", function(){
     // checamos la actualizacion
     common.selectLastPerson().element(by.css(".go-to-edit")).click();
     expect(element(by.model("student.name")).getAttribute("value")).toEqual("Rosanelda Resendiz");
-    expect(element(by.model("student.birthday")).getAttribute("value")).toEqual("1980-12-31");
     expect(element(by.model("student.address")).getAttribute("value")).toEqual("Insurgentes Sur 9300");
     expect(element(by.model("student.email")).getAttribute("value")).toEqual("rosanelda@gmail.com");
+    expect(element(by.model("student.birthday")).getAttribute("value")).toEqual("1980-12-31");
   });
 });
