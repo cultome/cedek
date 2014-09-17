@@ -15,4 +15,12 @@ task :run do
   Cedek::App.send(:run!)
 end
 
+desc "Run interatively"
+task :console do
+  require 'irb'
+  require 'irb/completion'
+  ARGV.clear
+  IRB.start
+end
+
 task :default => :run
