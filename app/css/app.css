@@ -152,3 +152,10 @@ hr.vertical-separator {
 textarea {
   width: 100%;
   resize: none;
+}
+
+table.light-border th,
+table.light-border td {
+  text-align: center;
+  border-right: 1px dotted #ddd;
+}

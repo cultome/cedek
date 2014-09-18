@@ -6,48 +6,29 @@
       <div class="panel-heading">
         <h3 class="panel-title">
           <p>
-            Datos del paciente
+          {{person.name}}
             <a href="#/persona/editar/{{person.id}}"><span class="glyphicon glyphicon-pencil pull-right go-to-edit"></span></a>
           </p>
         </h3>
       </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-3 text-right"><strong>Nombre</strong></div>
-          <div class="col-md-7 border-left">{{person.name}}</div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3 text-right"><strong>Ocupacion</strong></div>
-          <div class="col-md-7 border-left">Ama de Casa</div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3 text-right"><strong>Edad</strong></div>
-          <div class="col-md-3 border-left">{{getAge(person.birthday)}} a&ntilde;os <em class="pull-right">[ {{getDateLabel(person.birthday, true)}} ]</em></div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3 text-right"><strong>Estado Civil</strong></div>
-          <div class="col-md-7 border-left">Casado</div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3 text-right"><strong>Asiste a cursos</strong></div>
-          <div class="col-md-3 border-left">Si</div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3 text-right"><strong>Telefonos</strong></div>
-          <div class="col-md-4 border-left">
-            <ul class="list-group slim">
-              <li class="list-group-item" ng-repeat="phone in person.phones">
-                <span phone model="phone" editable="false"></span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <table class="table table-condensed light-border">
+        <thead>
+          <tr>
+            <th>Ocupacion</th>
+            <th>Edad</th>
+            <th>Estado Civil</th>
+            <th>Asiste a Cursos?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Licenciada en Ingenieria en Telecomunicaciones</td>
+            <td>{{getAge(person.birthday)}} a&ntilde;os <em class="pull-right">[ {{getDateLabel(person.birthday, true)}} ]</em></td>
+            <td>Casada</td>
+            <td>Si</td>
+          </tr>
+        </tbody>
+      </table>
 
       <!-- consultas -->
       <div class="panel-heading">
@@ -57,10 +38,9 @@
         <div class="row">
           <ul class="nav nav-tabs" role="tablist">
             <li today-tab-switch consult="todayConsult"></li>
-            <li ng-repeat="consult in lastConsults" tab-switch consult="consult"></li>
+            <li ng-repeat="consult in lastConsults" tab-switch idx="{{$index}}" consult="consult"></li>
 
-            <!-- TODO SUBIR A 5 -->
-            <li ng-show="lastConsults.length >= 2">
+            <li ng-show="lastConsults.length >= 5">
               <a class="tab-switch" href="#settings" role="tab" data-toggle="tab">
                 <span class="glyphicon glyphicon-forward"></span>
               </a>
@@ -74,6 +54,27 @@
             <div class="tab-content">
               <div class="tab-pane fade in active" id="today">
                 <div class="row form-group" style="margin-top: 20px;">
+                  <label class="label-control col-md-2">Opciones</label>
+                  <div  class="col-md-8">
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="bl" ng-model="todayConsult.options.bl"> Bl
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rj" ng-model="todayConsult.options.rj"> Rj
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="vr" ng-model="todayConsult.options.vr"> Vr
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rs" ng-model="todayConsult.options.rs"> Rs
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="am" ng-model="todayConsult.options.am"> Am
+                    </label>
+                  </div>
+                </div>
+
+                <div class="row form-group">
                   <label class="label-control col-md-6">Motivo</label>
                   <div  class="col-md-12">
                     <textarea rows="5" ng-model="todayConsult.reason"></textarea>
@@ -96,15 +97,36 @@
 
                 <div class="row form-group">
                   <div class="col-md-offset-4 col-md-4">
-                    <button class="btn btn-default btn-block color-success" ng-click="create(todayConsult)">Guardar</button>
+                    <button class="btn btn-default btn-block color-success" ng-click="create(person.id)">Guardar</button>
                   </div>
                 </div>
 
               </div>
 
               <!-- consultas historicos -->
-              <div ng-repeat="consult in lastConsults" id="{{consult.date}}" class="tab-pane fade">
+              <div ng-repeat="consult in lastConsults" id="{{consult.date}}-{{$index}}" class="tab-pane fade">
                 <div class="row form-group" style="margin-top: 20px;">
+                  <label class="label-control col-md-2">Opciones</label>
+                  <div  class="col-md-8">
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="bl" ng-model="consult.options.bl"> Bl
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rj" ng-model="consult.options.rj"> Rj
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="vr" ng-model="consult.options.vr"> Vr
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rs" ng-model="consult.options.rs"> Rs
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="am" ng-model="consult.options.am"> Am
+                    </label>
+                  </div>
+                </div>
+
+                <div class="row form-group">
                   <label class="label-control col-md-6">Motivo</label>
                   <div  class="col-md-12">
                     <textarea readonly="readonly" rows="5">{{consult.reason}}</textarea>

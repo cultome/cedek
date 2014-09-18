@@ -44,9 +44,7 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', '$lo
       };
 
       $scope.update = function(personId){
-        var success = PeopleService.updateStudent(personId, $scope.student);
-        console.log("Updated? ");
-        console.log(success);
+        return PeopleService.updateStudent(personId, $scope.student);
       };
 
       $scope.isCreatingPerson = function(){

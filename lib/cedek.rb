@@ -44,6 +44,11 @@ module Cedek
 			}
 		end
 
+    post '/consults/:personId' do |personId|
+      body = request.body.read
+      puts "body: #{body}"
+    end
+
     # refactor this method
 		post '/courses/:courseId/:action/:actionId' do |courseId, action, actionId|
       body = request.body.read

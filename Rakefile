@@ -55,7 +55,7 @@ task :run do
 end
 
 desc "Prepare and start the system"
-task :setup do
+task :dist do
   system "grunt"
   Rake::Task['run'].invoke
   system "rm -fr build/ public/"
@@ -67,6 +67,12 @@ task :console do
   require 'irb/completion'
   ARGV.clear
   IRB.start
+end
+
+desc "Initialize the dependencies"
+task :init do
+  system "npm install"
+  system "bower install"
 end
 
 task :default => :run

@@ -1,7 +1,7 @@
 /* jshint strict: true */
 var app = angular.module('CEDEK');
 
-var serviceEndpoint = "http://localhost:4567";
+var serviceEndpoint = "http://localhost:92/api";
 
 app.factory('PeopleService', ['$resource', function($resource){
   "use strict";
@@ -228,6 +228,92 @@ app.factory('CatalogService', ['$resource', function($resource){
         this.cache = CatalogResource.query({catalogId: 'phone'}, successCb, failCb);
       }
       return this.cache;
+    }
+  };
+}]);
+
+
+
+
+
+
+
+
+
+
+
+
+app.factory('ConsultService', ['$resource', function($resource){
+  "use strict";
+
+  var ConsultResource = $resource(serviceEndpoint + '/consults/:personId', {personId: '@id'});
+
+  var consults = {};
+
+  return {
+
+    cleanPacientConsult: function(personId){
+      if(!consults[personId]){
+        consults[personId] = {};
+      }
+      consults[personId].date = "";
+      consults[personId].reason = "";
+      consults[personId].diagnostic = "";
+      consults[personId].treatment = "";
+      consults[personId].options = { "bl": false, "rj": false, "vr": false, "rs": false, "am": false };
+    },
+
+    getPacientConsult: function(personId){
+      if(!consults[personId]){
+        this.cleanPacientConsult(personId);
+      }
+      return consults[personId];
+    },
+
+    save: function(consult, personId, successCb, failCb){
+      console.log(consult);
+      console.log(personId);
+      ConsultResource.save({personId: personId}, consult, successCb, failCb);
+    },
+
+    getLastConsults: function(personId){
+      return [
+      {
+        date: "2014-08-23",
+        options: { "bl": true, "rj": true, "vr": false, "rs": true, "am": false },
+        reason: "Me siento bien",
+        diagnostic: "Estas muy loco",
+        treatment: "Beber alcohol hasta olvidar"
+      },
+      {
+        date: "2014-06-03",
+        options: { "bl": true, "rj": false, "vr": true, "rs": false, "am": true },
+        reason: "Me siento mal",
+        diagnostic: "Estas muy feo",
+        treatment: "No verse al espejo en 20 dias"
+      },
+        {
+          date: "2014-06-03",
+          options: { "bl": false, "rj": false, "vr": false, "rs": false, "am": true },
+          reason: "Me siento mal",
+          diagnostic: "Estas muy feo",
+          treatment: "No verse al espejo en 20 dias"
+        },
+        {
+          date: "2014-06-03",
+          options: { "bl": true, "rj": false, "vr": false, "rs": false, "am": true },
+          reason: "Me siento mal",
+          diagnostic: "Estas muy feo",
+          treatment: "No verse al espejo en 20 dias"
+        },
+          {
+            date: "2013-12-14",
+            options: { "bl": false, "rj": false, "vr": false, "rs": true, "am": false },
+            reason: "Estoy muy viejo",
+            diagnostic: "Tiene 69 aos",
+            treatment: "Esperar la muerte"
+          }
+      ];
     }
   };
 }]);
