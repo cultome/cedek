@@ -244,15 +244,16 @@ app.directive('phone', ['CatalogService', function(CatalogService){
   return {
     replace: true,
     scope: {
-      model: '='
+      model: '=',
+      editable: '@'
     },
 
-    template: '<span><span><strong>{{model.number}}</strong></span><span class="deletable label label-default pull-right" style="width: 50px;">{{getPhoneTypeName}}</span></span>',
+    template: '<span><span><strong>{{model.number}}</strong></span><span class="deletable phone-number label label-default pull-right" style="width: 50px;">{{getPhoneTypeName()}}</span></span>',
     link: function(scope, elem, attr){
       var phoneTypes = CatalogService.phoneTypes();
 
-      function getTypeName(){
-        if(phoneTypes <= 1){
+      scope.getPhoneTypeName = function(){
+        if(phoneTypes.length <= 1){
           return "";
         }
 
@@ -264,14 +265,20 @@ app.directive('phone', ['CatalogService', function(CatalogService){
         return type.name;
       }
 
-      scope.getPhoneTypeName = getTypeName();
+      if(scope.editable !== "true"){
+        $(elem).find(".phone-number").toggleClass("deletable");
+      }
 
-      $(elem).find(".deletable").hover(function(){
-        $(this).text("X");
+      $(elem).find(".phone-number").hover(function(){
+        if(scope.editable === "true"){
+          $(this).text("X");
+        }
       }).mouseout(function(){
-        $(this).text(scope.getPhoneTypeName);
+        $(this).text(scope.getPhoneTypeName());
       }).click(function(){
-        scope.$emit("deletePhone", scope.model.number, scope.model.phone_type_id);
+        if(scope.editable === "true"){
+          scope.$emit("deletePhone", scope.model.number, scope.model.phone_type_id);
+        }
       });
     }
 
@@ -337,3 +344,46 @@ app.directive('studentScholarshipPercentage', [function(){
   };
 }]);
 
+app.directive('tabSwitch', [function(){
+  "use strict";
+
+  return {
+    replace: true,
+    scope: {
+      consult: "="
+    },
+
+    template: '<li><a class="tab-switch" href="#{{consult.date}}" role="tab" data-toggle="tab">{{getDateLabel(consult.date, true)}}</a></li>',
+
+    link: function(scope, elem, attrs){
+      scope.getDateLabel = scope.$parent.getDateLabel;
+
+      $(elem).click(function(e){
+        e.preventDefault();
+        $(this).tab('show')
+      });
+    }
+  };
+}]);
+
+app.directive('todayTabSwitch', [function(){
+  "use strict";
+
+  return {
+    replace: true,
+    scope: {
+      consult: "="
+    },
+
+    template: '<li class="active"><a class="tab-switch" href="#today" role="tab" data-toggle="tab">Hoy</a></li>',
+
+    link: function(scope, elem, attrs){
+      scope.getDateLabel = scope.$parent.getDateLabel;
+
+      $(elem).click(function(e){
+        e.preventDefault();
+        $(this).tab('show')
+      });
+    }
+  };
+}]);

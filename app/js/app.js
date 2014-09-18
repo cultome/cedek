@@ -85,7 +85,7 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
     return d.getFullYear() + "-" + ( month < 10 ? "0" + month : month) + "-" +(  date < 10 ? "0" + date : date);
   };
 
-  $scope.getDateLabel = function(dateStr){
+  $scope.getDateLabel = function(dateStr, abbr){
     if(dateStr == null){
       return "";
     }
@@ -96,7 +96,11 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
 
     var monthName = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"][month];
 
-    return day + " de " + monthName + "  " + year;
+    if(abbr){
+      return day + " " + monthName.substring(0,3) + " " + year;
+    } else {
+      return day + " de " + monthName + "  " + year;
+    }
   };
 }]);
 

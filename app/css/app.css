@@ -144,3 +144,11 @@
 hr.vertical-separator {
   margin: 10px 0px;
 }
+
+.border-left {
+  border-left: 1px dotted #ddd;
+}
+
+textarea {
+  width: 100%;
+  resize: none;

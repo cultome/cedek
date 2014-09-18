@@ -223,9 +223,9 @@ app.factory('CatalogService', ['$resource', function($resource){
 
   return {
     cache: null,
-    phoneTypes: function(){
+    phoneTypes: function(successCb, failCb){
       if(this.cache === null){
-        this.cache = CatalogResource.query({catalogId: 'phone'});
+        this.cache = CatalogResource.query({catalogId: 'phone'}, successCb, failCb);
       }
       return this.cache;
     }
