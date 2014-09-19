@@ -222,12 +222,20 @@ app.factory('CatalogService', ['$resource', function($resource){
   var CatalogResource = $resource(serviceEndpoint + '/catalogs/:catalogId', {catalogId: '@id'});
 
   return {
-    cache: null,
+    phonesCache: null,
+    leadersCache: null,
     phoneTypes: function(successCb, failCb){
-      if(this.cache === null){
-        this.cache = CatalogResource.query({catalogId: 'phone'}, successCb, failCb);
+      if(this.phonesCache === null){
+        this.phonesCache = CatalogResource.query({catalogId: 'phone'}, successCb, failCb);
       }
-      return this.cache;
+      return this.phonesCache;
+    },
+
+    leaders: function(successCb, failCb){
+      if(this.leadersCache === null){
+        this.leadersCache = CatalogResource.query({catalogId: "leaders"}, successCb, failCb);
+      }
+      return this.leadersCache;
     }
   };
 }]);
@@ -246,7 +254,7 @@ app.factory('CatalogService', ['$resource', function($resource){
 app.factory('ConsultService', ['$resource', function($resource){
   "use strict";
 
-  var ConsultResource = $resource(serviceEndpoint + '/consults/:personId', {personId: '@id'});
+  var ConsultResource = $resource(serviceEndpoint + '/consults/:personId/:actionId', {personId: '@id',actionId: '@actionId'});
 
   var consults = {};
 
@@ -260,6 +268,8 @@ app.factory('ConsultService', ['$resource', function($resource){
       consults[personId].reason = "";
       consults[personId].diagnostic = "";
       consults[personId].treatment = "";
+      consults[personId].leader_id = "";
+      consults[personId].person_id = "";
       consults[personId].options = { "bl": false, "rj": false, "vr": false, "rs": false, "am": false };
     },
 
@@ -273,47 +283,11 @@ app.factory('ConsultService', ['$resource', function($resource){
     save: function(consult, personId, successCb, failCb){
       console.log(consult);
       console.log(personId);
-      ConsultResource.save({personId: personId}, consult, successCb, failCb);
+      //ConsultResource.save({personId: personId}, consult, successCb, failCb);
     },
 
-    getLastConsults: function(personId){
-      return [
-      {
-        date: "2014-08-23",
-        options: { "bl": true, "rj": true, "vr": false, "rs": true, "am": false },
-        reason: "Me siento bien",
-        diagnostic: "Estas muy loco",
-        treatment: "Beber alcohol hasta olvidar"
-      },
-      {
-        date: "2014-06-03",
-        options: { "bl": true, "rj": false, "vr": true, "rs": false, "am": true },
-        reason: "Me siento mal",
-        diagnostic: "Estas muy feo",
-        treatment: "No verse al espejo en 20 dias"
-      },
-        {
-          date: "2014-06-03",
-          options: { "bl": false, "rj": false, "vr": false, "rs": false, "am": true },
-          reason: "Me siento mal",
-          diagnostic: "Estas muy feo",
-          treatment: "No verse al espejo en 20 dias"
-        },
-        {
-          date: "2014-06-03",
-          options: { "bl": true, "rj": false, "vr": false, "rs": false, "am": true },
-          reason: "Me siento mal",
-          diagnostic: "Estas muy feo",
-          treatment: "No verse al espejo en 20 dias"
-        },
-          {
-            date: "2013-12-14",
-            options: { "bl": false, "rj": false, "vr": false, "rs": true, "am": false },
-            reason: "Estoy muy viejo",
-            diagnostic: "Tiene 69 aos",
-            treatment: "Esperar la muerte"
-          }
-      ];
+    getLastConsults: function(personId, successCb, failCb){
+      return ConsultResource.query({personId: personId, actionId: "recent"}, successCb, failCb);
     }
   };
 }]);

@@ -53,9 +53,22 @@
             <!-- Tab panes -->
             <div class="tab-content">
               <div class="tab-pane fade in active" id="today">
+
                 <div class="row form-group" style="margin-top: 20px;">
+                  <label class="label-control col-md-2">Atendido por</label>
+                  <div class="col-md-4">
+                    <select
+                       class="form-control"
+                       ng-model="todayConsult.leader_id"
+                       ng-options="l.id as l.name for l in leaders">
+                      <option value="">Seleccione un guia</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row form-group">
                   <label class="label-control col-md-2">Opciones</label>
-                  <div  class="col-md-8">
+                  <div  class="col-md-4">
                     <label class="checkbox-inline">
                       <input type="checkbox" value="bl" ng-model="todayConsult.options.bl"> Bl
                     </label>
@@ -104,8 +117,21 @@
               </div>
 
               <!-- consultas historicos -->
-              <div ng-repeat="consult in lastConsults" id="{{consult.date}}-{{$index}}" class="tab-pane fade">
+              <div ng-repeat="consult in lastConsults" id="{{consult.consult_date}}-{{$index}}" class="tab-pane fade">
                 <div class="row form-group" style="margin-top: 20px;">
+                  <label class="label-control col-md-2">Atendido por</label>
+                  <div class="col-md-4">
+                    <select
+                       class="form-control"
+                       ng-model="consult.leader_id"
+                       ng-disabled="true"
+                       ng-options="l.id as l.name for l in leaders">
+                      <option value="">Seleccione un guia</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row form-group">
                   <label class="label-control col-md-2">Opciones</label>
                   <div  class="col-md-8">
                     <label class="checkbox-inline">

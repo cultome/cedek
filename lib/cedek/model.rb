@@ -118,5 +118,22 @@ module Cedek
 			end
 
 		end
+
+    class Consult < ActiveRecord::Base
+      belongs_to :leader
+      belongs_to :person
+
+      def leader_name
+        return leader.name
+      end
+
+      def person_name
+        return person.name
+      end
+    end
+
+    class Leader < ActiveRecord::Base
+    end
+
 	end
 end

@@ -175,6 +175,13 @@ module Cedek
       end
     end
 
+		get '/consults/:personId/recent' do |personId|
+      return with_connection do
+        consults = Consult.where("person_id = ?", personId).limit(5).order('consult_date desc').reverse
+        return consults.to_json(methods: [:leader_name, :person_name])
+      end
+    end
+
 		get '/people/:personId' do |personId|
       return with_connection do
         Person.find(personId).to_json(include: {
@@ -189,7 +196,6 @@ module Cedek
 		end
 
     get '/people' do
-
       return with_connection do
         if params.empty?
           Person.all.to_json(include: {
@@ -318,6 +324,8 @@ module Cedek
 			case catalogId
 			when "phone" then
 				return with_connection{ PhoneType.all.to_json }
+      when "leaders" then
+        return with_connection{ Leader.all.to_json }
 			end
 		end
 

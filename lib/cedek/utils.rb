@@ -30,6 +30,8 @@ module Cedek
 					ActiveRecord::Schema.drop_table('courses')
 					ActiveRecord::Schema.drop_table('phones')
 					ActiveRecord::Schema.drop_table('phone_types')
+					ActiveRecord::Schema.drop_table('leaders')
+					ActiveRecord::Schema.drop_table('consults')
 				rescue
 				end
 
@@ -60,38 +62,52 @@ module Cedek
 						end
 
 						create_table :phones do |t|
-							t.integer :person_id
-							t.integer :phone_type_id
+							t.references :person
+							t.references :phone_type
 							t.string :number
 						end
 
 						create_table :courses_people do |t|
-							t.integer :person_id
-							t.integer :course_id
+							t.references :person
+							t.references :course
 						end
 
 						create_table :scholarships do |t|
-							t.integer :person_id
-							t.integer :course_id
+							t.references :person
+							t.references :course
 							t.integer :percentage
 						end
 
 						create_table :debts do |t|
-							t.integer :person_id
-							t.integer :course_id
+							t.references :person
+							t.references :course
 							t.decimal :amount
 							t.date :commitment
 						end
 
 						create_table :sessions do |t|
-							t.integer :course_id
+							t.references :course
 							t.date :session_date
 						end
 
 						create_table :attendances do |t|
-							t.integer :session_id
-							t.integer :person_id
+							t.references :session
+							t.references :person
 						end
+
+            create_table :leaders do |t|
+              t.string :name
+            end
+
+            create_table :consults do |t|
+              t.references :leader
+              t.references :person
+              t.date :consult_date
+              t.string :options
+              t.string :reason
+              t.string :diagnostic
+              t.string :treatment
+            end
 
 					end
 				rescue ActiveRecord::StatementInvalid
@@ -100,6 +116,18 @@ module Cedek
 				PhoneType.create(id: 1, name: "Casa")
 				PhoneType.create(id: 2, name: "Movil")
 				PhoneType.create(id: 3, name: "Oficina")
+
+        Leader.create!(id: 1, name: "Tirso Alvarado")
+        Leader.create!(id: 2, name: "Paloma Alvarado")
+        Leader.create!(id: 3, name: "Araceli")
+
+        # eliminar
+        Consult.create!(id: 1, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*86, options: "", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
+        Consult.create!(id: 2, leader_id: 2, person_id: 1, consult_date: Time.now - 60*60*24*54, options: "", reason: "Razon 2", diagnostic: "Diagnostico 2", treatment: "Tratamiento 2")
+        Consult.create!(id: 3, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*23, options: "", reason: "Razon 3", diagnostic: "Diagnostico 3", treatment: "Tratamiento 3")
+        Consult.create!(id: 4, leader_id: 1, person_id: 2, consult_date: Time.now - 60*60*24*59, options: "", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
+        Consult.create!(id: 5, leader_id: 3, person_id: 1, consult_date: Time.now - 60*60*24*10, options: "", reason: "Razon 4", diagnostic: "Diagnostico 4", treatment: "Tratamiento 4")
+        Consult.create!(id: 6, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*1, options: "", reason: "Razon 5", diagnostic: "Diagnostico 5", treatment: "Tratamiento 5")
 
         return true
 			end

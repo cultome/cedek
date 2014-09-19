@@ -354,7 +354,7 @@ app.directive('tabSwitch', [function(){
       idx: "@"
     },
 
-    template: '<li><a class="tab-switch" href="#{{consult.date}}-{{idx}}" role="tab" data-toggle="tab">{{getDateLabel(consult.date, true)}}</a></li>',
+    template: '<li><a class="tab-switch" href="#{{consult.consult_date}}-{{idx}}" role="tab" data-toggle="tab">{{getDateLabel(consult.consult_date, true)}}</a></li>',
 
     link: function(scope, elem, attrs){
       scope.getDateLabel = scope.$parent.getDateLabel;
