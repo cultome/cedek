@@ -130,6 +130,12 @@ module Cedek
       def person_name
         return person.name
       end
+
+      def opts
+        return "" if self.options.empty?
+        return self.options.split("-").reduce({}){|acc, opc| acc[opc] = true; acc }
+      end
+
     end
 
     class Leader < ActiveRecord::Base

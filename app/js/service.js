@@ -281,9 +281,7 @@ app.factory('ConsultService', ['$resource', function($resource){
     },
 
     save: function(consult, personId, successCb, failCb){
-      console.log(consult);
-      console.log(personId);
-      //ConsultResource.save({personId: personId}, consult, successCb, failCb);
+      return ConsultResource.save({personId: personId}, consult, successCb, failCb);
     },
 
     getLastConsults: function(personId, successCb, failCb){
