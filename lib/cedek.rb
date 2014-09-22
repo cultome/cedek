@@ -46,12 +46,12 @@ module Cedek
 
     post '/consults/:personId' do |personId|
       body = JSON.parse request.body.read
-      #puts "************ body: #{body.inspect}"
-      options = body["options"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")
-      #puts "============ options: #{options}"
-      #return with_connection do
-        #Consult.create!()
-      #end
+      drops = body["drops"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")
+      body["drops"] = drops
+      return with_connection do
+        Consult.create!(body)
+        return true
+      end
     end
 
     # refactor this method
@@ -180,9 +180,14 @@ module Cedek
       end
     end
 
-		get '/consults/:personId/recent' do |personId|
+    get '/consults/:personId' do |personId|
       return with_connection do
-        consults = Consult.where("person_id = ?", personId).limit(5).order('consult_date desc').reverse
+        consults = Consult.by_person(personId)
+
+        if params["recent"]
+          consults = consults.limit(5)
+        end
+
         return consults.to_json(methods: [:leader_name, :person_name, :opts])
       end
     end

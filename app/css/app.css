@@ -159,3 +159,11 @@ table.light-border td {
   text-align: center;
   border-right: 1px dotted #ddd;
 }
+
+.multiline-tabs > li.active {
+  border-bottom: 1px solid #fff;
+}
+
+.multiline-tabs > li {
+  border-bottom: 1px solid #ddd;
+}

@@ -103,7 +103,7 @@ module Cedek
               t.references :leader
               t.references :person
               t.date :consult_date
-              t.string :options
+              t.string :drops
               t.string :reason
               t.string :diagnostic
               t.string :treatment
@@ -122,12 +122,12 @@ module Cedek
         Leader.create!(id: 3, name: "Araceli")
 
         # eliminar
-        Consult.create!(id: 1, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*86, options: "bl-am", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
-        Consult.create!(id: 2, leader_id: 2, person_id: 1, consult_date: Time.now - 60*60*24*54, options: "rj-vr", reason: "Razon 2", diagnostic: "Diagnostico 2", treatment: "Tratamiento 2")
-        Consult.create!(id: 3, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*23, options: "rs", reason: "Razon 3", diagnostic: "Diagnostico 3", treatment: "Tratamiento 3")
-        Consult.create!(id: 4, leader_id: 1, person_id: 2, consult_date: Time.now - 60*60*24*59, options: "vr-rs", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
-        Consult.create!(id: 5, leader_id: 3, person_id: 1, consult_date: Time.now - 60*60*24*10, options: "bl-am", reason: "Razon 4", diagnostic: "Diagnostico 4", treatment: "Tratamiento 4")
-        Consult.create!(id: 6, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*1, options: "rj-vr-rs-am-bl", reason: "Razon 5", diagnostic: "Diagnostico 5", treatment: "Tratamiento 5")
+        Consult.create!(id: 1, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*86, drops: "bl-am", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
+        Consult.create!(id: 2, leader_id: 2, person_id: 1, consult_date: Time.now - 60*60*24*54, drops: "rj-vr", reason: "Razon 2", diagnostic: "Diagnostico 2", treatment: "Tratamiento 2")
+        Consult.create!(id: 3, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*23, drops: "rs", reason: "Razon 3", diagnostic: "Diagnostico 3", treatment: "Tratamiento 3")
+        Consult.create!(id: 4, leader_id: 1, person_id: 2, consult_date: Time.now - 60*60*24*59, drops: "vr-rs", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
+        Consult.create!(id: 5, leader_id: 3, person_id: 1, consult_date: Time.now - 60*60*24*10, drops: "bl-am", reason: "Razon 4", diagnostic: "Diagnostico 4", treatment: "Tratamiento 4")
+        Consult.create!(id: 6, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*1, drops: "rj-vr-rs-am-bl", reason: "Razon 5", diagnostic: "Diagnostico 5", treatment: "Tratamiento 5")
 
         return true
 			end

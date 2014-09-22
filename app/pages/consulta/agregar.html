@@ -36,12 +36,12 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <ul class="nav nav-tabs" role="tablist">
+          <ul class="nav nav-tabs multiline-tabs" role="tablist">
             <li today-tab-switch consult="todayConsult"></li>
             <li ng-repeat="consult in lastConsults" tab-switch idx="{{$index}}" consult="consult"></li>
 
-            <li ng-show="lastConsults.length >= 5">
-              <a class="tab-switch" href="#settings" role="tab" data-toggle="tab">
+            <li ng-show="lastConsults.length >= 5 && !showingAll">
+              <a ng-click="loadAll()">
                 <span class="glyphicon glyphicon-forward"></span>
               </a>
             </li>
@@ -67,22 +67,22 @@
                 </div>
 
                 <div class="row form-group">
-                  <label class="label-control col-md-2">Opciones</label>
+                  <label class="label-control col-md-2">Gotas</label>
                   <div  class="col-md-4">
                     <label class="checkbox-inline">
-                      <input type="checkbox" value="bl" ng-model="todayConsult.options.bl"> Bl
+                      <input type="checkbox" value="bl" ng-model="todayConsult.drops.bl"> Bl
                     </label>
                     <label class="checkbox-inline">
-                      <input type="checkbox" value="rj" ng-model="todayConsult.options.rj"> Rj
+                      <input type="checkbox" value="rj" ng-model="todayConsult.drops.rj"> Rj
                     </label>
                     <label class="checkbox-inline">
-                      <input type="checkbox" value="vr" ng-model="todayConsult.options.vr"> Vr
+                      <input type="checkbox" value="vr" ng-model="todayConsult.drops.vr"> Vr
                     </label>
                     <label class="checkbox-inline">
-                      <input type="checkbox" value="rs" ng-model="todayConsult.options.rs"> Rs
+                      <input type="checkbox" value="rs" ng-model="todayConsult.drops.rs"> Rs
                     </label>
                     <label class="checkbox-inline">
-                      <input type="checkbox" value="am" ng-model="todayConsult.options.am"> Am
+                      <input type="checkbox" value="am" ng-model="todayConsult.drops.am"> Am
                     </label>
                   </div>
                 </div>
@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="row form-group">
-                  <label class="label-control col-md-2">Opciones</label>
+                  <label class="label-control col-md-2">Gotas</label>
                   <div  class="col-md-8">
                     <label class="checkbox-inline">
                       <input type="checkbox" value="bl" ng-model="consult.opts.bl" ng-disabled="true"> Bl

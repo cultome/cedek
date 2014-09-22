@@ -254,7 +254,7 @@ app.factory('CatalogService', ['$resource', function($resource){
 app.factory('ConsultService', ['$resource', function($resource){
   "use strict";
 
-  var ConsultResource = $resource(serviceEndpoint + '/consults/:personId/:actionId', {personId: '@id',actionId: '@actionId'});
+  var ConsultResource = $resource(serviceEndpoint + '/consults/:personId', {personId: '@id'});
 
   var consults = {};
 
@@ -264,13 +264,14 @@ app.factory('ConsultService', ['$resource', function($resource){
       if(!consults[personId]){
         consults[personId] = {};
       }
-      consults[personId].date = "";
-      consults[personId].reason = "";
-      consults[personId].diagnostic = "";
-      consults[personId].treatment = "";
-      consults[personId].leader_id = "";
-      consults[personId].person_id = "";
-      consults[personId].options = { "bl": false, "rj": false, "vr": false, "rs": false, "am": false };
+      consults[personId].consult_date = null;
+      consults[personId].reason = null;
+      consults[personId].diagnostic = null;
+      consults[personId].treatment = null;
+      consults[personId].leader_id = null;
+      consults[personId].person_id = null;
+      consults[personId].drops = { "bl": false, "rj": false, "vr": false, "rs": false, "am": false };
+      return consults[personId];
     },
 
     getPacientConsult: function(personId){
@@ -285,7 +286,11 @@ app.factory('ConsultService', ['$resource', function($resource){
     },
 
     getLastConsults: function(personId, successCb, failCb){
-      return ConsultResource.query({personId: personId, actionId: "recent"}, successCb, failCb);
+      return ConsultResource.query({personId: personId, recent: true}, successCb, failCb);
+    },
+
+    getAllConsults: function(personId, successCb, failCb){
+      return ConsultResource.query({personId: personId}, successCb, failCb);
     }
   };
 }]);

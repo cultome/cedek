@@ -123,6 +123,8 @@ module Cedek
       belongs_to :leader
       belongs_to :person
 
+      scope :by_person, ->(personId){ where("person_id = ?", personId).order('consult_date desc') }
+
       def leader_name
         return leader.name
       end
@@ -132,8 +134,8 @@ module Cedek
       end
 
       def opts
-        return "" if self.options.empty?
-        return self.options.split("-").reduce({}){|acc, opc| acc[opc] = true; acc }
+        return "" if self.drops.empty?
+        return self.drops.split("-").reduce({}){|acc, opc| acc[opc] = true; acc }
       end
 
     end

@@ -5,13 +5,22 @@ angular.module('CEDEK').controller('ConsultCtrl', ['$scope', '$routeParams', 'Pe
       $scope.person = null;
       $scope.todayConsult = null;
       $scope.lastConsults = null;
+      $scope.showingAll = false;
 
       $scope.create = function(personId){
         ConsultService.save($scope.todayConsult, personId, function(){
           var savedConsult = angular.copy($scope.todayConsult);
+          savedConsult.opts = savedConsult.drops;
           $scope.lastConsults.unshift(savedConsult);
-          ConsultService.cleanPacientConsult(personId);
-          $scope.todayConsult.date = $scope.today();
+          $scope.todayConsult = ConsultService.cleanPacientConsult(personId);
+          $scope.todayConsult.consult_date = $scope.today();
+        });
+      };
+
+      $scope.loadAll = function(){
+        ConsultService.getAllConsults(personId, function(consults){
+          $scope.lastConsults = consults;
+          $scope.showingAll = true;
         });
       };
 
@@ -21,7 +30,7 @@ angular.module('CEDEK').controller('ConsultCtrl', ['$scope', '$routeParams', 'Pe
         $scope.leaders = CatalogService.leaders();
         $scope.todayConsult = ConsultService.getPacientConsult(personId);
         $scope.lastConsults = ConsultService.getLastConsults(personId);
-        $scope.todayConsult.date = $scope.today();
+        $scope.todayConsult.consult_date = $scope.today();
         $scope.todayConsult.person_id = personId;
       }
     }
