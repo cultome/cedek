@@ -4,15 +4,30 @@ module Cedek
 	module Utils
 
 		ActiveRecord::Base.include_root_in_json = false
+    ENVS = {
+      'dev' => {
+        adapter: 'sqlite3',
+        database: 'db/app.db'
+      },
+      'prod' => {
+        adapter: 'mysql2',
+        database: 'cedek',
+        host: '127.0.0.1',
+        username: 'cedek',
+        password: 'cedek',
+        encoding: 'utf8'
+      }
+    }
+
+    def selected_env
+      ENV["ENV"] || 'dev'
+    end
 
 		def with_connection(&db_logic)
 			begin
 				ActiveRecord::Base.connection_pool
 			rescue Exception => e
-				ActiveRecord::Base.establish_connection(
-					adapter: 'mysql2', database: 'cedek', host: '127.0.0.1', username: 'cedek', password: 'cedek', encoding: 'utf8'
-					#adapter: 'sqlite3',#database: 'db/app.db'
-				)
+				ActiveRecord::Base.establish_connection(ENVS[selected_env])
 			end
 
 			ActiveRecord::Base.connection_pool.with_connection(&db_logic)
