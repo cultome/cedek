@@ -10,8 +10,8 @@ module Cedek
 				ActiveRecord::Base.connection_pool
 			rescue Exception => e
 				ActiveRecord::Base.establish_connection(
-					adapter: 'sqlite3',
-					database: 'db/app.db'
+					adapter: 'mysql2', database: 'cedek', host: '127.0.0.1', username: 'cedek', password: 'cedek', encoding: 'utf8'
+					#adapter: 'sqlite3',#database: 'db/app.db'
 				)
 			end
 
