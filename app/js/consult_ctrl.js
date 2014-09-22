@@ -12,8 +12,8 @@ angular.module('CEDEK').controller('ConsultCtrl', ['$scope', '$routeParams', 'Pe
           var savedConsult = angular.copy($scope.todayConsult);
           savedConsult.opts = savedConsult.drops;
           $scope.lastConsults.unshift(savedConsult);
-          $scope.todayConsult = ConsultService.cleanPacientConsult(personId);
-          $scope.todayConsult.consult_date = $scope.today();
+          ConsultService.cleanPacientConsult(personId);
+          $scope.todayConsult = ConsultService.getCurrentConsult(personId, $scope.today());
         });
       };
 
@@ -24,14 +24,20 @@ angular.module('CEDEK').controller('ConsultCtrl', ['$scope', '$routeParams', 'Pe
         });
       };
 
+      $scope.isStudent = function(person){
+        if(person.previous && person.reserves && person.enrollments){
+          return (person.previous.length > 0 || person.reserves.length > 0 || person.enrollments.length > 0) ? "Si" : "No";
+        }
+
+        return "No";
+      };
+
       if($routeParams.personId){
         var personId = parseInt($routeParams.personId);
         $scope.person = PeopleService.getStudent(personId);
         $scope.leaders = CatalogService.leaders();
-        $scope.todayConsult = ConsultService.getPacientConsult(personId);
         $scope.lastConsults = ConsultService.getLastConsults(personId);
-        $scope.todayConsult.consult_date = $scope.today();
-        $scope.todayConsult.person_id = personId;
+        $scope.todayConsult = ConsultService.getCurrentConsult(personId, $scope.today());
       }
     }
 ]);

@@ -25,6 +25,9 @@ function goTo(option){
 function createStudent(studentName){
   goTo("addPeople");
   element(by.model("student.name")).sendKeys(studentName);
+  element(by.model("student.job")).sendKeys("Licenciado en Ingenieria");
+  element(by.model("student.marital_status_id")).sendKeys("C");
+
   element(by.model("student.birthday")).sendKeys("06112008");
   element(by.model("student.address")).sendKeys("Av. del Pirul 365, Xochimilco, D.F.");
   element(by.model("student.email")).sendKeys("salsero2008@gmail.com");

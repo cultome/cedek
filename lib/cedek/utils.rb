@@ -32,6 +32,7 @@ module Cedek
 					ActiveRecord::Schema.drop_table('phone_types')
 					ActiveRecord::Schema.drop_table('leaders')
 					ActiveRecord::Schema.drop_table('consults')
+					ActiveRecord::Schema.drop_table('marital_statuses')
 				rescue
 				end
 
@@ -40,6 +41,8 @@ module Cedek
 						create_table :people do |t|
 							t.string :name
 							t.date :birthday
+              t.string :job
+              t.references :marital_status
 							t.string :address
 							t.string :email
 							t.boolean :lead_pray_group
@@ -109,17 +112,27 @@ module Cedek
               t.string :treatment
             end
 
+            create_table :marital_statuses do |t|
+              t.string :name
+            end
+
 					end
 				rescue ActiveRecord::StatementInvalid
 				end
+
+        MaritalStatus.create!(name: "Solter@")
+        MaritalStatus.create!(name: "Casad@")
+        MaritalStatus.create!(name: "Divorciad@")
+        MaritalStatus.create!(name: "Viud@")
+        MaritalStatus.create!(name: "Otro")
 
 				PhoneType.create(id: 1, name: "Casa")
 				PhoneType.create(id: 2, name: "Movil")
 				PhoneType.create(id: 3, name: "Oficina")
 
-        Leader.create!(id: 1, name: "Tirso Alvarado")
-        Leader.create!(id: 2, name: "Paloma Alvarado")
-        Leader.create!(id: 3, name: "Araceli")
+        Leader.create!(id: 1, name: "Guia 1")
+        Leader.create!(id: 2, name: "Guia 2")
+        Leader.create!(id: 3, name: "Guia 3")
 
         # eliminar
         Consult.create!(id: 1, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*86, drops: "bl-am", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")

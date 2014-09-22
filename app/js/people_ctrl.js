@@ -6,6 +6,7 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', '$lo
       // list students
       $scope.students = null;
       $scope.student = null;
+      $scope.maritalStatus = CatalogService.maritalStatus();
 
       $scope.panels = {
         "subscribe": {

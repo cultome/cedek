@@ -53,6 +53,10 @@ module Cedek
 			belongs_to :phone_type
 		end
 
+		class MaritalStatus < ActiveRecord::Base
+      has_many :people
+		end
+
 		class PhoneType < ActiveRecord::Base
 			has_many :phones
 		end
@@ -96,6 +100,7 @@ module Cedek
 
 		class Person < ActiveRecord::Base
 			has_and_belongs_to_many :courses
+      belongs_to :marital_status
 			has_many :phones
 			has_many :scholarships
 			has_many :debts
@@ -117,13 +122,16 @@ module Cedek
 				courses.closed.to_a
 			end
 
+      def marital_status_name
+        marital_status.name
+      end
 		end
 
     class Consult < ActiveRecord::Base
       belongs_to :leader
       belongs_to :person
 
-      scope :by_person, ->(personId){ where("person_id = ?", personId).order('consult_date desc') }
+      scope :by_person, ->(personId){ where("person_id = ?", personId).order('id desc') }
 
       def leader_name
         return leader.name

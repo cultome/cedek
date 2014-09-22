@@ -224,11 +224,19 @@ app.factory('CatalogService', ['$resource', function($resource){
   return {
     phonesCache: null,
     leadersCache: null,
+    maritalStatusCache: null,
     phoneTypes: function(successCb, failCb){
       if(this.phonesCache === null){
         this.phonesCache = CatalogResource.query({catalogId: 'phone'}, successCb, failCb);
       }
       return this.phonesCache;
+    },
+
+    maritalStatus: function(successCb, failCb){
+      if(this.maritalStatusCache === null){
+        this.maritalStatusCache = CatalogResource.query({catalogId: "maritalStatus"}, successCb, failCb);
+      }
+      return this.maritalStatusCache;
     },
 
     leaders: function(successCb, failCb){
@@ -274,10 +282,12 @@ app.factory('ConsultService', ['$resource', function($resource){
       return consults[personId];
     },
 
-    getPacientConsult: function(personId){
+    getCurrentConsult: function(personId, date){
       if(!consults[personId]){
         this.cleanPacientConsult(personId);
       }
+      consults[personId].person_id = personId;
+      consults[personId].consult_date = date;
       return consults[personId];
     },
 

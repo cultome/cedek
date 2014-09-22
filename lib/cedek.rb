@@ -49,8 +49,10 @@ module Cedek
       drops = body["drops"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")
       body["drops"] = drops
       return with_connection do
-        Consult.create!(body)
-        return true
+        puts "=> #{body.inspect}"
+        consult = Consult.create!(body)
+        puts "<= #{consult.inspect} == #{consult.persisted?}"
+        return consult.persisted?
       end
     end
 
@@ -194,7 +196,7 @@ module Cedek
 
 		get '/people/:personId' do |personId|
       return with_connection do
-        Person.find(personId).to_json(include: {
+        Person.find(personId).to_json( methods: [:marital_status_name], include: {
           phones: { only: [:id, :number, :phone_type_id] },
           scholarships: { only: [:course_id, :id, :percentage], methods: [:course_name] },
           enrollments: { only: [:id, :name] },
@@ -336,6 +338,8 @@ module Cedek
 				return with_connection{ PhoneType.all.to_json }
       when "leaders" then
         return with_connection{ Leader.all.to_json }
+      when "maritalStatus" then
+        return with_connection{ MaritalStatus.all.to_json }
 			end
 		end
 

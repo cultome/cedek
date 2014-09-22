@@ -44,6 +44,30 @@
           </div>
 
           <div class="row form-group">
+            <label for="ocupacion" class="col-md-3 control-label">Ocupacion</label>
+            <div class="col-md-6">
+              <input
+                 type="text"
+                 class="form-control"
+                 id="ocupacion"
+                 ng-model="student.job">
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label for="edocivil" class="col-md-3 control-label">Estado Civil</label>
+            <div class="col-md-6">
+              <select
+                 class="form-control"
+                 id="edocivil"
+                 ng-model="student.marital_status_id"
+                 ng-options="e.id as e.name for e in maritalStatus">
+                 <option value="">Seleccione</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row form-group">
             <label for="direccion" class="col-md-3 control-label">Direccion</label>
             <div class="col-md-6">
               <input

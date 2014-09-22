@@ -22,10 +22,10 @@
         </thead>
         <tbody>
           <tr>
-            <td>Licenciada en Ingenieria en Telecomunicaciones</td>
+            <td>{{ person.job }}</td>
             <td>{{getAge(person.birthday)}} a&ntilde;os <em class="pull-right">[ {{getDateLabel(person.birthday, true)}} ]</em></td>
-            <td>Casada</td>
-            <td>Si</td>
+            <td>{{ person.marital_status_name }}</td>
+            <td>{{ isStudent(person) }}</td>
           </tr>
         </tbody>
       </table>
