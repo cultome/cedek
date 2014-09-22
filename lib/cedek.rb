@@ -49,9 +49,7 @@ module Cedek
       drops = body["drops"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")
       body["drops"] = drops
       return with_connection do
-        puts "=> #{body.inspect}"
         consult = Consult.create!(body)
-        puts "<= #{consult.inspect} == #{consult.persisted?}"
         return consult.persisted?
       end
     end

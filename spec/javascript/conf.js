@@ -4,7 +4,7 @@ exports.config = {
   capabilities: {
     'browserName': 'chrome',
     'chromeOptions': {
-      'args': ['--disable-web-security']
+      //'args': ['--disable-web-security']
     }
   }
 }

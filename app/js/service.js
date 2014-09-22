@@ -21,6 +21,7 @@ app.factory('PeopleService', ['$resource', function($resource){
       delete student.reserves;
       delete student.enrollments;
       delete student.scholarships;
+      delete student.marital_status_name;
       return PersonResource.update({personId: personId}, student);
     },
 
