@@ -4,37 +4,9 @@ module Cedek
 	module Utils
 
 		ActiveRecord::Base.include_root_in_json = false
-    ENVS = {
-      'dev' => {
-        adapter: 'sqlite3',
-        database: 'db/app.db'
-      },
-      'prod' => {
-        adapter: 'mysql2',
-        database: 'cedek',
-        host: '127.0.0.1',
-        username: 'cedek',
-        password: 'cedek',
-        encoding: 'utf8'
-      }
-    }
-
-    def selected_env
-      ENV["ENV"] || 'dev'
-    end
-
-		def with_connection(&db_logic)
-			begin
-				ActiveRecord::Base.connection_pool
-			rescue Exception => e
-				ActiveRecord::Base.establish_connection(ENVS[selected_env])
-			end
-
-			ActiveRecord::Base.connection_pool.with_connection(&db_logic)
-		end
 
 		def recreate_schema
-			with_connection do
+			#with_connection do
 				begin
 					ActiveRecord::Schema.drop_table('scholarships')
 					ActiveRecord::Schema.drop_table('debts')
@@ -158,11 +130,11 @@ module Cedek
         Consult.create!(id: 6, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*1, drops: "rj-vr-rs-am-bl", reason: "Razon 5", diagnostic: "Diagnostico 5", treatment: "Tratamiento 5")
 
         return true
-			end
+			#end
 		end # recreate_schema
 
     def fixtures
-      return with_connection do
+      #return with_connection do
 				s1 = Person.create!(id: 1, name: "Susana Alvarado", birthday: Time.new(1983, 10, 2), address: "Av Iman 580, Coyoacan, D.F.", email: "susana@gmail.com", lead_pray_group: true, has_scholarship: true, scholarship_percentage: 75)
 				s2 = Person.create!(id: 2, name: "Noel Soria", birthday: Time.new(2010, 3, 1), address: "Av Iman 580, Coyoacan, D.F.", email: "noel@gmail.com", lead_pray_group: false, has_scholarship: false, scholarship_percentage: 0)
 				s3 = Person.create!(id: 3, name: "Carlos Soria", birthday: Time.new(1983, 9, 10), address: "Av Iman 580, Coyoacan, D.F.", email: "carlos@gmail.com", lead_pray_group: false, has_scholarship: true, scholarship_percentage: 50)
@@ -243,7 +215,7 @@ module Cedek
 				Attendance.create!(session_id: 11, person_id: 2)
 				Attendance.create!(session_id: 12, person_id: 5)
 
-      end
+      #end
     end # fixtures
 
 	end

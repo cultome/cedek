@@ -1,15 +1,10 @@
-require 'cedek'
-
-include Cedek::Model
-include Cedek::Utils
-
 desc "Recreate database schema"
-task :reset do
+task :reset => :environment do
   recreate_schema
 end
 
 desc "Run protractor e2e tests"
-task :e2e do
+task :e2e => :environment do
   begin
     webdriver_pid = fork do
       system "webdriver-manager start"
@@ -43,26 +38,20 @@ task :e2e do
   end
 end
 
-task :killall do
-  system "ps aux | grep -ie '-Dwebdriver' | awk '{print $2}' | xargs kill -9"
-  system "ps aux | grep -ie 'node /usr/bin/protractor spec/javascript/conf.js' | awk '{print $2}' | xargs kill -9"
-  system "ps aux | grep -ie 'ruby /home/csoria/.rvm/rubies/default/bin/rake run' | awk '{print $2}' | xargs kill -9"
-end
-
 desc "Run sinatra app"
-task :run do
+task :run => :environment do
   Cedek::App.send(:run!)
 end
 
 desc "Prepare and start the system"
-task :dist do
+task :dist => :environment do
   system "grunt"
   Rake::Task['run'].invoke
   system "rm -fr build/ public/"
 end
 
 desc "Run interatively"
-task :console do
+task :console => :environment do
   require 'irb'
   require 'irb/completion'
   ARGV.clear
@@ -73,6 +62,23 @@ desc "Initialize the dependencies"
 task :init do
   system "npm install"
   system "bower install"
+end
+
+task :killall do
+  system "ps aux | grep -ie '-Dwebdriver' | awk '{print $2}' | xargs kill -9"
+  system "ps aux | grep -ie 'node /usr/bin/protractor spec/javascript/conf.js' | awk '{print $2}' | xargs kill -9"
+  system "ps aux | grep -ie 'ruby /home/csoria/.rvm/rubies/default/bin/rake run' | awk '{print $2}' | xargs kill -9"
+end
+
+task :environment do
+  ENV["RACK_ENV"] = ENV["RACK_ENV"] || "development"
+  puts "[*] Running in #{ENV["RACK_ENV"]} environment."
+
+  require 'cedek'
+
+  include Cedek::Model
+  include Cedek::Utils
+
 end
 
 task :default => :run
