@@ -43,13 +43,6 @@ task :run => :environment do
   Cedek::App.send(:run!)
 end
 
-desc "Prepare and start the system"
-task :dist => :environment do
-  system "grunt"
-  Rake::Task['run'].invoke
-  system "rm -fr build/ public/"
-end
-
 desc "Run interatively"
 task :console => :environment do
   require 'irb'
@@ -67,7 +60,7 @@ end
 task :killall do
   system "ps aux | grep -ie '-Dwebdriver' | awk '{print $2}' | xargs kill -9"
   system "ps aux | grep -ie 'node /usr/bin/protractor spec/javascript/conf.js' | awk '{print $2}' | xargs kill -9"
-  system "ps aux | grep -ie 'ruby /home/csoria/.rvm/rubies/default/bin/rake run' | awk '{print $2}' | xargs kill -9"
+  system "ps aux | grep -ie 'rake run' | awk '{print $2}' | xargs kill -9"
 end
 
 task :environment do

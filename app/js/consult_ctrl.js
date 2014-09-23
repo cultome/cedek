@@ -2,6 +2,8 @@
 angular.module('CEDEK').controller('ConsultCtrl', ['$scope', '$routeParams', 'PeopleService', 'ConsultService', 'CatalogService',
     function($scope, $routeParams, PeopleService, ConsultService, CatalogService){
 
+      "use strict";
+
       $scope.person = null;
       $scope.todayConsult = null;
       $scope.lastConsults = null;

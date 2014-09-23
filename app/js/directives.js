@@ -263,7 +263,7 @@ app.directive('phone', ['CatalogService', function(CatalogService){
         }
 
         return type.name;
-      }
+      };
 
       if(scope.editable !== "true"){
         $(elem).find(".phone-number").toggleClass("deletable");
@@ -361,7 +361,7 @@ app.directive('tabSwitch', [function(){
 
       $(elem).click(function(e){
         e.preventDefault();
-        $(this).tab('show')
+        $(this).tab('show');
       });
     }
   };
@@ -383,7 +383,7 @@ app.directive('todayTabSwitch', [function(){
 
       $(elem).click(function(e){
         e.preventDefault();
-        $(this).tab('show')
+        $(this).tab('show');
       });
     }
   };
