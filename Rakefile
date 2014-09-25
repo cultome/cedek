@@ -54,7 +54,7 @@ end
 desc "Initialize the dependencies"
 task :init do
   system "npm install"
-  system "bower install"
+  system "#{File.expand_path(File.dirname(__FILE__))}/node_modules/bower/bin/bower install"
 end
 
 task :killall do
