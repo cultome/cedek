@@ -3,7 +3,7 @@ var courseMenu = menuOptions.last();
 var peopleMenu = menuOptions.first();
 
 function goHome(){
-  browser.get("http://localhost:92/app/");
+  browser.get("http://localhost:1234");
 }
 
 function goTo(option){
