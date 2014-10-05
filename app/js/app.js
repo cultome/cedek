@@ -15,7 +15,10 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/curso/:courseId', {templateUrl: 'pages/curso/detalles.html', controller: 'CourseCtrl'});
   $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl'});
 
-  $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'ConsultCtrl'});
+  $routeProvider.when('/usuarios/agregar', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl'});
+  $routeProvider.when('/usuario/editar/:courseId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl'});
+
+  $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'UserCtrl'});
 
   $routeProvider.when('/dashboard', {templateUrl: 'pages/dashboard.html', controller: 'DashboardCtrl'});
   $routeProvider.otherwise({redirectTo: '/dashboard'});
@@ -49,6 +52,20 @@ app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
       amount: 0,
       name: "_none_"
     }
+  };
+
+  $scope.getInputClass = function(input, base){
+    var classes = [].concat(base);
+
+    if($scope.isInputInvalid(input)){
+      classes.push('has-feedback');
+      classes.push('has-error');
+    }
+    return classes;
+  };
+
+  $scope.isInputInvalid = function(input){
+    return input.$invalid && input.$dirty;
   };
 
   $scope.$on("$routeChangeSuccess", function(){

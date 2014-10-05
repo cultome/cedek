@@ -20,7 +20,8 @@
         </div>
         <div class="panel-body">
           <div class="row">
-            <div ng-class="getInputClass(courseForm.name)">
+            {{getInputClass(courseForm.name, ['form-group'])}}
+            <div ng-class="getInputClass(courseForm.name, ['form-group'])">
               <label for="nombre" class="col-md-2 control-label">Nombre</label>
               <div class="col-md-8">
                 <input
@@ -37,7 +38,7 @@
           </div>
 
           <div class="row">
-            <div ng-class="getInputClass(courseForm.code)">
+            <div ng-class="getInputClass(courseForm.code, ['form-group'])">
               <label for="clave" class="col-md-2 control-label">Clave</label>
               <div class="col-md-3">
                 <input

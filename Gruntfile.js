@@ -13,6 +13,7 @@ module.exports = function(grunt) {
         src: [
           'app/js/app.js',
           'app/js/course_ctrl.js',
+          'app/js/user_ctrl.js',
           'app/js/people_ctrl.js',
           'app/js/consult_ctrl.js',
           'app/js/directives.js',
