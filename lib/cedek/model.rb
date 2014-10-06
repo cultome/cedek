@@ -99,6 +99,10 @@ module Cedek
 		end
 
 		class Person < ActiveRecord::Base
+
+    end
+
+		class Person < ActiveRecord::Base
 			has_and_belongs_to_many :courses
       belongs_to :marital_status
 			has_many :phones

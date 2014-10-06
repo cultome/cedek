@@ -1,7 +1,7 @@
 /* jshint strict: true */
 var app = angular.module('CEDEK');
 
-var serviceEndpoint = "http://localhost:1234";
+var serviceEndpoint = "http://localhost:8000/api";
 
 app.factory('PeopleService', ['$resource', function($resource){
   "use strict";
@@ -257,6 +257,31 @@ app.factory('CatalogService', ['$resource', function($resource){
 
 
 
+
+
+
+app.factory('UserService', ['$resource', function($resource){
+  "use strict";
+
+  var UserResource = $resource(serviceEndpoint + '/users/:userId', {userId: '@id'},
+    {'update': { method: 'PUT' }}
+  );
+
+  return {
+    create: function(user, successCb, failCb){
+      return UserResource.save({}, user, successCb, failCb);
+    },
+    
+    update: function(userId, info, successCb, failCb){
+      return UserResource.update({userId: userId}, info, successCb, failCb);
+    },
+
+    get: function(userId, successCb, failCb){
+      return UserResource.get({userId: userId}, successCb, failCb);
+    }
+
+  };
+}]);
 
 
 

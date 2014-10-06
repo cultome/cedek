@@ -71,6 +71,16 @@ module Cedek
       return course.update_attributes(props)
     end
 
+    post '/users' do
+      body = request.body.read
+      unless body.empty?
+        req = JSON.parse body
+      end
+
+      user = User.create!(req)
+      return user.persisted?
+    end
+
     post '/consults/:personId' do |personId|
       body = JSON.parse request.body.read
       drops = body["drops"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")

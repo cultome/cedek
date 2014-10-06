@@ -17,9 +17,10 @@ module Cedek
 					ActiveRecord::Schema.drop_table('courses')
 					ActiveRecord::Schema.drop_table('phones')
 					ActiveRecord::Schema.drop_table('phone_types')
-					ActiveRecord::Schema.drop_table('leaders')
 					ActiveRecord::Schema.drop_table('consults')
 					ActiveRecord::Schema.drop_table('marital_statuses')
+					ActiveRecord::Schema.drop_table('leaders')
+					ActiveRecord::Schema.drop_table('users')
 				rescue
 				end
 
@@ -89,6 +90,11 @@ module Cedek
               t.string :name
             end
 
+            create_table :users do |t|
+              t.string :username
+              t.string :name
+            end
+
             create_table :consults do |t|
               t.references :leader
               t.references :person
@@ -117,17 +123,7 @@ module Cedek
 				PhoneType.create(id: 2, name: "Movil")
 				PhoneType.create(id: 3, name: "Oficina")
 
-        Leader.create!(id: 1, name: "Guia 1")
-        Leader.create!(id: 2, name: "Guia 2")
-        Leader.create!(id: 3, name: "Guia 3")
-
-        # eliminar
-        Consult.create!(id: 1, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*86, drops: "bl-am", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
-        Consult.create!(id: 2, leader_id: 2, person_id: 1, consult_date: Time.now - 60*60*24*54, drops: "rj-vr", reason: "Razon 2", diagnostic: "Diagnostico 2", treatment: "Tratamiento 2")
-        Consult.create!(id: 3, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*23, drops: "rs", reason: "Razon 3", diagnostic: "Diagnostico 3", treatment: "Tratamiento 3")
-        Consult.create!(id: 4, leader_id: 1, person_id: 2, consult_date: Time.now - 60*60*24*59, drops: "vr-rs", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
-        Consult.create!(id: 5, leader_id: 3, person_id: 1, consult_date: Time.now - 60*60*24*10, drops: "bl-am", reason: "Razon 4", diagnostic: "Diagnostico 4", treatment: "Tratamiento 4")
-        Consult.create!(id: 6, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*1, drops: "rj-vr-rs-am-bl", reason: "Razon 5", diagnostic: "Diagnostico 5", treatment: "Tratamiento 5")
+        User.create!(username: "admin", name: "Administrador")
 
         return true
 			#end
@@ -214,6 +210,17 @@ module Cedek
 
 				Attendance.create!(session_id: 11, person_id: 2)
 				Attendance.create!(session_id: 12, person_id: 5)
+
+        Leader.create!(id: 1, name: "Guia 1")
+        Leader.create!(id: 2, name: "Guia 2")
+        Leader.create!(id: 3, name: "Guia 3")
+
+        Consult.create!(id: 1, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*86, drops: "bl-am", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
+        Consult.create!(id: 2, leader_id: 2, person_id: 1, consult_date: Time.now - 60*60*24*54, drops: "rj-vr", reason: "Razon 2", diagnostic: "Diagnostico 2", treatment: "Tratamiento 2")
+        Consult.create!(id: 3, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*23, drops: "rs", reason: "Razon 3", diagnostic: "Diagnostico 3", treatment: "Tratamiento 3")
+        Consult.create!(id: 4, leader_id: 1, person_id: 2, consult_date: Time.now - 60*60*24*59, drops: "vr-rs", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
+        Consult.create!(id: 5, leader_id: 3, person_id: 1, consult_date: Time.now - 60*60*24*10, drops: "bl-am", reason: "Razon 4", diagnostic: "Diagnostico 4", treatment: "Tratamiento 4")
+        Consult.create!(id: 6, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*1, drops: "rj-vr-rs-am-bl", reason: "Razon 5", diagnostic: "Diagnostico 5", treatment: "Tratamiento 5")
 
       #end
     end # fixtures

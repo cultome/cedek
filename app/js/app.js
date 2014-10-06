@@ -16,7 +16,7 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl'});
 
   $routeProvider.when('/usuarios/agregar', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl'});
-  $routeProvider.when('/usuario/editar/:courseId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl'});
+  $routeProvider.when('/usuario/editar/:userId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl'});
 
   $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'UserCtrl'});
 
