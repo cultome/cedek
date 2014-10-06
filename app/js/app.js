@@ -6,21 +6,23 @@ angular.module('CEDEK', [
 ]).
 config(['$routeProvider', function($routeProvider) {
   'use strict';
-  $routeProvider.when('/personas/agregar', {templateUrl: 'pages/persona/agregar.html', controller: 'PeopleCtrl'});
-  $routeProvider.when('/personas/listar', {templateUrl: 'pages/persona/listar.html', controller: 'PeopleCtrl'});
-  $routeProvider.when('/persona/editar/:personId', {templateUrl: 'pages/persona/agregar.html', controller: 'PeopleCtrl'});
+  $routeProvider.when('/personas/agregar', {templateUrl: 'pages/persona/agregar.html', controller: 'PeopleCtrl', roles: ['Administrador']});
+  $routeProvider.when('/personas/listar', {templateUrl: 'pages/persona/listar.html', controller: 'PeopleCtrl', roles: ['Administrador', 'Regular']});
+  $routeProvider.when('/persona/editar/:personId', {templateUrl: 'pages/persona/agregar.html', controller: 'PeopleCtrl', roles: ['Administrador', 'Regular']});
 
-  $routeProvider.when('/cursos/listar', {templateUrl: 'pages/curso/listar.html', controller: 'CourseCtrl'});
-  $routeProvider.when('/cursos/agregar', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl'});
-  $routeProvider.when('/curso/:courseId', {templateUrl: 'pages/curso/detalles.html', controller: 'CourseCtrl'});
-  $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl'});
+  $routeProvider.when('/cursos/listar', {templateUrl: 'pages/curso/listar.html', controller: 'CourseCtrl', roles: ['Administrador', 'Regular']});
+  $routeProvider.when('/cursos/agregar', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl', roles: ['Administrador']});
+  $routeProvider.when('/curso/:courseId', {templateUrl: 'pages/curso/detalles.html', controller: 'CourseCtrl', roles: ['Administrador', 'Regular']});
+  $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl', roles: ['Administrador']});
 
-  $routeProvider.when('/usuarios/agregar', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl'});
-  $routeProvider.when('/usuario/editar/:userId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl'});
+  $routeProvider.when('/usuarios/agregar', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl', roles: ['Administrador']});
+  $routeProvider.when('/usuario/editar/:userId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl', roles: ['Administrador']});
 
-  $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'UserCtrl'});
+  $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'UserCtrl', roles: ['Administrador', 'Regular']});
 
-  $routeProvider.when('/dashboard', {templateUrl: 'pages/dashboard.html', controller: 'DashboardCtrl'});
+  $routeProvider.when('/login', {templateUrl: 'pages/login.html', roles: ['Administrador', 'Regular']});
+
+  $routeProvider.when('/dashboard', {templateUrl: 'pages/dashboard.html', controller: 'DashboardCtrl', roles: ['Administrador', 'Regular']});
   $routeProvider.otherwise({redirectTo: '/dashboard'});
 }]);
 
@@ -35,91 +37,134 @@ var app = angular.module('CEDEK');
 /*
  *   Controller
  */
-app.controller('RootCtrl', ['$scope', '$route', function($scope, $route){
-  "use strict";
+app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
+    function($scope, $route, $location, AuthService){
+      "use strict";
 
-  $scope.showFilter = true;
-  $scope.alerts = {
-    "confirmRemoveStudentFromCourse": {
-      name: "_none_"
-    },
+      $scope.redirectAfterLogin = null;
+      $scope.login = {
+        "username": "",
+        "password": ""
+      };
 
-    "confirmDeleteScholarship": {
-      name: "_none_"
-    },
-
-    "confirmDebtClose": {
-      amount: 0,
-      name: "_none_"
-    }
-  };
-
-  $scope.getInputClass = function(input, base){
-    var classes = [].concat(base);
-
-    if($scope.isInputInvalid(input)){
-      classes.push('has-feedback');
-      classes.push('has-error');
-    }
-    return classes;
-  };
-
-  $scope.isInputInvalid = function(input){
-    return input.$invalid && input.$dirty;
-  };
-
-  $scope.$on("$routeChangeSuccess", function(){
-    // limpiamos el filtro
-    $scope.name = "";
-    var path = $route.current.originalPath;
-    if(path !== undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
       $scope.showFilter = true;
-    } else {
-      $scope.showFilter = false;
-    }
-  });
+      $scope.alerts = {
+        "confirmRemoveStudentFromCourse": {
+          name: "_none_"
+        },
 
-  $scope.toggleLatePaymentOptions = function(studentId){
-    var section = $("#latePaymentOption" + studentId);
-    if(section.css("display") === "none"){
-      section.css("display", "");
-    } else {
-      section.css("display", "none");
-    }
-  };
+        "confirmDeleteScholarship": {
+          name: "_none_"
+        },
 
-  $scope.getAge = function(birthday){
-    if(birthday){
-      return (new Date()).getFullYear() - parseInt(birthday.split("-")[0]);
-    }
-    return 0;
-  };
+        "confirmDebtClose": {
+          amount: 0,
+          name: "_none_"
+        }
+      };
 
-  $scope.today = function(){
-    var d = new Date();
-    var month = (d.getMonth() + 1);
-    var date = d.getDate();
-    return d.getFullYear() + "-" + ( month < 10 ? "0" + month : month) + "-" +(  date < 10 ? "0" + date : date);
-  };
+      $scope.login = function(){
+        AuthService.login($scope.login.username, $scope.login.password, function(){
+          $location.path($scope.redirectAfterLogin);
+        }, function(){
+          console.log("ERROR!!!");
+        });
+      };
 
-  $scope.getDateLabel = function(dateStr, abbr){
-    if(dateStr == null){
-      return "";
-    }
-    var date = dateStr.split("-");
-    var year = parseInt(date[0]);
-    var month = parseInt(date[1]) - 1;
-    var day = parseInt(date[2]);
+      $scope.getInputClass = function(input, base){
+        var classes = [].concat(base);
 
-    var monthName = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"][month];
+        if($scope.isInputInvalid(input)){
+          classes.push('has-feedback');
+          classes.push('has-error');
+        }
+        return classes;
+      };
 
-    if(abbr){
-      return day + " " + monthName.substring(0,3) + " " + year;
-    } else {
-      return day + " de " + monthName + "  " + year;
-    }
-  };
-}]);
+      $scope.isInputInvalid = function(input){
+        return input.$invalid && input.$dirty;
+      };
+
+      $scope.getUser = function(){
+        return AuthService.getCurrentUser();
+      };
+
+      $scope.isLogged = function(){
+        return AuthService.isLogged();
+      };
+
+      $scope.$on("$locationChangeStart", function(evt, next, current){
+        var nextRoutePath = next.substring(next.indexOf("#") + 1);
+        for(var r in $route.routes){
+          var route = $route.routes[r];
+          if(nextRoutePath.match(route.regexp) !== null && r !== "null"){
+            if($scope.isLogged()){
+              if($route.routes.roles && $route.routes.roles.indexOf($scope.getUser().user_type_id) < 0){
+                alert("El usuario no esta autorizado");
+              }
+            } else {
+              if(next.match(/login$/) === null){
+                var path = next.substring(next.indexOf("#") + 1);
+                $scope.redirectAfterLogin = path;
+              }
+              $location.path("/login");
+            }
+          }
+        }
+      });
+
+      $scope.$on("$routeChangeSuccess", function(){
+        // limpiamos el filtro
+        $scope.name = "";
+        var path = $route.current.originalPath;
+        if(path !== undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
+          $scope.showFilter = true;
+        } else {
+          $scope.showFilter = false;
+        }
+      });
+
+      $scope.toggleLatePaymentOptions = function(studentId){
+        var section = $("#latePaymentOption" + studentId);
+        if(section.css("display") === "none"){
+          section.css("display", "");
+        } else {
+          section.css("display", "none");
+        }
+      };
+
+      $scope.getAge = function(birthday){
+        if(birthday){
+          return (new Date()).getFullYear() - parseInt(birthday.split("-")[0]);
+        }
+        return 0;
+      };
+
+      $scope.today = function(){
+        var d = new Date();
+        var month = (d.getMonth() + 1);
+        var date = d.getDate();
+        return d.getFullYear() + "-" + ( month < 10 ? "0" + month : month) + "-" +(  date < 10 ? "0" + date : date);
+      };
+
+      $scope.getDateLabel = function(dateStr, abbr){
+        if(dateStr == null){
+          return "";
+        }
+        var date = dateStr.split("-");
+        var year = parseInt(date[0]);
+        var month = parseInt(date[1]) - 1;
+        var day = parseInt(date[2]);
+
+        var monthName = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"][month];
+
+        if(abbr){
+          return day + " " + monthName.substring(0,3) + " " + year;
+        } else {
+          return day + " de " + monthName + "  " + year;
+        }
+      };
+    }]);
 
 
 

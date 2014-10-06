@@ -98,8 +98,11 @@ module Cedek
       end
 		end
 
-		class Person < ActiveRecord::Base
+		class UserType < ActiveRecord::Base
+    end
 
+		class User < ActiveRecord::Base
+      belongs_to :user_type
     end
 
 		class Person < ActiveRecord::Base
@@ -127,7 +130,7 @@ module Cedek
 			end
 
       def marital_status_name
-        marital_status.name
+        marital_status.name unless marital_status.nil?
       end
 		end
 

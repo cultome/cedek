@@ -71,14 +71,31 @@ module Cedek
       return course.update_attributes(props)
     end
 
+    post '/auth' do
+      body = request.body.read
+      unless body.empty?
+        req = JSON.parse body
+      end
+
+      puts body
+      puts req
+
+      user = User.where("username = ?", req["username"]).first
+      raise "El usuario no existe" if user.nil?
+      # TODO hashear las contasenas antes de compararlas
+      raise "La contraseña es invalida" unless user.password == req["password"]
+      return user.to_json(only: [:id, :username, :name, :user_type_id])
+    end
+
     post '/users' do
       body = request.body.read
       unless body.empty?
         req = JSON.parse body
       end
 
+      # TODO hashear las contasenas antes de almacenarlas
       user = User.create!(req)
-      return user.persisted?
+      return user.to_json(only: [:id, :username, :name, :user_type_id])
     end
 
     post '/consults/:personId' do |personId|
@@ -199,6 +216,12 @@ module Cedek
         success = debt.update_attributes(props)
         return success
       end
+    end
+
+    get '/users/:userId' do |userId|
+      user = User.find(userId)
+      raise "El usuario no existe!" if user.nil?
+      return user.to_json
     end
 
     get '/consults/:personId' do |personId|
@@ -345,6 +368,8 @@ module Cedek
         return Leader.all.to_json
       when "maritalStatus" then
         return MaritalStatus.all.to_json
+      when "userType" then
+        return UserType.all.to_json
       end
     end
 

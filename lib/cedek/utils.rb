@@ -21,6 +21,7 @@ module Cedek
 					ActiveRecord::Schema.drop_table('marital_statuses')
 					ActiveRecord::Schema.drop_table('leaders')
 					ActiveRecord::Schema.drop_table('users')
+					ActiveRecord::Schema.drop_table('user_types')
 				rescue
 				end
 
@@ -90,11 +91,6 @@ module Cedek
               t.string :name
             end
 
-            create_table :users do |t|
-              t.string :username
-              t.string :name
-            end
-
             create_table :consults do |t|
               t.references :leader
               t.references :person
@@ -106,6 +102,17 @@ module Cedek
             end
 
             create_table :marital_statuses do |t|
+              t.string :name
+            end
+
+            create_table :users do |t|
+              t.string :username
+              t.string :password
+              t.string :name
+              t.references :user_type
+            end
+
+            create_table :user_types do |t|
               t.string :name
             end
 
@@ -123,7 +130,10 @@ module Cedek
 				PhoneType.create(id: 2, name: "Movil")
 				PhoneType.create(id: 3, name: "Oficina")
 
-        User.create!(username: "admin", name: "Administrador")
+        UserType.create!(id: 1, name: "Administrador")
+        UserType.create!(id: 2, name: "Regular")
+
+        User.create!(username: "admin", password: "admin", name: "Administrador", user_type_id: 1)
 
         return true
 			#end

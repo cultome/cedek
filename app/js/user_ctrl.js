@@ -1,14 +1,17 @@
 /* jshint strict: true */
-angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', 'UserService',
-    function($scope, $routeParams, UserService){
+angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$location', 'UserService', 'CatalogService',
+    function($scope, $routeParams, $location, UserService, CatalogService){
       'use strict';
 
+      $scope.userTypes = CatalogService.userTypes();
+
       $scope.isCreatingUser = function(){
-        return true;
+        return $location.path().match(/editar/) === null;
       };
 
       $scope.create = function(user){
-        UserService.create(user, function(){
+        UserService.create(user, function(usr){
+          $location.path("usuario/editar/" + usr.id);
         });
       };
 
@@ -22,11 +25,14 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', 'UserS
       };
 
       if($routeParams.userId){
-        getUser(parseInt($routeParams.userId));
+        $scope.getUser(parseInt($routeParams.userId));
       } else {
         $scope.user = {
           "username": "",
-          "name": ""
+          "name": "",
+          "password": "",
+          "password_confirm": "",
+          "user_type_id": 2
         };
       }
 

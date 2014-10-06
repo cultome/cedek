@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-md-offset-4 col-md-4">
+    <h3 style="color: #AAA" class="text-center">Bienvenido</h3>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <form name="loginForm" novalidate>
+          <div ng-class="{ 'form-group': true, 'has-feedback':true, 'has-error': loginForm.username.$invalid && loginForm.username.$dirty}">
+            <input
+               type="text"
+               class="form-control"
+               name="username"
+               ng-required="true"
+               ng-model="login.username"
+               placeholder="Nombre de Usuario">
+            <span class="glyphicon glyphicon-user form-control-feedback" style="top: 0px;"></span>
+          </div>
+
+          <div ng-class="{'form-group': true, 'has-feedback':true, 'has-error': loginForm.password.$invalid && loginForm.password.$dirty}">
+            <input
+               type="password"
+               class="form-control"
+               name="password"
+               ng-required="true"
+               ng-model="login.password"
+               placeholder="Contraseña">
+            <span class="glyphicon glyphicon-lock form-control-feedback" style="top: 0px;"></span>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-12">
+              <button
+                 class="btn btn-default btn-block"
+                 ng-disabled="loginForm.$invalid"
+                 ng-click="login()">Entrar</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>

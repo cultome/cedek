@@ -11,8 +11,10 @@
       <a class="navbar-brand" style="padding-top: 2px;" href="#"><img src="img/logo.svg"> CEDEK</a>
     </div>
 
+    <p class="navbar-text navbar-right" ng-show="isLogged()"><a href="#/usuario/editar/{{getUser().id}}" class="navbar-link">{{getUser().name}}</a></p>
+
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right" ng-show="isLogged()" style="border-right: 1px solid #ddd">
         <li ng-show="showFilter">
           <form class="navbar-form" role="search">
             <div class="form-group">
@@ -38,8 +40,8 @@
         </li>
       </ul>
 
-      <p class="navbar-text navbar-right filter-alert" ng-show="showFilter && name">Filtro activo</p>
 
+      <p class="navbar-text navbar-right filter-alert" ng-show="showFilter && name">Filtro activo</p>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

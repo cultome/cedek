@@ -1,7 +1,8 @@
 /* jshint strict: true */
 var app = angular.module('CEDEK');
 
-var serviceEndpoint = "http://localhost:8000/api";
+var serviceEndpoint = "http://localhost:92/api";
+//var serviceEndpoint = "http://localhost:8000/api";
 
 app.factory('PeopleService', ['$resource', function($resource){
   "use strict";
@@ -226,6 +227,8 @@ app.factory('CatalogService', ['$resource', function($resource){
     phonesCache: null,
     leadersCache: null,
     maritalStatusCache: null,
+    userTypesCache: null,
+
     phoneTypes: function(successCb, failCb){
       if(this.phonesCache === null){
         this.phonesCache = CatalogResource.query({catalogId: 'phone'}, successCb, failCb);
@@ -245,6 +248,13 @@ app.factory('CatalogService', ['$resource', function($resource){
         this.leadersCache = CatalogResource.query({catalogId: "leaders"}, successCb, failCb);
       }
       return this.leadersCache;
+    },
+
+    userTypes: function(successCb, failCb){
+      if(this.userTypesCache === null){
+        this.userTypesCache = CatalogResource.query({catalogId: "userType"}, successCb, failCb);
+      }
+      return this.userTypesCache;
     }
   };
 }]);
@@ -331,3 +341,33 @@ app.factory('ConsultService', ['$resource', function($resource){
   };
 }]);
 
+
+
+
+
+
+
+
+
+
+app.factory('AuthService', ['$resource', function($resource){
+  "use strict";
+
+  var AuthResource = $resource(serviceEndpoint + '/auth/:userId', {userId: '@id'});
+
+  return {
+    loggedUser: null,
+
+    login: function(username, password, successCb, failCb){
+      this.loggedUser = AuthResource.save({}, {"username": username, "password": password}, successCb, failCb);
+    },
+
+    isLogged: function(){
+      return this.loggedUser !== null;
+    },
+
+    getCurrentUser: function(){
+      return this.loggedUser;
+    }
+  };
+}]);
