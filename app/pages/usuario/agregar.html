@@ -35,30 +35,31 @@
           </div>
 
           <div ng-class="getInputClass(userForm.password, ['row', 'form-group'])" ng-show="isCreatingUser()">
-            <label for="nombre" class="col-md-3 control-label">Contraseña</label>
+            <label for="nombre" class="col-md-3 control-label">Contrase&ntilde;a</label>
             <div class="col-md-6">
               <input
                  type="password"
                  class="form-control"
                  id="nombre"
                  name="password"
-                 ng-required="true"
-                 placeholder="Contraseña"
+                 ng-required="isCreatingUser()"
+                 placeholder="Contrase&ntilde;a"
                  ng-model="user.password">
               <span ng-show="isInputInvalid(userForm.password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
           </div>
 
           <div ng-class="getInputClass(userForm.password_confirm, ['row', 'form-group'])" ng-show="isCreatingUser()">
-            <label for="nombre" class="col-md-3 control-label">Confirmar Contraseña</label>
+            <label for="nombre" class="col-md-3 control-label">Confirmar contrase&ntilde;a</label>
             <div class="col-md-6">
               <input
                  type="password"
                  class="form-control"
                  id="nombre"
                  name="password_confirm"
-                 ng-required="true"
-                 placeholder="Confirmar Contraseña"
+                 ng-required="isCreatingUser()"
+                 ng-change="checkPasswords()"
+                 placeholder="Confirmar Contrase&ntilde;a"
                  ng-model="user.password_confirm">
               <span ng-show="isInputInvalid(userForm.password_confirm)" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
@@ -80,7 +81,7 @@
           </div>
 
           <div class="row form-group">
-            <label for="nombre" class="col-md-3 control-label">Tipo de Usuario</label>
+            <label for="nombre" class="col-md-3 control-label">Tipo de usuario</label>
             <div class="col-md-6">
               <select class="form-control" ng-model="user.user_type_id" ng-options="t.id as t.name for t in userTypes">
               </select>
@@ -89,16 +90,78 @@
 
         </div>
 
-        <!-- panel de botones  -->
 
+
+
+
+        <!-- cambiar contraseña -->
+        <div class="panel-heading" ng-hide="isCreatingUser()">
+          <h3 class="panel-title">
+            <p>
+              Cambiar contrase&ntilde;a
+            </p>
+          </h3>
+        </div>
+
+        <div class="panel-body" ng-hide="isCreatingUser()">
+          <form name="passwdForm" novalidate>
+            <div ng-class="getInputClass(userForm.current_password, ['row', 'form-group'])" >
+              <label for="nombre" class="col-md-3 control-label">Contrase&ntilde;a actual</label>
+              <div class="col-md-6">
+                <input
+                   type="password"
+                   class="form-control"
+                   id="nombre"
+                   name="current_password"
+                   ng-required="true"
+                   placeholder="Contrase&ntilde;a"
+                   ng-model="user.current_password">
+                <span ng-show="isInputInvalid(userForm.current_password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              </div>
+            </div>
+
+            <div ng-class="getInputClass(userForm.new_password, ['row', 'form-group'])">
+              <label for="nombre" class="col-md-3 control-label">Nueva contrase&ntilde;a</label>
+              <div class="col-md-6">
+                <input
+                   type="password"
+                   class="form-control"
+                   id="nombre"
+                   name="new_password"
+                   ng-required="true"
+                   placeholder="Contrase&ntilde;a"
+                   ng-model="user.new_password">
+                <span ng-show="isInputInvalid(userForm.new_password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              </div>
+            </div>
+
+            <div ng-class="getInputClass(userForm.new_password_confirm, ['row', 'form-group'])">
+              <label for="nombre" class="col-md-3 control-label">Confirmar nueva contrase&ntilde;a</label>
+              <div class="col-md-6">
+                <input
+                   type="password"
+                   class="form-control"
+                   id="nombre"
+                   name="new_password_confirm"
+                   ng-required="true"
+                   ng-change="checkNewPasswords()"
+                   placeholder="Confirmar Contrase&ntilde;a"
+                   ng-model="user.new_password_confirm">
+                <span ng-show="isInputInvalid(userForm.new_password_confirm)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- panel de botones  -->
         <div class="panel-heading" ng-show="isCreatingUser()">
           <div class="row">
             <div class="col-md-offset-4 col-md-4">
               <button
-                id="createPersonBtn"
-                class="btn btn-default btn-block"
-                ng-disabled="userForm.$invalid"
-                ng-click="create(user)">Crear</button>
+                 id="createPersonBtn"
+                 class="btn btn-default btn-block"
+                 ng-disabled="userForm.$invalid"
+                 ng-click="create(user)">Crear</button>
             </div>
           </div>
         </div>

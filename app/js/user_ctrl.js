@@ -16,12 +16,32 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
       };
 
       $scope.update = function(userId){
-        UserService.update(userId, user, function(){
+        UserService.update(userId, $scope.user, function(){
         });
       };
 
       $scope.getUser = function(userId){
         $scope.user = UserService.get(userId);
+      };
+
+      $scope.checkNewPasswords = function(){
+        if($scope.user.new_password === $scope.user.new_password_confirm){
+          $scope.passwdForm.new_password_confirm.$invalid = false;
+          $scope.passwdForm.$invalid = false;
+        } else {
+          $scope.passwdForm.new_password_confirm.$invalid = true;
+          $scope.passwdForm.$invalid = true;
+        }
+      };
+
+      $scope.checkPasswords = function(){
+        if($scope.user.password === $scope.user.password_confirm){
+          $scope.userForm.password_confirm.$invalid = false;
+          $scope.userForm.$invalid = false;
+        } else {
+          $scope.userForm.password_confirm.$invalid = true;
+          $scope.userForm.$invalid = true;
+        }
       };
 
       if($routeParams.userId){

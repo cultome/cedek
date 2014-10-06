@@ -42,6 +42,7 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
       "use strict";
 
       $scope.currentUser = null;
+      $scope.thereIsLoginError = false;
       $scope.redirectAfterLogin = null;
       $scope.login = {
         "username": "",
@@ -69,7 +70,7 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
           $scope.currentUser = user;
           $location.path($scope.redirectAfterLogin);
         }, function(){
-          console.log("ERROR!!!");
+          $scope.thereIsLoginError = true;
         });
       };
 
