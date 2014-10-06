@@ -356,18 +356,8 @@ app.factory('AuthService', ['$resource', function($resource){
   var AuthResource = $resource(serviceEndpoint + '/auth/:userId', {userId: '@id'});
 
   return {
-    loggedUser: null,
-
     login: function(username, password, successCb, failCb){
-      this.loggedUser = AuthResource.save({}, {"username": username, "password": password}, successCb, failCb);
-    },
-
-    isLogged: function(){
-      return this.loggedUser !== null;
-    },
-
-    getCurrentUser: function(){
-      return this.loggedUser;
+      return AuthResource.save({}, {"username": username, "password": password}, successCb, failCb);
     }
   };
 }]);

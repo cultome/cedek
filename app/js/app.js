@@ -41,6 +41,7 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
     function($scope, $route, $location, AuthService){
       "use strict";
 
+      $scope.currentUser = null;
       $scope.redirectAfterLogin = null;
       $scope.login = {
         "username": "",
@@ -64,7 +65,8 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
       };
 
       $scope.login = function(){
-        AuthService.login($scope.login.username, $scope.login.password, function(){
+        AuthService.login($scope.login.username, $scope.login.password, function(user){
+          $scope.currentUser = user;
           $location.path($scope.redirectAfterLogin);
         }, function(){
           console.log("ERROR!!!");
@@ -86,11 +88,11 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
       };
 
       $scope.getUser = function(){
-        return AuthService.getCurrentUser();
+        return $scope.currentUser;
       };
 
       $scope.isLogged = function(){
-        return AuthService.isLogged();
+        return $scope.currentUser !== null;
       };
 
       $scope.$on("$locationChangeStart", function(evt, next, current){

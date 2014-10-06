@@ -1,5 +1,5 @@
 <div class="row">
-  <form class="form-horizontal" role="form" name="studentForm" novalidate>
+  <form class="form-horizontal" role="form" name="userForm" novalidate>
     <div class="col-md-offset-1 col-md-8">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -10,7 +10,7 @@
                 <button
                   id="updatePersonBtn"
                   class="btn btn-default btn-sm pull-right color-success"
-                  ng-disabled="studentForm.$invalid"
+                  ng-disabled="userForm.$invalid"
                   ng-click="update(user.id)">Actualizar</button>
               </span>
             </p>
@@ -18,7 +18,7 @@
         </div>
 
         <div class="panel-body">
-          <div ng-class="getInputClass(studentForm.username, ['row', 'form-group'])">
+          <div ng-class="getInputClass(userForm.username, ['row', 'form-group'])">
             <label for="nombre" class="col-md-3 control-label">Usuario</label>
             <div class="col-md-6">
               <input
@@ -30,11 +30,11 @@
                  ng-pattern="/^[a-zA-Z]+$/"
                  placeholder="Nombre de Usuario"
                  ng-model="user.username">
-              <span ng-show="isInputInvalid(studentForm.username)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              <span ng-show="isInputInvalid(userForm.username)" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
           </div>
 
-          <div ng-class="getInputClass(studentForm.password, ['row', 'form-group'])" ng-show="isCreatingUser()">
+          <div ng-class="getInputClass(userForm.password, ['row', 'form-group'])" ng-show="isCreatingUser()">
             <label for="nombre" class="col-md-3 control-label">Contraseña</label>
             <div class="col-md-6">
               <input
@@ -45,11 +45,11 @@
                  ng-required="true"
                  placeholder="Contraseña"
                  ng-model="user.password">
-              <span ng-show="isInputInvalid(studentForm.password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              <span ng-show="isInputInvalid(userForm.password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
           </div>
 
-          <div ng-class="getInputClass(studentForm.password_confirm, ['row', 'form-group'])" ng-show="isCreatingUser()">
+          <div ng-class="getInputClass(userForm.password_confirm, ['row', 'form-group'])" ng-show="isCreatingUser()">
             <label for="nombre" class="col-md-3 control-label">Confirmar Contraseña</label>
             <div class="col-md-6">
               <input
@@ -60,11 +60,11 @@
                  ng-required="true"
                  placeholder="Confirmar Contraseña"
                  ng-model="user.password_confirm">
-              <span ng-show="isInputInvalid(studentForm.password_confirm)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              <span ng-show="isInputInvalid(userForm.password_confirm)" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
           </div>
 
-          <div ng-class="getInputClass(studentForm.name, ['row', 'form-group'])">
+          <div ng-class="getInputClass(userForm.name, ['row', 'form-group'])">
             <label for="nombre" class="col-md-3 control-label">Nombre</label>
             <div class="col-md-6">
               <input
@@ -75,7 +75,7 @@
                  ng-required="true"
                  placeholder="Nombre completo"
                  ng-model="user.name">
-              <span ng-show="isInputInvalid(studentForm.name)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+              <span ng-show="isInputInvalid(userForm.name)" class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
           </div>
 
@@ -97,7 +97,7 @@
               <button
                 id="createPersonBtn"
                 class="btn btn-default btn-block"
-                ng-disabled="studentForm.$invalid"
+                ng-disabled="userForm.$invalid"
                 ng-click="create(user)">Crear</button>
             </div>
           </div>

@@ -133,7 +133,7 @@ module Cedek
         UserType.create!(id: 1, name: "Administrador")
         UserType.create!(id: 2, name: "Regular")
 
-        User.create!(username: "admin", password: "admin", name: "Administrador", user_type_id: 1)
+        User.create!(username: "admin", password: Digest::SHA1.hexdigest("admin"), name: "Administrador", user_type_id: 1)
 
         return true
 			#end

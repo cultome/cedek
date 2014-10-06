@@ -3,6 +3,7 @@ require 'sinatra/base'
 require 'cedek/model'
 require 'cedek/utils'
 require 'json'
+require 'digest'
 
 module Cedek
   class App < Sinatra::Base
@@ -82,8 +83,8 @@ module Cedek
 
       user = User.where("username = ?", req["username"]).first
       raise "El usuario no existe" if user.nil?
-      # TODO hashear las contasenas antes de compararlas
-      raise "La contraseña es invalida" unless user.password == req["password"]
+      passwd = Digest::SHA1.hexdigest(req["password"])
+      raise "La contraseña es invalida" unless user.password == passwd
       return user.to_json(only: [:id, :username, :name, :user_type_id])
     end
 
@@ -93,7 +94,8 @@ module Cedek
         req = JSON.parse body
       end
 
-      # TODO hashear las contasenas antes de almacenarlas
+      raise "El nombre de usuario ya existe" unless User.where("username = ?", req["username"]).first.nil?
+      req["password"] = Digest::SHA1.hexdigest(req["password"])
       user = User.create!(req)
       return user.to_json(only: [:id, :username, :name, :user_type_id])
     end
