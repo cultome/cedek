@@ -3,9 +3,6 @@
     <h3 style="color: #AAA" class="text-center">Bienvenido</h3>
     <div class="panel panel-default">
       <div class="panel-body">
-        <div class="alert alert-danger" role="alert" ng-show="loginError">
-          {{loginError}}
-        </div>
         <form name="loginForm" novalidate>
           <div ng-class="{ 'form-group': true, 'has-feedback':true, 'has-error': loginForm.username.$invalid && loginForm.username.$dirty}">
             <input

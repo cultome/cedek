@@ -103,6 +103,10 @@ module Cedek
 
 		class User < ActiveRecord::Base
       belongs_to :user_type
+
+      def user_type_name
+        return self.user_type.name
+      end
     end
 
 		class Person < ActiveRecord::Base

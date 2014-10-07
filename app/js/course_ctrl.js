@@ -104,6 +104,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
       $scope.create = function(course){
         CourseService.createCourse(course, function(res){
           $location.path("/curso/editar/" + res.id);
+          $scope.notify(course.name + " agregado!", "success");
         });
       };
 

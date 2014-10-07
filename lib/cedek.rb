@@ -105,15 +105,18 @@ module Cedek
       raise "El usuario no existe" if user.nil?
       passwd = Digest::SHA1.hexdigest(req["password"])
       raise "La contraseña es invalida" unless user.password == passwd
-      return user.to_json(only: [:id, :username, :name, :user_type_id])
+      return user.to_json(only: [:id, :username, :name, :user_type_id], methods: [:user_type_name])
     end
 
     post '/users' do
       req = get_body
       raise "El nombre de usuario ya existe" unless User.where("username = ?", req["username"]).first.nil?
       req["password"] = Digest::SHA1.hexdigest(req["password"])
+      # liminamos los datos que no van
+      req.delete("password_confirm")
+      # creamos
       user = User.create!(req)
-      return user.to_json(only: [:id, :username, :name, :user_type_id])
+      return user.to_json(only: [:id, :username, :name, :user_type_id], methods: [:user_type_name])
     end
 
     post '/consults/:personId' do |personId|
@@ -235,7 +238,7 @@ module Cedek
     get '/users/:userId' do |userId|
       user = User.find(userId)
       raise "El usuario no existe!" if user.nil?
-      return user.to_json
+      return user.to_json(only: [:id, :username, :name, :user_type_id], methods: [:user_type_name])
     end
 
     get '/consults/:personId' do |personId|
@@ -257,6 +260,10 @@ module Cedek
         previous: { only: [:id, :name] },
         debts: { only: [:id, :amount, :commitment, :course_id, :person_id], methods: [:person_name, :course_name] }
       })
+    end
+
+    get '/users' do
+      return User.all.to_json(only: [:id, :username, :name, :user_type_id], methods: [:user_type_name])
     end
 
     get '/people' do

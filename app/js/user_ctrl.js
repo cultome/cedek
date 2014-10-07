@@ -6,6 +6,7 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
       $scope.userTypes = CatalogService.userTypes();
       $scope.user = null;
       $scope.passwords = null;
+      $scope.users = null;
 
       $scope.isCreatingUser = function(){
         return $location.path().match(/editar/) === null;
@@ -51,8 +52,19 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
         }
       };
 
+      $scope.initUserList = function(){
+        $scope.users = UserService.getUsers();
+      };
+
       if($routeParams.userId){
-        $scope.getUser(parseInt($routeParams.userId));
+        var requestedUserId = parseInt($routeParams.userId);
+        if($scope.getLoggedUser().user_type_id === 1 || $scope.getLoggedUser().id === requestedUserId){
+          $scope.getUser(requestedUserId);
+        } else {
+          // no esta autorizado
+          $scope.notify("No estas autorizado para editar ese usuario", "error");
+          $location.path("/dashboard");
+        }
       } else {
         $scope.user = {
           "username": "",

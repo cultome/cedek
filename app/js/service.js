@@ -288,6 +288,10 @@ app.factory('UserService', ['$resource', function($resource){
 
     get: function(userId, successCb, failCb){
       return UserResource.get({userId: userId}, successCb, failCb);
+    },
+
+    getUsers: function(successCb, failCb){
+      return UserResource.query({}, successCb, failCb);
     }
 
   };

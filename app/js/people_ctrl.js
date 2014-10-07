@@ -41,6 +41,7 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', '$lo
       $scope.create = function(student){
         PeopleService.createStudent(student, function(res){
           $location.path("personas/listar");
+          $scope.notify(student.name + " agregado!", "success");
         });
       };
 

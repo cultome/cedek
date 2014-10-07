@@ -15,8 +15,9 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/curso/:courseId', {templateUrl: 'pages/curso/detalles.html', controller: 'CourseCtrl', roles: ['Administrador', 'Regular']});
   $routeProvider.when('/curso/editar/:courseId', {templateUrl: 'pages/curso/agregar.html', controller: 'CourseCtrl', roles: ['Administrador']});
 
+  $routeProvider.when('/usuarios/listar', {templateUrl: 'pages/usuario/listar.html', controller: 'UserCtrl', roles: ['Administrador']});
   $routeProvider.when('/usuarios/agregar', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl', roles: ['Administrador']});
-  $routeProvider.when('/usuario/editar/:userId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl', roles: ['Administrador']});
+  $routeProvider.when('/usuario/editar/:userId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl', roles: ['Administrador', 'Regular']});
 
   $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'UserCtrl', roles: ['Administrador', 'Regular']});
 
@@ -42,7 +43,6 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService', 'Use
       "use strict";
 
       $scope.currentUser = null;
-      $scope.loginError = null;
       $scope.redirectAfterLogin = null;
       $scope.login = {
         "username": "",
@@ -70,12 +70,12 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService', 'Use
           $scope.currentUser = user;
           $location.path($scope.redirectAfterLogin);
         }, function(response){
-          $scope.loginError = response.data;
+          $scope.notify(response.data, "error");
         });
       };
 
       $scope.notify = function(message, className){
-        $.notify(message, {globalPosition: "top center", autoHideDelay: 1000, className: className});
+        $.notify(message, {globalPosition: "top center", autoHideDelay: 2000, className: className});
       };
 
       $scope.getInputClass = function(input, base){
@@ -151,8 +151,9 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService', 'Use
           var route = $route.routes[r];
           if(nextRoutePath.match(route.regexp) !== null && r !== "null"){
             if($scope.isLogged()){
-              if($route.routes.roles && $route.routes.roles.indexOf($scope.getLoggedUser().user_type_id) < 0){
-                alert("El usuario no esta autorizado");
+              if(route && route.roles.indexOf($scope.getLoggedUser().user_type_name) < 0){
+                $scope.notify("No tienes autorizacion para entrar ahi", "error");
+                $location.path("/dashboard");
               }
             } else {
               if(next.match(/login$/) === null){

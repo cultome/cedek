@@ -1,0 +1,24 @@
+<div class="row" ng-init="initUserList()" id="buscarUsuarios">
+  <div class="col-md-3" ng-repeat="user in users | filter:name">
+    <div class="panel panel-default students-panel">
+      <div class="panel-heading" data-toggle="collapse" data-parent="#buscarUsuarios" href="#userInfo{{user.id}}">
+        <h3 class="panel-title">
+          {{user.name}}
+          <a href="#/usuario/editar/{{user.id}}"><span class="glyphicon glyphicon-pencil pull-right go-to-edit"></span></a>
+        </h3>
+      </div>
+      <div class="panel-body panel-collapse collapse" id="userInfo{{user.id}}">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-5"><strong>Usuario</strong></div>
+            <div class="col-md-7">{{user.username}}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-5"><strong>Rol</strong></div>
+            <div class="col-md-7">{{user.user_type_name}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
