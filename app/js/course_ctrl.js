@@ -113,7 +113,11 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
       };
 
       $scope.update = function(courseId, course){
-        return CourseService.updateCourse(courseId, course);
+        return CourseService.updateCourse(courseId, course, function(){
+          $scope.notify("Curso '" + course.name + "' actualizado", "success");
+        }, function(response){
+          $scope.notify(response.data, "error");
+        });
       };
 
       $scope.selectStudent = function(studentId){

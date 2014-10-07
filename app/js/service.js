@@ -13,7 +13,7 @@ app.factory('PeopleService', ['$resource', function($resource){
   var CourseResource = $resource(serviceEndpoint + '/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
-    updateStudent: function(personId, studentData){
+    updateStudent: function(personId, studentData, successCb, failCb){
       var student = angular.copy(studentData);
       // removemos propiedades que no sirven
       delete student.id;
@@ -23,7 +23,7 @@ app.factory('PeopleService', ['$resource', function($resource){
       delete student.enrollments;
       delete student.scholarships;
       delete student.marital_status_name;
-      return PersonResource.update({personId: personId}, student);
+      return PersonResource.update({personId: personId}, student, successCb, failCb);
     },
 
     createStudent: function(student, successCb, failCb){
@@ -104,7 +104,7 @@ app.factory('CourseService', ['$resource', function($resource){
       return CourseResource.save(course, successCb, failCb);
     },
 
-    updateCourse: function(courseId, courseData){
+    updateCourse: function(courseId, courseData, successCb, failCb){
       var course = angular.copy(courseData);
       delete course.scholarships;
       delete course.students;
@@ -112,7 +112,7 @@ app.factory('CourseService', ['$resource', function($resource){
       delete course.endLabel;
       delete course.id;
       delete course.schedule;
-      return CourseResource.update({courseId: courseId}, course);
+      return CourseResource.update({courseId: courseId}, course, successCb, failCb);
     },
 
     getCourse: function(courseId, successCb, failCb){

@@ -1,9 +1,16 @@
 var menuOptions = element.all(by.css(".dropdown"));
 var courseMenu = menuOptions.last();
-var peopleMenu = menuOptions.first();
+var peopleMenu = menuOptions.get(1);
+var usersMenu = menuOptions.first();
 
 function goHome(){
-  browser.get("http://localhost:1234");
+  browser.get("http://localhost:92/app");
+}
+
+function login(user, passwd){
+  element(by.name("username")).sendKeys(user);
+  element(by.name("password")).sendKeys(passwd);
+  element(by.css("[value='Entrar']")).click();
 }
 
 function goTo(option){
@@ -126,3 +133,4 @@ exports.countPeopleListed = countPeopleListed;
 exports.selectLastCourse = selectLastCourse;
 exports.selectLastPerson = selectLastPerson;
 exports.goHome = goHome;
+exports.login = login;

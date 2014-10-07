@@ -130,7 +130,7 @@ module Cedek
 
     # refactor this method
     post '/courses/:courseId/:action/:actionId' do |courseId, action, actionId|
-      req = get_body
+      req = get_body(false)
       case action
       when "scholarship" then
         course = Course.find(courseId.to_i)
@@ -418,7 +418,7 @@ module Cedek
     def get_body(required=true)
       body = request.body.read
       raise "Falta informacion requerida" if required && body.empty?
-      req = JSON.parse body
+      req = if body.empty? then {} else JSON.parse body end
       return req
     end
 

@@ -3,6 +3,7 @@ var common = require('./spec_helper.js');
 describe("Person", function(){
   beforeEach(function(){
     common.goHome();
+    common.login("admin", "admin");
   });
 
   it("creates a new person", function(){
