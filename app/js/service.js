@@ -13,7 +13,7 @@ app.factory('PeopleService', ['$resource', function($resource){
   var CourseResource = $resource(serviceEndpoint + '/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
-    updateStudent: function(personId, studentData, successCb, failCb){
+    updateStudent: function(personId, studentData, token, successCb, failCb){
       var student = angular.copy(studentData);
       // removemos propiedades que no sirven
       delete student.id;
@@ -23,7 +23,7 @@ app.factory('PeopleService', ['$resource', function($resource){
       delete student.enrollments;
       delete student.scholarships;
       delete student.marital_status_name;
-      return PersonResource.update({personId: personId}, student, successCb, failCb);
+      return PersonResource.update({personId: personId, t: token}, student, successCb, failCb);
     },
 
     createStudent: function(student, successCb, failCb){

@@ -1,4 +1,5 @@
 require 'active_record'
+require 'digest'
 
 module Cedek
 	module Utils
@@ -22,6 +23,10 @@ module Cedek
 					ActiveRecord::Schema.drop_table('leaders')
 					ActiveRecord::Schema.drop_table('users')
 					ActiveRecord::Schema.drop_table('user_types')
+					ActiveRecord::Schema.drop_table('logs')
+					ActiveRecord::Schema.drop_table('actions')
+					ActiveRecord::Schema.drop_table('object_types')
+					ActiveRecord::Schema.drop_table('tokens')
 				rescue
 				end
 
@@ -116,6 +121,28 @@ module Cedek
               t.string :name
             end
 
+            create_table :actions do |t|
+              t.string :name
+            end
+
+            create_table :object_types do |t|
+              t.string :name
+            end
+
+            create_table :logs do |t|
+              t.datetime :date
+              t.references :user
+              t.references :action
+              t.references :object_type
+              t.integer :object_id
+            end
+
+            create_table :tokens do |t|
+              t.datetime :creation
+              t.references :user
+              t.string :token
+            end
+
 					end
 				rescue ActiveRecord::StatementInvalid
 				end
@@ -133,11 +160,30 @@ module Cedek
         UserType.create!(id: 1, name: "Administrador")
         UserType.create!(id: 2, name: "Regular")
 
-        User.create!(username: "admin", password: Digest::SHA1.hexdigest("admin"), name: "Administrador", user_type_id: 1)
+        Action.create!(id: 1, name: "Crear")
+        Action.create!(id: 2, name: "Actualizar")
+        Action.create!(id: 3, name: "Entrar")
+        Action.create!(id: 4, name: "Cambio de Contraseña")
+        Action.create!(id: 5, name: "Eliminar")
+
+        ObjectType.create!(id: 1, name: "Persona")
+        ObjectType.create!(id: 2, name: "Curso")
+        ObjectType.create!(id: 3, name: "Usuario")
+        ObjectType.create!(id: 4, name: "Autorizacion")
+        ObjectType.create!(id: 5, name: "Consulta")
+        ObjectType.create!(id: 6, name: "Beca")
+        ObjectType.create!(id: 7, name: "Inscripcion")
+        ObjectType.create!(id: 8, name: "Deuda")
+
+        User.create!(username: "admin", password: encrypt("admin"), name: "Administrador", user_type_id: 1)
 
         return true
 			#end
 		end # recreate_schema
+
+    def encrypt(msg)
+      return Digest::SHA1.hexdigest(msg)
+    end
 
     def fixtures
       #return with_connection do

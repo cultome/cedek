@@ -61,6 +61,18 @@ module Cedek
 			has_many :phones
 		end
 
+    class ObjectType < ActiveRecord::Base
+    end
+
+    class Action < ActiveRecord::Base
+    end
+
+    class Log < ActiveRecord::Base
+      belongs_to :action
+      belongs_to :object_type
+      belongs_to :user
+    end
+
 		class Scholarship < ActiveRecord::Base
 			belongs_to :person
 			belongs_to :course
@@ -77,6 +89,10 @@ module Cedek
 				return student.name
 			end
 		end
+
+		class Token < ActiveRecord::Base
+      belongs_to :user
+    end
 
 		class Session < ActiveRecord::Base
 			belongs_to :course
@@ -106,6 +122,11 @@ module Cedek
 
       def user_type_name
         return self.user_type.name
+      end
+
+      def token
+        token = Token.where("user_id = ?", self.id).last
+        return token.token unless token.nil?
       end
     end
 

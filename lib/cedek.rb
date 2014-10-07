@@ -3,7 +3,6 @@ require 'sinatra/base'
 require 'cedek/model'
 require 'cedek/utils'
 require 'json'
-require 'digest'
 
 module Cedek
   class App < Sinatra::Base
@@ -56,67 +55,27 @@ module Cedek
       redirect '/index.html'
     end
 
-    put '/users/:userId' do |userId|
-      req = get_body
-      raise "El nombre de usuario ya existe" if User.where("username = ?", req["username"]).count > 1
-      user = User.find(userId)
-      raise "La contraseña es incorrecta" unless user.password == Digest::SHA1.hexdigest(req["currentPassword"])
-      # quitamos los campos que no van
-      req.delete("id")
-      req.delete("password")
-      req.delete("currentPassword")
-      # actualizamos
-      return user.update_attributes(req)
-    end
-
-    put '/auth/:userId' do |userId|
-      req = get_body
-      user = User.find(userId)
-      raise "El usuario no existe" if user.nil?
-      raise "Contraseña actual incorrecta" unless user.password == Digest::SHA1.hexdigest(req["currentPassword"])
-      user.password = Digest::SHA1.hexdigest(req["newPassword"])
-      return user.save
-    end
-
-    put '/people/:personId' do |personId|
-      student = Person.find(personId)
-      student_attrs = get_body
-      phone_attrs = student_attrs.delete("phones")
-      phone_attrs.each do |phone|
-        if phone["id"].nil?
-          unless phone["number"].empty?
-            student.phones << Phone.create!(phone)
-          end
-        else
-          Phone.find(phone["id"].to_i).update_attributes(phone)
-        end
-      end
-      student.update_attributes(student_attrs)
-    end
-
-    put '/courses/:courseId' do |courseId|
-      props = get_body
-      course = Course.find(courseId)
-      return course.update_attributes(props)
-    end
-
     post '/auth' do
       req = get_body
       user = User.where("username = ?", req["username"]).first
       raise "El usuario no existe" if user.nil?
-      passwd = Digest::SHA1.hexdigest(req["password"])
+      passwd = encrypt(req["password"])
       raise "La contraseña es invalida" unless user.password == passwd
-      return user.to_json(only: [:id, :username, :name, :user_type_id], methods: [:user_type_name])
+      # creamos un token
+      createToken(user.id)
+      log(user.id, :create, :auth, user.id)
+      return user.to_json(only: [:id, :username, :name, :user_type_id], methods: [:user_type_name, :token])
     end
 
     post '/users' do
       req = get_body
       raise "El nombre de usuario ya existe" unless User.where("username = ?", req["username"]).first.nil?
-      req["password"] = Digest::SHA1.hexdigest(req["password"])
+      req["password"] = encrypt(req["password"])
       # liminamos los datos que no van
       req.delete("password_confirm")
       # creamos
       user = User.create!(req)
+      log(request["t"], :create, :user, user.id)
       return user.to_json(only: [:id, :username, :name, :user_type_id], methods: [:user_type_name])
     end
 
@@ -125,6 +84,7 @@ module Cedek
       drops = req["drops"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")
       req["drops"] = drops
       consult = Consult.create!(req)
+      log(request["t"], :create, :consult, consult.id)
       return consult.persisted?
     end
 
@@ -142,12 +102,15 @@ module Cedek
 
         scholarships = course.scholarships.select{|s| s.student == student }
         if scholarships.empty?
-          Scholarship.create!(course: course, person_id: student.id, percentage: amount)
-          return true
+          scholarship = Scholarship.create!(course: course, person_id: student.id, percentage: amount)
+          log(request["t"], :create, :scholarship, scholarship.id)
+          return scholarship.persisted?
 
         else
           scholarships[0].percentage = amount
-          return scholarships[0].save
+          success = scholarships[0].save
+          log(request["t"], :create, :scholarship, scholarships[0].id)
+          return success
 
         end
 
@@ -160,6 +123,7 @@ module Cedek
           puts "El estudiante ya esta registrado en el curso."
         else
           course.students << student
+          log(request["t"], :create, :enrollment, student.id)
         end
 
         return true
@@ -184,13 +148,17 @@ module Cedek
 
     post '/courses' do
       course = get_body
-      return Course.create!(course).to_json(only: :id, methods: [:persisted?])
+      new_course = Course.create!(course)
+      log(request["t"], :create, :course, new_course.id)
+      return new_course.to_json(only: :id, methods: [:persisted?])
     end
 
     post '/people' do
       student = get_body
       student["phones"] = student["phones"].map{|p| Phone.new(p) }
-      return Person.create!(student).to_json(only: :id, methods: [:persisted?])
+      new_person = Person.create!(student)
+      log(request["t"], :create, :person, new_person.id)
+      return new_person.to_json(only: :id, methods: [:persisted?])
     end
 
     post '/debts/pay' do
@@ -203,13 +171,16 @@ module Cedek
       debt = Debt.where(person_id: student_id, course_id: course_id).first
       if debt.nil?
         if amount - payment > 0
+          log(request["t"], :create, :debt, debt.id)
           return Debt.create!(person_id: student_id, course_id: course_id, amount: amount - payment)
         end
       else
         debt.amount -= payment
         if debt.amount <= 0
+          log(request["t"], :delete, :debt, debt.id)
           return debt.delete
         else
+          log(request["t"], :update, :debt, debt.id)
           return debt.save
         end
       end
@@ -227,13 +198,90 @@ module Cedek
 
       debt = Debt.where(person_id: student_id, course_id: course_id).first
       if debt.nil?
+        log(request["t"], :create, :debt, debt.id)
         return Debt.create!(person_id: student_id, course_id: course_id, amount: amount, commitment: commitment)
       else
         props = { commitment: commitment }
         props[:amount] = debt.amount + amount if add_amount
         success = debt.update_attributes(props)
+        log(request["t"], :update, :debt, debt.id)
         return success
       end
+    end
+
+    put '/users/:userId' do |userId|
+      req = get_body
+      raise "El nombre de usuario ya existe" if User.where("username = ?", req["username"]).count > 1
+      user = User.find(userId)
+      raise "La contraseña es incorrecta" unless user.password == encrypt(req["currentPassword"])
+      # quitamos los campos que no van
+      req.delete("id")
+      req.delete("password")
+      req.delete("currentPassword")
+      # actualizamos
+      success = user.update_attributes(req)
+      log(request["t"], :update, :user, userId) if success
+      return success
+    end
+
+    put '/auth/:userId' do |userId|
+      req = get_body
+      user = User.find(userId)
+      raise "El usuario no existe" if user.nil?
+      raise "Contraseña actual incorrecta" unless user.password == encrypt(req["currentPassword"])
+      user.password = encrypt(req["newPassword"])
+      success = user.save
+      log(request["t"], :change_password, :user, userId) if success
+      return success
+    end
+
+    put '/people/:personId' do |personId|
+      student = Person.find(personId)
+      student_attrs = get_body
+      phone_attrs = student_attrs.delete("phones")
+      phone_attrs.each do |phone|
+        if phone["id"].nil?
+          unless phone["number"].empty?
+            student.phones << Phone.create!(phone)
+          end
+        else
+          Phone.find(phone["id"].to_i).update_attributes(phone)
+        end
+      end
+      success = student.update_attributes(student_attrs)
+      log(request["t"], :update, :person, personId) if success
+      return success
+    end
+
+    put '/courses/:courseId' do |courseId|
+      props = get_body
+      course = Course.find(courseId)
+      success =  course.update_attributes(props)
+      log(request["t"], :update, :course, courseId) if success
+      return success
+    end
+
+    delete '/scholarship/:scholarshipId' do |scholarshipId|
+      Scholarship.delete(scholarshipId)
+      log(request["t"], :delete, :scholarship, scholarshipId)
+      return true
+    end
+
+    delete '/debts/remove/:debtId' do |debtId|
+      Debt.delete(debtId)
+      log(request["t"], :delete, :debt, debtId)
+      return true
+    end
+
+    delete '/courses/:courseId/unroll/:studentId' do |courseId, studentId|
+      course = Course.find(courseId)
+      raise "El curso no existe!" if course.nil?
+      student = course.students.find(studentId)
+      raise "El estudiante no existe!" if student.nil?
+      course.students.delete(student)
+
+      log(request["t"], :delete, :enrollment, studentId)
+      return true
     end
 
     get '/users/:userId' do |userId|
@@ -395,24 +443,8 @@ module Cedek
       end
     end
 
-    delete '/scholarship/:scholarshipId' do |scholarshipId|
-      Scholarship.delete(scholarshipId)
-      return true
-    end
-
-    delete '/debts/remove/:debtId' do |debtId|
-      Debt.delete(debtId)
-      return true
-    end
-
-    delete '/courses/:courseId/unroll/:studentId' do |courseId, studentId|
-      course = Course.find(courseId)
-      raise "El curso no existe!" if course.nil?
-      student = course.students.find(studentId)
-      raise "El estudiante no existe!" if student.nil?
-      course.students.delete(student)
-
-      return true
+    def createToken(userId)
+      return Token.create!(creation: Time.now, user_id: userId, token: encrypt("#{userId}-#{Time.now}"))
     end
 
     def get_body(required=true)
@@ -420,6 +452,38 @@ module Cedek
       raise "Falta informacion requerida" if required && body.empty?
       req = if body.empty? then {} else JSON.parse body end
       return req
+    end
+
+    def getUserIdFromToken(token)
+      return token if token.is_a?(Integer)
+      tk = Token.where("token = ?", token).last
+      return nil if tk.nil?
+      return tk.user_id
+    end
+
+    def log(token, action, type, id)
+      return Log.create!({
+        date: Time.now,
+        user_id: getUserIdFromToken(token),
+        object_id: id,
+        action_id: case action
+          when :create then 1
+          when :update then 2
+          when :login then 3
+          when :change_password then 4
+          when :delete then 5
+        end,
+        object_type_id: case type
+          when :person then 1
+          when :course then 2
+          when :user then 3
+          when :auth then 4
+          when :consult then 5
+          when :scholarship then 6
+          when :enrollment then 7
+          when :debt then 8
+        end
+      })
     end
 
   end
