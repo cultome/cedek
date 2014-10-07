@@ -353,11 +353,17 @@ app.factory('ConsultService', ['$resource', function($resource){
 app.factory('AuthService', ['$resource', function($resource){
   "use strict";
 
-  var AuthResource = $resource(serviceEndpoint + '/auth/:userId', {userId: '@id'});
+  var AuthResource = $resource(serviceEndpoint + '/auth/:userId', {userId: '@id'},
+    {'update': { method: 'PUT' }}
+  );
 
   return {
     login: function(username, password, successCb, failCb){
       return AuthResource.save({}, {"username": username, "password": password}, successCb, failCb);
+    },
+
+    changePassword: function(userId, currentPassword, newPassword, successCb, failCb){
+      return AuthResource.update({userId: userId}, {currentPassword: currentPassword, newPassword: newPassword}, successCb, failCb);
     }
   };
 }]);

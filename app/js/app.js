@@ -37,12 +37,12 @@ var app = angular.module('CEDEK');
 /*
  *   Controller
  */
-app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
-    function($scope, $route, $location, AuthService){
+app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService', 'UserService',
+    function($scope, $route, $location, AuthService, UserService){
       "use strict";
 
       $scope.currentUser = null;
-      $scope.thereIsLoginError = false;
+      $scope.loginError = null;
       $scope.redirectAfterLogin = null;
       $scope.login = {
         "username": "",
@@ -69,8 +69,8 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
         AuthService.login($scope.login.username, $scope.login.password, function(user){
           $scope.currentUser = user;
           $location.path($scope.redirectAfterLogin);
-        }, function(){
-          $scope.thereIsLoginError = true;
+        }, function(response){
+          $scope.loginError = response.data;
         });
       };
 
@@ -88,44 +88,13 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
         return input.$invalid && input.$dirty;
       };
 
-      $scope.getUser = function(){
+      $scope.getLoggedUser = function(){
         return $scope.currentUser;
       };
 
       $scope.isLogged = function(){
         return $scope.currentUser !== null;
       };
-
-      $scope.$on("$locationChangeStart", function(evt, next, current){
-        var nextRoutePath = next.substring(next.indexOf("#") + 1);
-        for(var r in $route.routes){
-          var route = $route.routes[r];
-          if(nextRoutePath.match(route.regexp) !== null && r !== "null"){
-            if($scope.isLogged()){
-              if($route.routes.roles && $route.routes.roles.indexOf($scope.getUser().user_type_id) < 0){
-                alert("El usuario no esta autorizado");
-              }
-            } else {
-              if(next.match(/login$/) === null){
-                var path = next.substring(next.indexOf("#") + 1);
-                $scope.redirectAfterLogin = path;
-              }
-              $location.path("/login");
-            }
-          }
-        }
-      });
-
-      $scope.$on("$routeChangeSuccess", function(){
-        // limpiamos el filtro
-        $scope.name = "";
-        var path = $route.current.originalPath;
-        if(path !== undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
-          $scope.showFilter = true;
-        } else {
-          $scope.showFilter = false;
-        }
-      });
 
       $scope.toggleLatePaymentOptions = function(studentId){
         var section = $("#latePaymentOption" + studentId);
@@ -167,6 +136,42 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService',
           return day + " de " + monthName + "  " + year;
         }
       };
+
+      $scope.$on("userUpdated", function(evt, userId){
+        $scope.currentUser = UserService.get(userId);
+      });
+
+      $scope.$on("$locationChangeStart", function(evt, next, current){
+        var nextRoutePath = next.substring(next.indexOf("#") + 1);
+        for(var r in $route.routes){
+          var route = $route.routes[r];
+          if(nextRoutePath.match(route.regexp) !== null && r !== "null"){
+            if($scope.isLogged()){
+              if($route.routes.roles && $route.routes.roles.indexOf($scope.getLoggedUser().user_type_id) < 0){
+                alert("El usuario no esta autorizado");
+              }
+            } else {
+              if(next.match(/login$/) === null){
+                var path = next.substring(next.indexOf("#") + 1);
+                $scope.redirectAfterLogin = path;
+              }
+              $location.path("/login");
+            }
+          }
+        }
+      });
+
+      $scope.$on("$routeChangeSuccess", function(){
+        // limpiamos el filtro
+        $scope.name = "";
+        var path = $route.current.originalPath;
+        if(path !== undefined && (path.match("listar$") || path.match("^/curso/:courseId$")) ){
+          $scope.showFilter = true;
+        } else {
+          $scope.showFilter = false;
+        }
+      });
+
     }]);
 
 

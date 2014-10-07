@@ -13,6 +13,7 @@ module Cedek
 
     configure do
       set :public_folder, File.dirname(__FILE__) + '/../public'
+      set :show_exceptions, false
 
       db_config = {
         'development' => {
@@ -46,13 +47,39 @@ module Cedek
       ActiveRecord::Base.connection_pool.release_connection
     end
 
+    error do
+      return env['sinatra.error'].message
+    end
+
     get '/' do
       redirect '/index.html'
     end
 
+    put '/users/:userId' do |userId|
+      req = get_body
+      raise "El nombre de usuario ya existe" if User.where("username = ?", req["username"]).count > 1
+      user = User.find(userId)
+      raise "La contraseña es incorrecta" unless user.password == Digest::SHA1.hexdigest(req["currentPassword"])
+      # quitamos los campos que no van
+      req.delete("id")
+      req.delete("password")
+      req.delete("currentPassword")
+      # actualizamos
+      return user.update_attributes(req)
+    end
+
+    put '/auth/:userId' do |userId|
+      req = get_body
+      user = User.find(userId)
+      raise "El usuario no existe" if user.nil?
+      raise "Contraseña actual incorrecta" unless user.password == Digest::SHA1.hexdigest(req["currentPassword"])
+      user.password = Digest::SHA1.hexdigest(req["newPassword"])
+      return user.save
+    end
+
     put '/people/:personId' do |personId|
       student = Person.find(personId)
-      student_attrs = JSON.parse request.body.read
+      student_attrs = get_body
       phone_attrs = student_attrs.delete("phones")
       phone_attrs.each do |phone|
         if phone["id"].nil?
@@ -67,20 +94,13 @@ module Cedek
     end
 
     put '/courses/:courseId' do |courseId|
-      props = JSON.parse request.body.read
+      props = get_body
       course = Course.find(courseId)
       return course.update_attributes(props)
     end
 
     post '/auth' do
-      body = request.body.read
-      unless body.empty?
-        req = JSON.parse body
-      end
-
-      puts body
-      puts req
-
+      req = get_body
       user = User.where("username = ?", req["username"]).first
       raise "El usuario no existe" if user.nil?
       passwd = Digest::SHA1.hexdigest(req["password"])
@@ -89,11 +109,7 @@ module Cedek
     end
 
     post '/users' do
-      body = request.body.read
-      unless body.empty?
-        req = JSON.parse body
-      end
-
+      req = get_body
       raise "El nombre de usuario ya existe" unless User.where("username = ?", req["username"]).first.nil?
       req["password"] = Digest::SHA1.hexdigest(req["password"])
       user = User.create!(req)
@@ -101,20 +117,16 @@ module Cedek
     end
 
     post '/consults/:personId' do |personId|
-      body = JSON.parse request.body.read
-      drops = body["drops"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")
-      body["drops"] = drops
-      consult = Consult.create!(body)
+      req = get_body
+      drops = req["drops"].collect{|arr| arr[1] ? arr[0] : nil }.compact.join("-")
+      req["drops"] = drops
+      consult = Consult.create!(req)
       return consult.persisted?
     end
 
     # refactor this method
     post '/courses/:courseId/:action/:actionId' do |courseId, action, actionId|
-      body = request.body.read
-      unless body.empty?
-        req = JSON.parse body
-      end
-
+      req = get_body
       case action
       when "scholarship" then
         course = Course.find(courseId.to_i)
@@ -167,18 +179,18 @@ module Cedek
     end
 
     post '/courses' do
-      course = JSON.parse request.body.read
+      course = get_body
       return Course.create!(course).to_json(only: :id, methods: [:persisted?])
     end
 
     post '/people' do
-      student = JSON.parse request.body.read
+      student = get_body
       student["phones"] = student["phones"].map{|p| Phone.new(p) }
       return Person.create!(student).to_json(only: :id, methods: [:persisted?])
     end
 
     post '/debts/pay' do
-      debt = JSON.parse request.body.read
+      debt = get_body
       student_id = debt["studentId"].to_i
       course_id = debt["courseId"].to_i
       amount = debt["amount"].to_f
@@ -202,7 +214,7 @@ module Cedek
     end
 
     post '/debts/later' do
-      debt = JSON.parse request.body.read
+      debt = get_body
       student_id = debt["studentId"].to_i
       course_id = debt["courseId"].to_i
       amount = debt["amount"].to_f
@@ -393,6 +405,13 @@ module Cedek
       course.students.delete(student)
 
       return true
+    end
+
+    def get_body(required=true)
+      body = request.body.read
+      raise "Falta informacion requerida" if required && body.empty?
+      req = JSON.parse body
+      return req
     end
 
   end

@@ -11,7 +11,7 @@
       <a class="navbar-brand" style="padding-top: 2px;" href="#"><img src="img/logo.svg"> CEDEK</a>
     </div>
 
-    <p class="navbar-text navbar-right" ng-show="isLogged()"><a href="#/usuario/editar/{{getUser().id}}" class="navbar-link">{{getUser().name}}</a></p>
+    <p class="navbar-text navbar-right" ng-show="isLogged()"><a href="#/usuario/editar/{{getLoggedUser().id}}" class="navbar-link">{{getLoggedUser().name}}</a></p>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right" ng-show="isLogged()" style="border-right: 1px solid #ddd">
@@ -23,7 +23,7 @@
           </form>
         </li>
 
-        <li class="dropdown" ng-show="getUser().user_type_id == 1">
+        <li class="dropdown" ng-show="getLoggedUser().user_type_id == 1">
           <a class="dropdown-toggle" data-toggle="dropdown">Usuarios <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a id="listPeopleOpt" href="#/usuarios/listar">Lista</a></li>

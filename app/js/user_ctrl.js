@@ -1,6 +1,6 @@
 /* jshint strict: true */
-angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$location', 'UserService', 'CatalogService',
-    function($scope, $routeParams, $location, UserService, CatalogService){
+angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$location', 'UserService', 'CatalogService', 'AuthService', 
+    function($scope, $routeParams, $location, UserService, CatalogService, AuthService){
       'use strict';
 
       $scope.userTypes = CatalogService.userTypes();
@@ -17,6 +17,7 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
 
       $scope.update = function(userId){
         UserService.update(userId, $scope.user, function(){
+          $scope.$emit("userUpdated", userId);
         });
       };
 
@@ -32,6 +33,14 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
           $scope.passwdForm.new_password_confirm.$invalid = true;
           $scope.passwdForm.$invalid = true;
         }
+      };
+
+      $scope.updatePassword = function(){
+        AuthService.changePassword($scope.getLoggedUser().id, $scope.user.current_password, $scope.user.new_password,
+          function(){},
+          function(){
+          }
+        );
       };
 
       $scope.checkPasswords = function(){

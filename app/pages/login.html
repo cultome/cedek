@@ -3,8 +3,8 @@
     <h3 style="color: #AAA" class="text-center">Bienvenido</h3>
     <div class="panel panel-default">
       <div class="panel-body">
-        <div class="alert alert-danger" role="alert" ng-show="thereIsLoginError">
-          El nombre de Usuario o la contraseña son invalidos.
+        <div class="alert alert-danger" role="alert" ng-show="loginError">
+          {{loginError}}
         </div>
         <form name="loginForm" novalidate>
           <div ng-class="{ 'form-group': true, 'has-feedback':true, 'has-error': loginForm.username.$invalid && loginForm.username.$dirty}">
@@ -31,10 +31,11 @@
 
           <div class="row">
             <div class="form-group col-md-12">
-              <button
+              <input type="submit"
                  class="btn btn-default btn-block"
                  ng-disabled="loginForm.$invalid"
-                 ng-click="login()">Entrar</button>
+                 ng-click="login()"
+                 value="Entrar"></input>
             </div>
           </div>
         </form>
