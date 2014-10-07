@@ -74,6 +74,10 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService', 'Use
         });
       };
 
+      $scope.notify = function(message, className){
+        $.notify(message, {globalPosition: "top center", autoHideDelay: 1000, className: className});
+      };
+
       $scope.getInputClass = function(input, base){
         var classes = [].concat(base);
 

@@ -41,6 +41,7 @@
                class="form-control"
                name="password"
                ng-required="isCreatingUser()"
+               ng-change="checkPasswords(userForm, user)"
                placeholder="Contrase&ntilde;a"
                ng-model="user.password">
             <span ng-show="isInputInvalid(userForm.password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -55,7 +56,7 @@
                class="form-control"
                name="password_confirm"
                ng-required="isCreatingUser()"
-               ng-change="checkPasswords()"
+               ng-change="checkPasswords(userForm, user)"
                placeholder="Confirmar Contrase&ntilde;a"
                ng-model="user.password_confirm"></input>
             <span ng-show="isInputInvalid(userForm.password_confirm)" class="glyphicon glyphicon-remove form-control-feedback"></span>
@@ -132,37 +133,38 @@
                name="current_password"
                ng-required="true"
                placeholder="Contrase&ntilde;a"
-               ng-model="user.current_password">
+               ng-model="passwords.current">
             <span ng-show="isInputInvalid(passwdForm.current_password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
           </div>
         </div>
 
-        <div ng-class="getInputClass(passwdForm.new_password, ['row', 'form-group'])">
+        <div ng-class="getInputClass(passwdForm.password, ['row', 'form-group'])">
           <label class="col-md-3 control-label">Nueva contrase&ntilde;a</label>
           <div class="col-md-6">
             <input
                type="password"
                class="form-control"
-               name="new_password"
+               name="password"
                ng-required="true"
+               ng-change="checkPasswords(passwdForm, passwords)"
                placeholder="Contrase&ntilde;a"
-               ng-model="user.new_password">
-            <span ng-show="isInputInvalid(passwdForm.new_password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+               ng-model="passwords.password">
+            <span ng-show="isInputInvalid(passwdForm.password)" class="glyphicon glyphicon-remove form-control-feedback"></span>
           </div>
         </div>
 
-        <div ng-class="getInputClass(passwdForm.new_password_confirm, ['row', 'form-group'])">
+        <div ng-class="getInputClass(passwdForm.password_confirm, ['row', 'form-group'])">
           <label class="col-md-3 control-label">Confirmar nueva contrase&ntilde;a</label>
           <div class="col-md-6">
             <input
                type="password"
                class="form-control"
-               name="new_password_confirm"
+               name="password_confirm"
                ng-required="true"
-               ng-change="checkNewPasswords()"
+               ng-change="checkPasswords(passwdForm, passwords)"
                placeholder="Confirmar Contrase&ntilde;a"
-               ng-model="user.new_password_confirm"></input>
-            <span ng-show="isInputInvalid(passwdForm.new_password_confirm)" class="glyphicon glyphicon-remove form-control-feedback"></span>
+               ng-model="passwords.password_confirm"></input>
+            <span ng-show="isInputInvalid(passwdForm.password_confirm)" class="glyphicon glyphicon-remove form-control-feedback"></span>
           </div>
         </div>
 
@@ -172,6 +174,7 @@
                type="submit"
                class="btn btn-default btn-block color-success"
                value="Cambiar Contrase&ntilde;a"
+               ng-disabled="passwdForm.$invalid"
                ng-click="updatePassword()">
             </input>
           </div>
@@ -186,7 +189,7 @@
           <button
              id="createPersonBtn"
              class="btn btn-default btn-block color-success"
-             ng-disabled="passwdForm.$invalid"
+             ng-disabled="userForm.$invalid"
              ng-click="create(user)">Crear</button>
         </div>
       </div>

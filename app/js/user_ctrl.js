@@ -4,6 +4,8 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
       'use strict';
 
       $scope.userTypes = CatalogService.userTypes();
+      $scope.user = null;
+      $scope.passwords = null;
 
       $scope.isCreatingUser = function(){
         return $location.path().match(/editar/) === null;
@@ -18,6 +20,9 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
       $scope.update = function(userId){
         UserService.update(userId, $scope.user, function(){
           $scope.$emit("userUpdated", userId);
+          $scope.notify("Datos del usuario actualizados!", "success");
+        }, function(response){
+          $scope.notify(response.data, "error");
         });
       };
 
@@ -25,31 +30,24 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
         $scope.user = UserService.get(userId);
       };
 
-      $scope.checkNewPasswords = function(){
-        if($scope.user.new_password === $scope.user.new_password_confirm){
-          $scope.passwdForm.new_password_confirm.$invalid = false;
-          $scope.passwdForm.$invalid = false;
-        } else {
-          $scope.passwdForm.new_password_confirm.$invalid = true;
-          $scope.passwdForm.$invalid = true;
-        }
-      };
-
       $scope.updatePassword = function(){
         AuthService.changePassword($scope.getLoggedUser().id, $scope.user.current_password, $scope.user.new_password,
-          function(){},
           function(){
+            $scope.notify("Contrase&ntilde;a actualizada!", "success");
+          },
+          function(response){
+            $scope.notify(response.data, "error");
           }
         );
       };
 
-      $scope.checkPasswords = function(){
-        if($scope.user.password === $scope.user.password_confirm){
-          $scope.userForm.password_confirm.$invalid = false;
-          $scope.userForm.$invalid = false;
+      $scope.checkPasswords = function(form, data){
+        if(data.password === data.password_confirm){
+          form.password_confirm.$invalid = false;
+          form.$invalid = !form.$valid;
         } else {
-          $scope.userForm.password_confirm.$invalid = true;
-          $scope.userForm.$invalid = true;
+          form.password_confirm.$invalid = true;
+          form.$invalid = true;
         }
       };
 
