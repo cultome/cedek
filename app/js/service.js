@@ -26,8 +26,8 @@ app.factory('PeopleService', ['$resource', function($resource){
       return PersonResource.update({personId: personId, t: token}, student, successCb, failCb);
     },
 
-    createStudent: function(student, successCb, failCb){
-      return PersonResource.save(student, successCb, failCb);
+    createStudent: function(student, token, successCb, failCb){
+      return PersonResource.save({t: token}, student, successCb, failCb);
     },
 
     listStudents: function(successCb, failCb){
@@ -84,27 +84,27 @@ app.factory('CourseService', ['$resource', function($resource){
 
   return {
 
-    unrollStudent: function(courseId, studentId, successCb, failCb){
-      return CourseResource.delete({courseId: courseId, action: "unroll", actionId: studentId}, successCb, failCb);
+    unrollStudent: function(courseId, studentId, token, successCb, failCb){
+      return CourseResource.delete({courseId: courseId, action: "unroll", actionId: studentId, t: token}, successCb, failCb);
     },
 
-    giveScholarship: function(courseId, studentId, amount, successCb, failCb){
-      return CourseResource.save({courseId: courseId, action: "scholarship", actionId: studentId, amount: amount}, successCb, failCb);
+    giveScholarship: function(courseId, studentId, amount, token, successCb, failCb){
+      return CourseResource.save({courseId: courseId, action: "scholarship", actionId: studentId, amount: amount, t: token}, successCb, failCb);
     },
 
-    subscribeStudent: function(courseId, studentId, successCb, failCb){
-      return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId}, successCb, failCb);
+    subscribeStudent: function(courseId, studentId, token, successCb, failCb){
+      return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId, t: token}, successCb, failCb);
     },
 
     checkAttendance: function(courseId, studentId, sessionDate, successCb, failCb){
       return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate}, successCb, failCb);
     },
 
-    createCourse: function(course, successCb, failCb){
-      return CourseResource.save(course, successCb, failCb);
+    createCourse: function(course, token, successCb, failCb){
+      return CourseResource.save({t: token}, course, successCb, failCb);
     },
 
-    updateCourse: function(courseId, courseData, successCb, failCb){
+    updateCourse: function(courseId, courseData, token, successCb, failCb){
       var course = angular.copy(courseData);
       delete course.scholarships;
       delete course.students;
@@ -112,7 +112,7 @@ app.factory('CourseService', ['$resource', function($resource){
       delete course.endLabel;
       delete course.id;
       delete course.schedule;
-      return CourseResource.update({courseId: courseId}, course, successCb, failCb);
+      return CourseResource.update({courseId: courseId, t: token}, course, successCb, failCb);
     },
 
     getCourse: function(courseId, successCb, failCb){
@@ -166,8 +166,8 @@ app.factory('ScholarshipService', ['$resource', function($resource){
   var ScholarshipResource = $resource(serviceEndpoint + '/scholarship/:scholarshipId', {scholarshipId: '@id'});
 
   return {
-    revoke: function(scholarshipId, successCb, failCb){
-      return ScholarshipResource.delete({scholarshipId: scholarshipId}, successCb, failCb);
+    revoke: function(scholarshipId, token, successCb, failCb){
+      return ScholarshipResource.delete({scholarshipId: scholarshipId, t: token}, successCb, failCb);
     }
   };
 }]);
@@ -202,8 +202,9 @@ app.factory('DebtService', ['$resource', function($resource){
       var chrgBool = charge === "true";
       return DebtResource.save({studentId: studentId, courseId: courseId, date: date, charge: chrgBool, amount: amount, action: "later"}, successCb, failCb);
     },
-    payNow: function(debtId, successCb, failCb){
-      return DebtResource.delete({actionId: debtId, action: 'remove'}, successCb, failCb);
+
+    payNow: function(debtId, token, successCb, failCb){
+      return DebtResource.delete({actionId: debtId, action: 'remove', t: token}, successCb, failCb);
     }
   };
 }]);
@@ -278,12 +279,12 @@ app.factory('UserService', ['$resource', function($resource){
   );
 
   return {
-    create: function(user, successCb, failCb){
-      return UserResource.save({}, user, successCb, failCb);
+    create: function(user, token, successCb, failCb){
+      return UserResource.save({t: token}, user, successCb, failCb);
     },
     
-    update: function(userId, info, successCb, failCb){
-      return UserResource.update({userId: userId}, info, successCb, failCb);
+    update: function(userId, info, token, successCb, failCb){
+      return UserResource.update({userId: userId, t: token}, info, successCb, failCb);
     },
 
     get: function(userId, successCb, failCb){
@@ -331,8 +332,8 @@ app.factory('ConsultService', ['$resource', function($resource){
       return consults[personId];
     },
 
-    save: function(consult, personId, successCb, failCb){
-      return ConsultResource.save({personId: personId}, consult, successCb, failCb);
+    save: function(consult, personId, token, successCb, failCb){
+      return ConsultResource.save({personId: personId, t: token}, consult, successCb, failCb);
     },
 
     getLastConsults: function(personId, successCb, failCb){
@@ -366,8 +367,8 @@ app.factory('AuthService', ['$resource', function($resource){
       return AuthResource.save({}, {"username": username, "password": password}, successCb, failCb);
     },
 
-    changePassword: function(userId, currentPassword, newPassword, successCb, failCb){
-      return AuthResource.update({userId: userId}, {currentPassword: currentPassword, newPassword: newPassword}, successCb, failCb);
+    changePassword: function(userId, currentPassword, newPassword, token, successCb, failCb){
+      return AuthResource.update({userId: userId, t: token}, {currentPassword: currentPassword, newPassword: newPassword}, successCb, failCb);
     }
   };
 }]);

@@ -10,7 +10,7 @@ angular.module('CEDEK').controller('ConsultCtrl', ['$scope', '$routeParams', 'Pe
       $scope.showingAll = false;
 
       $scope.create = function(personId){
-        ConsultService.save($scope.todayConsult, personId, function(){
+        ConsultService.save($scope.todayConsult, personId, $scope.getToken(), function(){
           var savedConsult = angular.copy($scope.todayConsult);
           savedConsult.opts = savedConsult.drops;
           $scope.lastConsults.unshift(savedConsult);
