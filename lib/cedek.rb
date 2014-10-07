@@ -48,6 +48,7 @@ module Cedek
     end
 
     error do
+      status 400
       return env['sinatra.error'].message
     end
 
