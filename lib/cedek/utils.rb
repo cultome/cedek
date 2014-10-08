@@ -53,6 +53,7 @@ module Cedek
 							t.integer :day
 							t.decimal :cost
 						end
+            add_index :courses, :day
 
 						create_table :phone_types do |t|
 							t.string :name
@@ -74,6 +75,7 @@ module Cedek
 							t.references :course
 							t.integer :percentage
 						end
+            add_index :scholarships, [:course_id, :person_id]
 
 						create_table :debts do |t|
 							t.references :person
@@ -81,16 +83,19 @@ module Cedek
 							t.decimal :amount
 							t.date :commitment
 						end
+            add_index :debts, [:person_id, :course_id]
 
 						create_table :sessions do |t|
 							t.references :course
 							t.date :session_date
 						end
+            add_index :sessions, :course_id
 
 						create_table :attendances do |t|
 							t.references :session
 							t.references :person
 						end
+            add_index :attendances, [:person_id, :session_id]
 
             create_table :leaders do |t|
               t.string :name
@@ -116,6 +121,7 @@ module Cedek
               t.string :name
               t.references :user_type
             end
+            add_index :users, :username, :unique
 
             create_table :user_types do |t|
               t.string :name
@@ -142,6 +148,7 @@ module Cedek
               t.references :user
               t.string :token
             end
+            add_index :tokens, :token
 
 					end
 				rescue ActiveRecord::StatementInvalid
