@@ -284,11 +284,20 @@ module Cedek
       return true
     end
 
+    get '/pager/:actionId' do |actionId|
+      case actionId
+        when "events" then return {count: Log.count}.to_json
+      end
+    end
+
     get '/admin/events' do
+      page = request["p"].nil? ? 0 : request["p"].to_i - 1
+      max = request["m"].nil? ? 100 : request["m"].to_i
       user_id = get_user_from_token(request["t"])
+
       user = User.find(user_id)
       raise "No tienes privilegios para ver este contenido" if user.user_type_id != 1
-      Log.order("id desc").to_json(only: [:id, :date, :user_id], methods: [:user_name, :action_friendly])
+      Log.limit(max).offset(max * page).order("id desc").to_json(only: [:id, :date, :user_id], methods: [:user_name, :action_friendly])
     end
 
     get '/users/:userId' do |userId|

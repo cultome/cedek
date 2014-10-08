@@ -415,9 +415,30 @@ app.factory('AdminService', ['$resource', 'AuthService', function($resource, Aut
   var AdminResource = $resource(serviceEndpoint + '/admin/:actionId', {actionId: "@actionId"});
 
   return {
-    getEvents: function(successCb, failCb){
+    getEvents: function(page, max, successCb, failCb){
       var token = AuthService.getToken();
-      return AdminResource.query({actionId: "events", t: token}, successCb, failCb);
+      return AdminResource.query({m: max, p: page, actionId: "events", t: token}, successCb, failCb);
+    }
+  };
+}]);
+
+
+
+
+
+
+
+
+
+
+app.factory('PagerService', ['$resource', function($resource){
+  "use strict";
+
+  var PagerResource = $resource(serviceEndpoint + '/pager/:actionId', {actionId: "@actionId"});
+
+  return {
+    getEventsCount: function(successCb, failCb){
+      return PagerResource.get({actionId: "events"}, successCb, failCb);
     }
   };
 }]);

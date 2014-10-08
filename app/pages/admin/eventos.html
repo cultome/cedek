@@ -1,5 +1,42 @@
 <div class="row" ng-init="initEventList()">
-<div class="col-md-offset-3 col-md-8">
+<div class="col-md-3">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Datos de Pagina</h4></div>
+    <div class="panel-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-4"><strong>Total</strong></div>
+          <div class="col-md-8">{{panels.info.maxEvents}} registros</div>
+          <div class="col-md-12"><strong></strong></div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><strong>Pagina</strong></div>
+          <div class="col-md-8">{{panels.info.currentPage}} de {{panels.info.totalPages()}}</div>
+          <div class="col-md-12"><strong></strong></div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><strong>Inicio</strong></div>
+          <div class="col-md-8">{{panels.info.since}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><strong>Final</strong></div>
+          <div class="col-md-8">{{panels.info.to}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <ul class="pagination pagination-sm">
+              <li ng-class="{'disabled': !panels.info.hasPrev() }"><a ng-click="prevPage()">&laquo;</a></li>
+              <li ng-class="{'active': p == panels.info.currentPage}" ng-repeat="p in panels.info.getPages()"><a ng-click="getPage(p)">{{p}}</a></li>
+              <li ng-class="{'disabled': !panels.info.hasNext() }"><a ng-click="nextPage()">&raquo;</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-9">
   <div class="panel panel-default">
     <div class="panel-heading">Eventos del Sistema</div>
     <table class="table">
