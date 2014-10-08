@@ -15,7 +15,7 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
             return Math.ceil(this.maxEvents / this.maxPage);
           },
           "hasNext": function(){
-            return this.currentPage + Math.floor(this.pagerSlots / 2) < this.totalPages();
+            return this.currentPage < this.totalPages();
           },
           "hasPrev": function(){
             return this.currentPage > 1;
@@ -25,7 +25,6 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
             var ps = [];
 
             if(this.currentPage < (this.pagerSlots / 2)){
-              console.log("=1=");
               for(var i = 1; i <= this.pagerSlots; i++){
                 if(i <= this.totalPages()){
                   ps.push(i);
@@ -33,7 +32,6 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
               }
 
             } else if(this.currentPage + (this.pagerSlots / 2) >= this.totalPages()){
-              console.log("=2=");
               for(var i = this.totalPages() - this.pagerSlots; i <= this.totalPages(); i++){
                 if(i > 0){
                   ps.push(i);
@@ -41,7 +39,6 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
               }
 
             } else {
-              console.log("=3=");
               for(var i = 1; i <= this.pagerSlots; i++){
                 var nbr = this.currentPage - Math.ceil(this.pagerSlots / 2) + i;
                 ps.push(nbr);
@@ -81,11 +78,15 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
       };
 
       $scope.nextPage = function(){
-        $scope.getPage($scope.panels.info.currentPage + 1);
+        if($scope.panels.info.hasNext()){
+          $scope.getPage($scope.panels.info.currentPage + 1);
+        }
       };
 
       $scope.prevPage = function(){
-        $scope.getPage($scope.panels.info.currentPage - 1);
+        if($scope.panels.info.hasPrev()){
+          $scope.getPage($scope.panels.info.currentPage - 1);
+        }
       };
 
       $scope.sanitize = function(value){
