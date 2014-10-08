@@ -330,7 +330,7 @@ module Cedek
         # crear criterio para diferentes fechas
         date = Time.now.to_date
 
-        Person.all.select{|s| s.birthday.month == date.month && s.birthday.day == date.day}.to_json(include: {
+        Person.all.select{|s| !s.birthday.nil? && s.birthday.month == date.month && s.birthday.day == date.day}.to_json(include: {
           phones: { only: [:id, :number, :phone_type_id] },
           scholarships: { only: [:course_id, :id, :percentage], methods: [:course_name] },
           enrollments: { only: [:id, :name] },

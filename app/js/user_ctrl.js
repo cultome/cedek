@@ -13,13 +13,13 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
       };
 
       $scope.create = function(user){
-        UserService.create(user, $scope.getToken(), function(usr){
+        UserService.create(user, function(usr){
           $location.path("usuario/editar/" + usr.id);
         });
       };
 
       $scope.update = function(userId){
-        UserService.update(userId, $scope.user, $scope.getToken(), function(){
+        UserService.update(userId, $scope.user, function(){
           $scope.$emit("userUpdated", userId);
           $scope.notify("Datos del usuario actualizados!", "success");
         }, function(response){
@@ -32,7 +32,7 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
       };
 
       $scope.updatePassword = function(){
-        AuthService.changePassword($scope.getLoggedUser().id, $scope.user.current_password, $scope.user.new_password, $scope.getToken(),
+        AuthService.changePassword($scope.getLoggedUser().id, $scope.user.current_password, $scope.user.new_password, 
           function(){
             $scope.notify("Contrase&ntilde;a actualizada!", "success");
           },

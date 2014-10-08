@@ -92,10 +92,6 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService', 'Use
         return input.$invalid && input.$dirty;
       };
 
-      $scope.getToken = function(){
-        return $scope.getLoggedUser().token;
-      };
-
       $scope.getLoggedUser = function(){
         return $scope.currentUser;
       };

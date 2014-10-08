@@ -76,13 +76,13 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
       }
 
       $scope.giveScholarship = function(courseId){
-        CourseService.giveScholarship(courseId, $scope.panels.scholarship.studentId, $scope.panels.scholarship.amount, $scope.getToken(), function(){
+        CourseService.giveScholarship(courseId, $scope.panels.scholarship.studentId, $scope.panels.scholarship.amount, function(){
           $scope.getStudentsWithScholarship(courseId);
         });
       };
 
       $scope.subscribe = function(courseId, studentId){
-        CourseService.subscribeStudent(courseId, studentId, $scope.getToken());
+        CourseService.subscribeStudent(courseId, studentId);
         $scope.$emit("enrollmentUpdated", courseId);
       };
 
@@ -102,7 +102,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
       };
 
       $scope.create = function(course){
-        CourseService.createCourse(course, $scope.getToken(), function(res){
+        CourseService.createCourse(course, function(res){
           $location.path("/curso/editar/" + res.id);
           $scope.notify(course.name + " agregado!", "success");
         });
@@ -113,7 +113,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
       };
 
       $scope.update = function(courseId, course){
-        return CourseService.updateCourse(courseId, course, $scope.getToken(), function(){
+        return CourseService.updateCourse(courseId, course, function(){
           $scope.notify("Curso '" + course.name + "' actualizado", "success");
         }, function(response){
           $scope.notify(response.data, "error");
@@ -173,7 +173,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         data.amount = debt.amount;
         data.name = debt.person_name;
         data.confirm = function(){
-          DebtService.payNow(debt.id, $scope.getToken(),
+          DebtService.payNow(debt.id,
               function(){
                 $scope.$emit("paymentsUpdated", debt.course_id, debt.person_id);
                 $("#confirmCloseDebt").modal('hide');
@@ -210,7 +210,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         var data = $scope.alerts.confirmRemoveStudentFromCourse;
         data.name = studentName;
         data.confirm = function(){
-          CourseService.unrollStudent(courseId, studentId, $scope.getToken(),
+          CourseService.unrollStudent(courseId, studentId,
               function(){
                 $scope.$emit("enrollmentUpdated", courseId);
                 $("#confirmRemoveStudentFromCourse").modal('hide');
@@ -235,7 +235,7 @@ angular.module('CEDEK').controller('CourseCtrl', ['$scope', '$routeParams', '$lo
         var data = $scope.alerts.confirmDeleteScholarship;
         data.name = studentName;
         data.confirm = function(){
-          ScholarshipService.revoke(scholarshipId, $scope.getToken(),
+          ScholarshipService.revoke(scholarshipId,
             function(){
               $scope.getStudentsWithScholarship(courseId);
               $("#confirmDeleteScholarship").modal('hide');

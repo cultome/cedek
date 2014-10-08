@@ -24,6 +24,7 @@ describe('Course', function(){
       element.all(by.css(".students-panel")).last().element(by.cssContainingText("option", "Susana Alvarado")).click();
       element(by.id("enrollBtn")).click();
 
+      browser.waitForAngular();
       var afterCount = element(by.id("enrolledStudentsCount")).getText();
       var afterStudents = element.all(by.repeater("student in students")).count();
       expect(afterCount).toBeGreaterThan(beforeCount);

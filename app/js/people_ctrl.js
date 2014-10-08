@@ -39,14 +39,14 @@ angular.module('CEDEK').controller('PeopleCtrl', ['$scope', '$routeParams', '$lo
       }
 
       $scope.create = function(student){
-        PeopleService.createStudent(student, $scope.getToken(), function(res){
+        PeopleService.createStudent(student, function(res){
           $location.path("personas/listar");
           $scope.notify(student.name + " agregado!", "success");
         });
       };
 
       $scope.update = function(personId){
-        return PeopleService.updateStudent(personId, $scope.student, $scope.getToken(), function(){
+        return PeopleService.updateStudent(personId, $scope.student, function(){
           $scope.notify("Datos de '" + $scope.student.name + "' actualizados", "success");
         }, function(response){
           $scope.notify(response.data, "error");

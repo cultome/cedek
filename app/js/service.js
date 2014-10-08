@@ -4,7 +4,7 @@ var app = angular.module('CEDEK');
 var serviceEndpoint = "http://localhost:92/api";
 //var serviceEndpoint = "http://localhost:8000/api";
 
-app.factory('PeopleService', ['$resource', function($resource){
+app.factory('PeopleService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
 
   var PersonResource = $resource(serviceEndpoint + '/people/:personId', {personId: '@id'},
@@ -13,7 +13,7 @@ app.factory('PeopleService', ['$resource', function($resource){
   var CourseResource = $resource(serviceEndpoint + '/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'});
 
   return {
-    updateStudent: function(personId, studentData, token, successCb, failCb){
+    updateStudent: function(personId, studentData, successCb, failCb){
       var student = angular.copy(studentData);
       // removemos propiedades que no sirven
       delete student.id;
@@ -23,10 +23,12 @@ app.factory('PeopleService', ['$resource', function($resource){
       delete student.enrollments;
       delete student.scholarships;
       delete student.marital_status_name;
+      var token = AuthService.getToken();
       return PersonResource.update({personId: personId, t: token}, student, successCb, failCb);
     },
 
-    createStudent: function(student, token, successCb, failCb){
+    createStudent: function(student, successCb, failCb){
+      var token = AuthService.getToken();
       return PersonResource.save({t: token}, student, successCb, failCb);
     },
 
@@ -75,7 +77,7 @@ app.factory('PeopleService', ['$resource', function($resource){
 
 
 
-app.factory('CourseService', ['$resource', function($resource){
+app.factory('CourseService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
 
   var CourseResource = $resource(serviceEndpoint + '/courses/:courseId/:action/:actionId', {courseId: '@courseId', action: '@action', actionId: '@actionId'},
@@ -84,27 +86,32 @@ app.factory('CourseService', ['$resource', function($resource){
 
   return {
 
-    unrollStudent: function(courseId, studentId, token, successCb, failCb){
+    unrollStudent: function(courseId, studentId, successCb, failCb){
+      var token = AuthService.getToken();
       return CourseResource.delete({courseId: courseId, action: "unroll", actionId: studentId, t: token}, successCb, failCb);
     },
 
-    giveScholarship: function(courseId, studentId, amount, token, successCb, failCb){
+    giveScholarship: function(courseId, studentId, amount, successCb, failCb){
+      var token = AuthService.getToken();
       return CourseResource.save({courseId: courseId, action: "scholarship", actionId: studentId, amount: amount, t: token}, successCb, failCb);
     },
 
-    subscribeStudent: function(courseId, studentId, token, successCb, failCb){
+    subscribeStudent: function(courseId, studentId, successCb, failCb){
+      var token = AuthService.getToken();
       return CourseResource.save({courseId: courseId, action: "subscribe", actionId: studentId, t: token}, successCb, failCb);
     },
 
     checkAttendance: function(courseId, studentId, sessionDate, successCb, failCb){
-      return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate}, successCb, failCb);
+      var token = AuthService.getToken();
+      return CourseResource.save({courseId: courseId, action: "attendance", actionId: studentId, sessionDate: sessionDate, t: token}, successCb, failCb);
     },
 
-    createCourse: function(course, token, successCb, failCb){
+    createCourse: function(course, successCb, failCb){
+      var token = AuthService.getToken();
       return CourseResource.save({t: token}, course, successCb, failCb);
     },
 
-    updateCourse: function(courseId, courseData, token, successCb, failCb){
+    updateCourse: function(courseId, courseData, successCb, failCb){
       var course = angular.copy(courseData);
       delete course.scholarships;
       delete course.students;
@@ -112,6 +119,7 @@ app.factory('CourseService', ['$resource', function($resource){
       delete course.endLabel;
       delete course.id;
       delete course.schedule;
+      var token = AuthService.getToken();
       return CourseResource.update({courseId: courseId, t: token}, course, successCb, failCb);
     },
 
@@ -160,13 +168,14 @@ app.factory('CourseService', ['$resource', function($resource){
 
 
 
-app.factory('ScholarshipService', ['$resource', function($resource){
+app.factory('ScholarshipService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
 
   var ScholarshipResource = $resource(serviceEndpoint + '/scholarship/:scholarshipId', {scholarshipId: '@id'});
 
   return {
-    revoke: function(scholarshipId, token, successCb, failCb){
+    revoke: function(scholarshipId, successCb, failCb){
+      var token = AuthService.getToken();
       return ScholarshipResource.delete({scholarshipId: scholarshipId, t: token}, successCb, failCb);
     }
   };
@@ -188,7 +197,7 @@ app.factory('ScholarshipService', ['$resource', function($resource){
 
 
 
-app.factory('DebtService', ['$resource', function($resource){
+app.factory('DebtService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
 
   var DebtResource = $resource(serviceEndpoint + '/debts/:action/:actionId', {action: '@action'});
@@ -203,7 +212,8 @@ app.factory('DebtService', ['$resource', function($resource){
       return DebtResource.save({studentId: studentId, courseId: courseId, date: date, charge: chrgBool, amount: amount, action: "later"}, successCb, failCb);
     },
 
-    payNow: function(debtId, token, successCb, failCb){
+    payNow: function(debtId, successCb, failCb){
+      var token = AuthService.getToken();
       return DebtResource.delete({actionId: debtId, action: 'remove', t: token}, successCb, failCb);
     }
   };
@@ -271,7 +281,7 @@ app.factory('CatalogService', ['$resource', function($resource){
 
 
 
-app.factory('UserService', ['$resource', function($resource){
+app.factory('UserService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
 
   var UserResource = $resource(serviceEndpoint + '/users/:userId', {userId: '@id'},
@@ -279,11 +289,13 @@ app.factory('UserService', ['$resource', function($resource){
   );
 
   return {
-    create: function(user, token, successCb, failCb){
+    create: function(user, successCb, failCb){
+      var token = AuthService.getToken();
       return UserResource.save({t: token}, user, successCb, failCb);
     },
     
-    update: function(userId, info, token, successCb, failCb){
+    update: function(userId, info, successCb, failCb){
+      var token = AuthService.getToken();
       return UserResource.update({userId: userId, t: token}, info, successCb, failCb);
     },
 
@@ -300,7 +312,7 @@ app.factory('UserService', ['$resource', function($resource){
 
 
 
-app.factory('ConsultService', ['$resource', function($resource){
+app.factory('ConsultService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
 
   var ConsultResource = $resource(serviceEndpoint + '/consults/:personId', {personId: '@id'});
@@ -332,7 +344,8 @@ app.factory('ConsultService', ['$resource', function($resource){
       return consults[personId];
     },
 
-    save: function(consult, personId, token, successCb, failCb){
+    save: function(consult, personId, successCb, failCb){
+      var token = AuthService.getToken();
       return ConsultResource.save({personId: personId, t: token}, consult, successCb, failCb);
     },
 
@@ -363,12 +376,26 @@ app.factory('AuthService', ['$resource', function($resource){
   );
 
   return {
+    currentUser: null,
+
     login: function(username, password, successCb, failCb){
-      return AuthResource.save({}, {"username": username, "password": password}, successCb, failCb);
+      this.currentUser =  AuthResource.save({}, {"username": username, "password": password}, successCb, failCb);
+      return this.currentUser;
     },
 
-    changePassword: function(userId, currentPassword, newPassword, token, successCb, failCb){
-      return AuthResource.update({userId: userId, t: token}, {currentPassword: currentPassword, newPassword: newPassword}, successCb, failCb);
+    changePassword: function(userId, currentPassword, newPassword, successCb, failCb){
+      return AuthResource.update({userId: userId, t: this.getToken()}, {currentPassword: currentPassword, newPassword: newPassword}, successCb, failCb);
+    },
+
+    getCurrentUser: function(){
+      return this.currentUser;
+    },
+
+    getToken: function(){
+      if(this.currentUser === null){
+        throw "El usuario no esta firmado en el sistema.";
+      }
+      return this.currentUser.token;
     }
   };
 }]);

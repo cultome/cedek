@@ -137,7 +137,7 @@ app.directive('subscribeCourse', ['CourseService', function(CourseService){
     templateUrl: 'pages/partials/inscribeReservaCurso.html',
     link: function(scope, element, attr){
       scope.subscribe = function(){
-        var response = CourseService.subscribeStudent(scope.courseSelected, scope.student.id);
+        var response = CourseService.subscribeStudent(scope.courseSelected, scope.student.idi);
         scope.$emit("subscribeStudentToCourse", scope.courseSelected, scope.student.id);
         return response;
       };
