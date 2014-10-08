@@ -1,7 +1,8 @@
 var menuOptions = element.all(by.css(".dropdown"));
 var courseMenu = menuOptions.last();
-var peopleMenu = menuOptions.get(1);
-var usersMenu = menuOptions.first();
+var peopleMenu = menuOptions.get(2);
+var usersMenu = menuOptions.get(1);
+var adminMenu = menuOptions.first();
 
 function goHome(){
   browser.get("http://localhost:92/app");

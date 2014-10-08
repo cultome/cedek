@@ -205,7 +205,7 @@ module Cedek
       scope :by_person, ->(personId){ where("person_id = ?", personId).order('id desc') }
 
       def leader_name
-        return leader.name
+        return leader.name unless leader.nil?
       end
 
       def person_name

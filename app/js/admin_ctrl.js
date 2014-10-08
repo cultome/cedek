@@ -1,10 +1,16 @@
 /* jshint strict: true */
-angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce', '$filter', 'AdminService', 'PagerService',
-    function($scope, $routeParams, $sce, $filter, AdminService, PagerService){
+angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce', '$filter', 'AdminService', 'PagerService', 'PeopleService', 'ConsultService', 'CatalogService',
+    function($scope, $routeParams, $sce, $filter, AdminService, PagerService, PeopleService, ConsultService, CatalogService){
       'use strict';
 
       $scope.panels = {
-        "info": {
+        "consults": {
+          "person": null,
+          "todayConsult": null,
+          "lastConsults": null,
+        },
+        "events": {
+          "list": [],
           "since": null,
           "to": null,
           "currentPage": 1,
@@ -50,42 +56,64 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
         }
       };
 
+      $scope.initConsult = function(){
+        $scope.people = PeopleService.listStudents();
+        $scope.leaders = CatalogService.leaders();
+      };
+
       $scope.initEventList = function(){
         $scope.getEvents();
       };
 
+      $scope.createConsult = function(personId){
+        ConsultService.save($scope.panels.consults.todayConsult, personId, function(){
+          var savedConsult = angular.copy($scope.panels.consults.todayConsult);
+          savedConsult.opts = savedConsult.drops;
+          $scope.panels.consults.lastConsults.unshift(savedConsult);
+          ConsultService.cleanPacientConsult(personId);
+          $scope.panels.consults.todayConsult = ConsultService.getCurrentConsult(personId, $scope.consultDate);
+        });
+      };
+
+      $scope.loadPerson = function(){
+        $scope.panels.consults.person = PeopleService.getStudent($scope.personId);
+        $scope.panels.consults.lastConsults = ConsultService.getLastConsults($scope.personId);
+        $scope.panels.consults.todayConsult = ConsultService.getCurrentConsult($scope.personId, $scope.consultDate);
+      };
+
       $scope.getEvents = function(){
         PagerService.getEventsCount(function(req){
-          $scope.panels.info.maxEvents = req.count;
+          $scope.panels.events.maxEvents = req.count;
         });
-        $scope.events = AdminService.getEvents($scope.panels.info.currentPage, $scope.panels.info.maxPage, function(events){
-          $scope.panels.info.since = $filter("shortDateFormat")(events[events.length - 1].date);
-          $scope.panels.info.to = $filter("shortDateFormat")(events[0].date);
+
+        $scope.panels.events.list = AdminService.getEvents($scope.panels.events.currentPage, $scope.panels.events.maxPage, function(events){
+          $scope.panels.events.since = $filter("shortDateFormat")(events[events.length - 1].date);
+          $scope.panels.events.to = $filter("shortDateFormat")(events[0].date);
         });
       };
 
       $scope.getPage = function(pageNbr){
-        if(pageNbr > $scope.panels.info.totalPages() || pageNbr <= 0){
-          console.log($scope.panels.info.totalPages());
+        if(pageNbr > $scope.panels.events.totalPages() || pageNbr <= 0){
+          console.log($scope.panels.events.totalPages());
           console.log(pageNbr);
           $scope.notify("Pagina invalida", "warning");
           return ;
         }
         // actualizamos el numero de pagina
-        $scope.panels.info.currentPage = pageNbr;
+        $scope.panels.events.currentPage = pageNbr;
         // vamos por los datos
         $scope.getEvents();
       };
 
       $scope.nextPage = function(){
-        if($scope.panels.info.hasNext()){
-          $scope.getPage($scope.panels.info.currentPage + 1);
+        if($scope.panels.events.hasNext()){
+          $scope.getPage($scope.panels.events.currentPage + 1);
         }
       };
 
       $scope.prevPage = function(){
-        if($scope.panels.info.hasPrev()){
-          $scope.getPage($scope.panels.info.currentPage - 1);
+        if($scope.panels.events.hasPrev()){
+          $scope.getPage($scope.panels.events.currentPage - 1);
         }
       };
 

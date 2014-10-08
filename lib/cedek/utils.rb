@@ -177,6 +177,10 @@ module Cedek
 
         User.create!(username: "admin", password: encrypt("admin"), name: "Administrador", user_type_id: 1)
 
+        Leader.create!(id: 1, name: "Guia 1")
+        Leader.create!(id: 2, name: "Guia 2")
+        Leader.create!(id: 3, name: "Guia 3")
+
         return true
 			#end
 		end # recreate_schema
@@ -266,10 +270,6 @@ module Cedek
 
 				Attendance.create!(session_id: 11, person_id: 2)
 				Attendance.create!(session_id: 12, person_id: 5)
-
-        Leader.create!(id: 1, name: "Guia 1")
-        Leader.create!(id: 2, name: "Guia 2")
-        Leader.create!(id: 3, name: "Guia 3")
 
         Consult.create!(id: 1, leader_id: 1, person_id: 1, consult_date: Time.now - 60*60*24*86, drops: "bl-am", reason: "Razon 1", diagnostic: "Diagnostico 1", treatment: "Tratamiento 1")
         Consult.create!(id: 2, leader_id: 2, person_id: 1, consult_date: Time.now - 60*60*24*54, drops: "rj-vr", reason: "Razon 2", diagnostic: "Diagnostico 2", treatment: "Tratamiento 2")

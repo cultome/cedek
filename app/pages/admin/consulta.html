@@ -1,0 +1,211 @@
+<div class="row" ng-init="initConsult()">
+<form class="form-horizontal" role="form" name="loadPersonForm" novalidate>
+  <div class="col-md-offset-1 col-md-8">
+    <div class="panel panel-default">
+      <!-- datos del paciente -->
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-4">
+            <select
+               class="form-control"
+               name="personId"
+               ng-model="personId"
+               ng-required="true"
+               ng-options="p.id as p.name for p in people">
+              <option value="">Seleccione un paciente</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <input
+               type="date"
+               name="consultDate"
+               class="form-control"
+               ng-required="true"
+               ng-model="consultDate" />
+          </div>
+          <div class="col-md-2">
+            <button
+               type="button"
+               class="btn btn-default"
+               ng-disabled="loadPersonForm.$invalid"
+               ng-click="loadPerson()">Cargar</button>
+          </div>
+          <div class="col-md-2">
+            <a href="#/persona/editar/{{panels.consults.person.id}}" ng-show="panels.consults.person">
+              <span class="glyphicon glyphicon-pencil pull-right go-to-edit"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-condensed light-border">
+        <thead>
+          <tr>
+            <th>Ocupacion</th>
+            <th>Edad</th>
+            <th>Estado Civil</th>
+            <th>Asiste a Cursos?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ panels.consults.person.job }}</td>
+            <td>{{getAge(panels.consults.person.birthday)}} a&ntilde;os <em class="pull-right">[ {{getDateLabel(panels.consults.person.birthday, true)}} ]</em></td>
+            <td>{{ panels.consults.person.marital_status_name }}</td>
+            <td>{{ isStudent(panels.consults.person) }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- consultas -->
+      <div class="panel-heading">
+        <h3 class="panel-title">Historial</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <ul class="nav nav-tabs multiline-tabs" role="tablist">
+            <li today-tab-switch consult="panels.consults.todayConsult"></li>
+            <li ng-repeat="consult in panels.consults.lastConsults" tab-switch idx="{{$index}}" consult="consult"></li>
+
+            <li ng-show="panels.consults.lastConsults.length >= 5 && !showingAll">
+              <a ng-click="loadAll()">
+                <span class="glyphicon glyphicon-forward"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane fade in active" id="today">
+
+                <div class="row form-group" style="margin-top: 20px;">
+                  <label class="label-control col-md-2">Atendido por</label>
+                  <div class="col-md-4">
+                    <select
+                       class="form-control"
+                       ng-model="panels.consults.todayConsult.leader_id"
+                       ng-options="l.id as l.name for l in leaders">
+                      <option value="">Seleccione un guia</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-2">Gotas</label>
+                  <div  class="col-md-4">
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="bl" ng-model="panels.consults.todayConsult.drops.bl"> Bl
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rj" ng-model="panels.consults.todayConsult.drops.rj"> Rj
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="vr" ng-model="panels.consults.todayConsult.drops.vr"> Vr
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rs" ng-model="panels.consults.todayConsult.drops.rs"> Rs
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="am" ng-model="panels.consults.todayConsult.drops.am"> Am
+                    </label>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-6">Motivo</label>
+                  <div  class="col-md-12">
+                    <textarea rows="5" ng-model="panels.consults.todayConsult.reason"></textarea>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-6">Diagnostico</label>
+                  <div  class="col-md-12">
+                    <textarea rows="5" ng-model="panels.consults.todayConsult.diagnostic"></textarea>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-6">Tratamiento</label>
+                  <div  class="col-md-12">
+                    <textarea rows="5" ng-model="panels.consults.todayConsult.treatment"></textarea>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <div class="col-md-offset-4 col-md-4">
+                    <button class="btn btn-default btn-block color-success" ng-click="createConsult(panels.consults.person.id)">Guardar</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- consultas historicos -->
+              <div ng-repeat="consult in panels.consults.lastConsults" id="{{consult.consult_date}}-{{$index}}" class="tab-pane fade">
+                <div class="row form-group" style="margin-top: 20px;">
+                  <label class="label-control col-md-2">Atendido por</label>
+                  <div class="col-md-4">
+                    <select
+                       class="form-control"
+                       ng-model="consult.leader_id"
+                       ng-disabled="true"
+                       ng-options="l.id as l.name for l in leaders">
+                      <option value="">Seleccione un guia</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-2">Gotas</label>
+                  <div  class="col-md-8">
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="bl" ng-model="consult.opts.bl" ng-disabled="true"> Bl
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rj" ng-model="consult.opts.rj" ng-disabled="true"> Rj
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="vr" ng-model="consult.opts.vr" ng-disabled="true"> Vr
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="rs" ng-model="consult.opts.rs" ng-disabled="true"> Rs
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" value="am" ng-model="consult.opts.am" ng-disabled="true"> Am
+                    </label>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-6">Motivo</label>
+                  <div  class="col-md-12">
+                    <textarea readonly="readonly" rows="5">{{consult.reason}}</textarea>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-6">Diagnostico</label>
+                  <div  class="col-md-12">
+                    <textarea readonly="readonly" rows="5">{{consult.diagnostic}}</textarea>
+                  </div>
+                </div>
+
+                <div class="row form-group">
+                  <label class="label-control col-md-6">Tratamiento</label>
+                  <div  class="col-md-12">
+                    <textarea readonly="readonly" rows="5">{{consult.treatment}}</textarea>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
