@@ -39,7 +39,7 @@
 <div class="col-md-9">
   <div class="panel panel-default">
     <div class="panel-heading">Eventos del Sistema</div>
-    <table class="table">
+    <table class="table table-hover table-condensed">
       <thead>
         <tr>
           <th>#</th>
@@ -49,7 +49,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="event in events">
+        <tr ng-class="{'success': event.object_type_id == 1, 'info': event.object_type_id == 2, 'warning': event.object_type_id == 3, 'danger': event.object_type_id == 8}" ng-repeat="event in events">
           <td>{{event.id}}</td>
           <td>{{event.date | dateFormat}}</td>
           <td><a href="#/usuario/editar/{{event.user_id}}">{{event.user_name}}</a></td>

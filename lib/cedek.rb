@@ -297,7 +297,7 @@ module Cedek
 
       user = User.find(user_id)
       raise "No tienes privilegios para ver este contenido" if user.user_type_id != 1
-      Log.limit(max).offset(max * page).order("id desc").to_json(only: [:id, :date, :user_id], methods: [:user_name, :action_friendly])
+      Log.limit(max).offset(max * page).order("id desc").to_json(only: [:id, :date, :user_id, :object_type_id], methods: [:user_name, :action_friendly])
     end
 
     get '/users/:userId' do |userId|
