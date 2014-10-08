@@ -399,3 +399,25 @@ app.factory('AuthService', ['$resource', function($resource){
     }
   };
 }]);
+
+
+
+
+
+
+
+
+
+
+app.factory('AdminService', ['$resource', 'AuthService', function($resource, AuthService){
+  "use strict";
+
+  var AdminResource = $resource(serviceEndpoint + '/admin/:actionId', {actionId: "@actionId"});
+
+  return {
+    getEvents: function(successCb, failCb){
+      var token = AuthService.getToken();
+      return AdminResource.query({actionId: "events", t: token}, successCb, failCb);
+    }
+  };
+}]);

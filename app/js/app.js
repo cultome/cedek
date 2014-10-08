@@ -2,6 +2,7 @@
 
 angular.module('CEDEK', [
     'ngResource',
+    'ngSanitize',
     'ngRoute'//,'templates'
 ]).
 config(['$routeProvider', function($routeProvider) {
@@ -18,6 +19,9 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/usuarios/listar', {templateUrl: 'pages/usuario/listar.html', controller: 'UserCtrl', roles: ['Administrador']});
   $routeProvider.when('/usuarios/agregar', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl', roles: ['Administrador']});
   $routeProvider.when('/usuario/editar/:userId', {templateUrl: 'pages/usuario/agregar.html', controller: 'UserCtrl', roles: ['Administrador', 'Regular']});
+
+  $routeProvider.when('/admin/eventos', {templateUrl: 'pages/admin/eventos.html', controller: 'AdminCtrl', roles: ['Administrador']});
+  $routeProvider.when('/admin/consultas', {templateUrl: 'pages/consulta/agregar.html', controller: 'AdminCtrl', roles: ['Administrador']});
 
   $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'UserCtrl', roles: ['Administrador', 'Regular']});
 

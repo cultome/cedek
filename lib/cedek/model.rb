@@ -71,6 +71,45 @@ module Cedek
       belongs_to :action
       belongs_to :object_type
       belongs_to :user
+
+      def user_name
+        return user.nil? ? "Desconocido" : user.name 
+      end
+
+      def action_friendly
+        if self.object_type_id == 1 # Person
+          return "#{ self.action.name } #{self.object_type.name} <a href='#/persona/editar/#{self.object_id}'>#{Person.find(self.object_id).name}</a>"
+
+        elsif self.object_type_id == 2 # Curso
+          return "#{ self.action.name } #{self.object_type.name} <a href='#/curso/editar/#{self.object_id}'>#{Course.find(self.object_id).name}</a>"
+
+        elsif self.object_type_id == 3 # Usuario
+          return "#{ self.action.name } #{self.object_type.name} <a href='#/usuario/editar/#{self.object_id}'>#{User.find(self.object_id).name}</a>"
+
+        elsif self.object_type_id == 4 # Autoizacion (login)
+          user = User.find(self.object_id)
+          return "#{ self.action.name } #{self.object_type.name} para <a href='#/usuario/editar/#{user.id}'>#{user.name}</a>"
+
+        elsif self.object_type_id == 5 # Consulta
+          person = Consult.find(self.object_id).person
+          return "#{ self.action.name } #{self.object_type.name} para <a href='#/persona/editar/#{person.id}'>#{person.name}</a>"
+
+        elsif self.object_type_id == 6 # Beca
+          person = Scholarship.find(self.object_id).person
+          return "#{ self.action.name } #{self.object_type.name} para <a href='#/persona/editar/#{person.id}'>#{person.name}</a>"
+
+        elsif self.object_type_id == 7 # Inscripcion
+          person = Person.find(self.object_id)
+          return "#{ self.action.name } #{self.object_type.name} <a href='#/person/editar/#{person.id}'>#{person.name}</a>"
+
+        elsif self.object_type_id == 8 # Deuda
+          person = Debt.find(self.object_id).person
+          return "#{ self.action.name } #{self.object_type.name} para <a href='#/person/editar/#{person.id}'>#{person.name}</a>"
+
+        else
+          return "#{ self.action.name } #{self.object_type.name} ##{self.object_id}"
+        end
+      end
     end
 
 		class Scholarship < ActiveRecord::Base

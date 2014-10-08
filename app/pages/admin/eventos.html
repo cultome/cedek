@@ -1,0 +1,25 @@
+<div class="row" ng-init="initEventList()">
+<div class="col-md-offset-3 col-md-8">
+  <div class="panel panel-default">
+    <div class="panel-heading">Eventos del Sistema</div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Fecha</th>
+          <th>Usuario</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="event in events">
+          <td>{{event.id}}</td>
+          <td>{{event.date | dateFormat}}</td>
+          <td><a href="#/usuario/editar/{{event.user_id}}">{{event.user_name}}</a></td>
+          <td ng-bind-html="sanitize(event.action_friendly)"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>

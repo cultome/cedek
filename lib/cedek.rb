@@ -284,6 +284,13 @@ module Cedek
       return true
     end
 
+    get '/admin/events' do
+      user_id = get_user_from_token(request["t"])
+      user = User.find(user_id)
+      raise "No tienes privilegios para ver este contenido" if user.user_type_id != 1
+      Log.order("id desc").to_json(only: [:id, :date, :user_id], methods: [:user_name, :action_friendly])
+    end
+
     get '/users/:userId' do |userId|
       user = User.find(userId)
       raise "El usuario no existe!" if user.nil?
@@ -454,7 +461,7 @@ module Cedek
       return req
     end
 
-    def getUserIdFromToken(token)
+    def get_user_from_token(token)
       return token if token.is_a?(Integer)
       tk = Token.where("token = ?", token).last
       return nil if tk.nil?
@@ -464,7 +471,7 @@ module Cedek
     def log(token, action, type, id)
       return Log.create!({
         date: Time.now,
-        user_id: getUserIdFromToken(token),
+        user_id: get_user_from_token(token),
         object_id: id,
         action_id: case action
           when :create then 1
