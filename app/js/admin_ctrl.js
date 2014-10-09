@@ -29,23 +29,24 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
           "getPages": function(){
             var t = this.totalPages();
             var ps = [];
+            var i;
 
             if(this.currentPage < (this.pagerSlots / 2)){
-              for(var i = 1; i <= this.pagerSlots; i++){
+              for(i = 1; i <= this.pagerSlots; i++){
                 if(i <= this.totalPages()){
                   ps.push(i);
                 }
               }
 
             } else if(this.currentPage + (this.pagerSlots / 2) >= this.totalPages()){
-              for(var i = this.totalPages() - this.pagerSlots; i <= this.totalPages(); i++){
+              for(i = this.totalPages() - this.pagerSlots; i <= this.totalPages(); i++){
                 if(i > 0){
                   ps.push(i);
                 }
               }
 
             } else {
-              for(var i = 1; i <= this.pagerSlots; i++){
+              for(i = 1; i <= this.pagerSlots; i++){
                 var nbr = this.currentPage - Math.ceil(this.pagerSlots / 2) + i;
                 ps.push(nbr);
               }
@@ -124,6 +125,8 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
 ]);
 
 angular.module('CEDEK').filter('shortDateFormat', function($filter){
+  "use strict";
+
   return function(input){
     if(input == null){ return ""; } 
     var _date = $filter('date')(new Date(input), "dd MMM yyyy, HH:mm");
@@ -132,6 +135,8 @@ angular.module('CEDEK').filter('shortDateFormat', function($filter){
 });
 
 angular.module('CEDEK').filter('dateFormat', function($filter){
+  "use strict";
+
   return function(input){
     if(input == null){ return ""; } 
     var _date = $filter('date')(new Date(input), "EEE dd MMM yyyy, HH:mm 'hrs'");
