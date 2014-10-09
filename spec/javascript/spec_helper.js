@@ -5,7 +5,7 @@ var usersMenu = menuOptions.get(1);
 var adminMenu = menuOptions.first();
 
 function goHome(){
-  browser.get("http://localhost:92/app");
+  browser.get("https://localhost/app");
 }
 
 function login(user, passwd){
@@ -27,7 +27,31 @@ function goTo(option){
   } else if("listPeople" === option){
     peopleMenu.click();
     peopleMenu.element(by.id("listPeopleOpt")).click();
+  } else if("listEvents" === option){
+    adminMenu.click();
+    adminMenu.element(by.id("listEventsOpt")).click();
+  } else if("addConsults" === option){
+    adminMenu.click();
+    adminMenu.element(by.id("addConsultOpt")).click();
+  } else if("addUsers" === option){
+    usersMenu.click();
+    usersMenu.element(by.id("addUsersOpt")).click();
+  } else if("listUsers" === option){
+    usersMenu.click();
+    usersMenu.element(by.id("listUsersOpt")).click();
   }
+}
+
+function createUser(username, name, type){
+  goTo("addUsers");
+  expect(element(by.name("passwdForm")).isDisplayed()).toBe(false);
+  element(by.model("user.username")).sendKeys(username);
+  element(by.model("user.password")).sendKeys("password");
+  element(by.model("user.password_confirm")).sendKeys("password");
+  element(by.model("user.name")).sendKeys(name);
+  element(by.model("user.user_type_id")).sendKeys(type);
+  element(by.id("createUserBtn")).click();
+  expect(element(by.name("passwdForm")).isDisplayed()).toBe(true);
 }
 
 function createStudent(studentName){
@@ -42,6 +66,13 @@ function createStudent(studentName){
   expect(element(by.id("buscarPersonas")).isPresent()).toBe(true);
 }
 
+function selectLastUser(){
+  goTo("listUsers");
+  var user = element.all(by.repeater("user in users | filter:name")).last();
+  user.element(by.css(".panel-heading")).click();
+  return user;
+}
+
 function selectLastCourse(){
   goTo("listCourse");
   var course = element.all(by.repeater("course in courses | filter:name")).last();
@@ -54,6 +85,11 @@ function selectLastPerson(){
   var student = element.all(by.repeater("student in students | filter:name")).last();
   student.element(by.css(".panel-heading")).click();
   return student;
+}
+
+function countUsersListed(){
+  goTo("listUsers");
+  return element.all(by.repeater("user in users | filter:name")).count();
 }
 
 function countPeopleListed(){
@@ -135,3 +171,6 @@ exports.selectLastCourse = selectLastCourse;
 exports.selectLastPerson = selectLastPerson;
 exports.goHome = goHome;
 exports.login = login;
+exports.countUsersListed = countUsersListed;
+exports.createUser = createUser;
+exports.selectLastUser = selectLastUser;
