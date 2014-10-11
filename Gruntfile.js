@@ -121,6 +121,10 @@ module.exports = function(grunt) {
               'angular-route/angular-route.min.js.map',
               'angular-resource/angular-resource.min.js',
               'angular-resource/angular-resource.min.js.map',
+              'angular-sanitize/angular-sanitize.min.js',
+              'angular-sanitize/angular-sanitize.min.js.map',
+              'notifyjs/dist/notify.min.js',
+              'notifyjs/dist/styles/bootstrap/notify-bootstrap.js',
               'bootstrap/dist/js/bootstrap.min.js',
               'bootstrap/dist/css/bootstrap.min.css',
             ],
@@ -163,6 +167,8 @@ module.exports = function(grunt) {
               retVal = retVal.replace(/..\/bower_components\/angular-sanitize\/angular-sanitize.min.js/g, "lib\/angular-sanitize.min.js");
               retVal = retVal.replace(/..\/bower_components\/jquery\/dist\/jquery.min.js/g, "lib\/jquery.min.js");
               retVal = retVal.replace(/..\/bower_components\/bootstrap\/dist\/js\/bootstrap.min.js/g, "lib\/bootstrap.min.js");
+              retVal = retVal.replace(/..\/bower_components\/notifyjs\/dist\/notify.min.js/g, "lib\/notify.min.js");
+              retVal = retVal.replace(/..\/bower_components\/notifyjs\/dist\/styles\/bootstrap\/notify-bootstrap.js/g, "lib\/notify-bootstrap.js");
 
               return retVal;
             } else {
