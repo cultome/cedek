@@ -1,7 +1,7 @@
 /* jshint strict: true */
 var app = angular.module('CEDEK');
 
-var serviceEndpoint = "https://localhost/api";
+var serviceEndpoint = "https://localhost:2000/api";
 
 app.factory('PeopleService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
