@@ -124,7 +124,7 @@ angular.module('CEDEK').controller('AdminCtrl', ['$scope', '$routeParams', '$sce
     }
 ]);
 
-angular.module('CEDEK').filter('shortDateFormat', function($filter){
+angular.module('CEDEK').filter('shortDateFormat', ['$filter', function($filter){
   "use strict";
 
   return function(input){
@@ -132,9 +132,9 @@ angular.module('CEDEK').filter('shortDateFormat', function($filter){
     var _date = $filter('date')(new Date(input), "dd MMM yyyy, HH:mm");
     return _date;
   };
-});
+}]);
 
-angular.module('CEDEK').filter('dateFormat', function($filter){
+angular.module('CEDEK').filter('dateFormat', ['$filter', function($filter){
   "use strict";
 
   return function(input){
@@ -142,4 +142,4 @@ angular.module('CEDEK').filter('dateFormat', function($filter){
     var _date = $filter('date')(new Date(input), "EEE dd MMM yyyy, HH:mm 'hrs'");
     return _date;
   };
-});
+}]);

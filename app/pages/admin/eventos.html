@@ -1,62 +1,63 @@
 <div class="row" ng-init="initEventList()">
-<div class="col-md-3">
-  <div class="panel panel-default">
-    <div class="panel-heading"><h4>Datos de Pagina</h4></div>
-    <div class="panel-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-4"><strong>Total</strong></div>
-          <div class="col-md-8">{{panels.events.maxEvents}} registros</div>
-          <div class="col-md-12"><strong></strong></div>
-        </div>
-        <div class="row">
-          <div class="col-md-4"><strong>Pagina</strong></div>
-          <div class="col-md-8">{{panels.events.currentPage}} de {{panels.events.totalPages()}}</div>
-          <div class="col-md-12"><strong></strong></div>
-        </div>
-        <div class="row">
-          <div class="col-md-4"><strong>Inicio</strong></div>
-          <div class="col-md-8">{{panels.events.since}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-4"><strong>Final</strong></div>
-          <div class="col-md-8">{{panels.events.to}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
-            <ul class="pagination pagination-sm">
-              <li ng-class="{'disabled': !panels.events.hasPrev() }"><a ng-click="prevPage()">&laquo;</a></li>
-              <li ng-class="{'active': p == panels.events.currentPage}" ng-repeat="p in panels.events.getPages()"><a ng-click="getPage(p)">{{p}}</a></li>
-              <li ng-class="{'disabled': !panels.events.hasNext() }"><a ng-click="nextPage()">&raquo;</a></li>
-            </ul>
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading"><h4>Datos de Pagina</h4></div>
+      <div class="panel-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4"><strong>Total</strong></div>
+            <div class="col-md-8">{{panels.events.maxEvents}} registros</div>
+            <div class="col-md-12"><strong></strong></div>
           </div>
-        </div>
+          <div class="row">
+            <div class="col-md-4"><strong>Pagina</strong></div>
+            <div class="col-md-8">{{panels.events.currentPage}} de {{panels.events.totalPages()}}</div>
+            <div class="col-md-12"><strong></strong></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4"><strong>Inicio</strong></div>
+            <div class="col-md-8">{{panels.events.since}}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-4"><strong>Final</strong></div>
+            <div class="col-md-8">{{panels.events.to}}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <ul class="pagination pagination-sm">
+                <li ng-class="{'disabled': !panels.events.hasPrev() }"><a ng-click="prevPage()">&laquo;</a></li>
+                <li ng-class="{'active': p == panels.events.currentPage}" ng-repeat="p in panels.events.getPages()"><a ng-click="getPage(p)">{{p}}</a></li>
+                <li ng-class="{'disabled': !panels.events.hasNext() }"><a ng-click="nextPage()">&raquo;</a></li>
+              </ul>
+            </div>
+          </div><!-- row -->
+        </div><!-- form-group -->
+      </div><!-- panel-body -->
+    </div><!-- panel panel-default -->
+  </div><!-- col-md-3 -->
+
+  <div class="col-md-9">
+    <div class="panel panel-default">
+      <div class="panel-heading">Eventos del Sistema</div>
+        <table class="table table-hover table-condensed">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Usuario</th>
+              <th>Accion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-class="{'success': event.object_type_id == 1, 'info': event.object_type_id == 2, 'warning': event.object_type_id == 3, 'danger': event.object_type_id == 8}" ng-repeat="event in panels.events.list">
+              <td>{{event.id}}</td>
+              <td>{{event.date | dateFormat}}</td>
+              <td><a href="#/usuario/editar/{{event.user_id}}">{{event.user_name}}</a></td>
+              <td ng-bind-html="sanitize(event.action_friendly)"></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-</div>
-
-<div class="col-md-9">
-  <div class="panel panel-default">
-    <div class="panel-heading">Eventos del Sistema</div>
-    <table class="table table-hover table-condensed">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Fecha</th>
-          <th>Usuario</th>
-          <th>Accion</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-class="{'success': event.object_type_id == 1, 'info': event.object_type_id == 2, 'warning': event.object_type_id == 3, 'danger': event.object_type_id == 8}" ng-repeat="event in panels.events.list">
-          <td>{{event.id}}</td>
-          <td>{{event.date | dateFormat}}</td>
-          <td><a href="#/usuario/editar/{{event.user_id}}">{{event.user_name}}</a></td>
-          <td ng-bind-html="sanitize(event.action_friendly)"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 </div>
