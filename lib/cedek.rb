@@ -199,8 +199,9 @@ module Cedek
 
       debt = Debt.where(person_id: student_id, course_id: course_id).first
       if debt.nil?
+        debt = Debt.create!(person_id: student_id, course_id: course_id, amount: amount, commitment: commitment)
         log(request["t"], :create, :debt, debt.id)
-        return Debt.create!(person_id: student_id, course_id: course_id, amount: amount, commitment: commitment)
+        return debt
       else
         props = { commitment: commitment }
         props[:amount] = debt.amount + amount if add_amount
