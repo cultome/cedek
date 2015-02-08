@@ -23,7 +23,7 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/admin/eventos', {templateUrl: 'pages/admin/eventos.html', controller: 'AdminCtrl', roles: ['Administrador']});
   $routeProvider.when('/admin/consultas', {templateUrl: 'pages/admin/consulta.html', controller: 'AdminCtrl', roles: ['Administrador']});
 
-  $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'UserCtrl', roles: ['Administrador', 'Regular']});
+  $routeProvider.when('/consulta/nueva/:personId', {templateUrl: 'pages/consulta/agregar.html', controller: 'ConsultCtrl', roles: ['Administrador', 'Regular']});
 
   $routeProvider.when('/login', {templateUrl: 'pages/login.html', roles: ['Administrador', 'Regular']});
 
