@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="CEDEK">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CEDEK</title>
+
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css"/>
+    
+    <link rel="stylesheet" type="text/css" href="css/cedek.min.css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="lib/angular.min.js"></script>
+    <script type="text/javascript" src="lib/angular-route.min.js"></script>
+    <script type="text/javascript" src="lib/angular-resource.min.js"></script>
+    <script type="text/javascript" src="lib/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="lib/notify.min.js"></script>
+    <script type="text/javascript" src="lib/notify-bootstrap.js"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    <script type="text/javascript" src="js/templates.js"></script>
+    <script type="text/javascript" src="js/cedek.min.js"></script>
+  </head>
+  <body ng-controller="RootCtrl">
+    <div navigation></div>
+    <div class="main-content" ng-view></div>
+    <div class="footer navbar-fixed-bottom">
+      <p>Made with <span class="glyphicon glyphicon-heart"></span> by
+      <a data-toggle="modal" data-target="#thanks">cultome and friends</a>.</p>
+    </div>
+
+    <div alerts></div>
+  </body>
+</html>
