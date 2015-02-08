@@ -171,8 +171,9 @@ module Cedek
       debt = Debt.where(person_id: student_id, course_id: course_id).first
       if debt.nil?
         if amount - payment > 0
+          debt = Debt.create!(person_id: student_id, course_id: course_id, amount: amount - payment)
           log(request["t"], :create, :debt, debt.id)
-          return Debt.create!(person_id: student_id, course_id: course_id, amount: amount - payment)
+          return debt
         end
       else
         debt.amount -= payment
