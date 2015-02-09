@@ -43,7 +43,7 @@
           <a class="dropdown-toggle" data-toggle="dropdown">Personas <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a id="listPeopleOpt" href="#/personas/listar">Lista</a></li>
-            <li><a id="addPeopleOpt" href="#/personas/agregar">Agregar</a></li>
+            <li ng-show="getLoggedUser().user_type_id == 1"><a id="addPeopleOpt" href="#/personas/agregar">Agregar</a></li>
           </ul>
         </li>
 
@@ -51,7 +51,7 @@
           <a class="dropdown-toggle" data-toggle="dropdown">Cursos <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a id="listCourseOpt" href="#/cursos/listar">Lista</a></li>
-            <li><a id="addCourseOpt" href="#/cursos/agregar">Agregar</a></li>
+            <li ng-show="getLoggedUser().user_type_id == 1"><a id="addCourseOpt" href="#/cursos/agregar">Agregar</a></li>
           </ul>
         </li>
       </ul>
