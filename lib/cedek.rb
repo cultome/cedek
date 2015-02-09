@@ -167,21 +167,22 @@ module Cedek
       course_id = debt["courseId"].to_i
       amount = debt["amount"].to_f
       payment = debt["payment"].to_f
+      token = debt["t"]
 
       debt = Debt.where(person_id: student_id, course_id: course_id).first
       if debt.nil?
         if amount - payment > 0
           debt = Debt.create!(person_id: student_id, course_id: course_id, amount: amount - payment)
-          log(request["t"], :create, :debt, debt.id)
+          log(token, :create, :debt, debt.id)
           return debt
         end
       else
         debt.amount -= payment
         if debt.amount <= 0
-          log(request["t"], :delete, :debt, debt.id)
+          log(token, :delete, :debt, debt.id)
           return debt.delete
         else
-          log(request["t"], :update, :debt, debt.id)
+          log(token, :update, :debt, debt.id)
           return debt.save
         end
       end
@@ -196,17 +197,18 @@ module Cedek
       amount = debt["amount"].to_f
       commitment = Time.new(*debt["date"].split("-"))
       add_amount = debt["charge"]
+      token = debt["t"]
 
       debt = Debt.where(person_id: student_id, course_id: course_id).first
       if debt.nil?
         debt = Debt.create!(person_id: student_id, course_id: course_id, amount: amount, commitment: commitment)
-        log(request["t"], :create, :debt, debt.id)
+        log(token, :create, :debt, debt.id)
         return debt
       else
         props = { commitment: commitment }
         props[:amount] = debt.amount + amount if add_amount
         success = debt.update_attributes(props)
-        log(request["t"], :update, :debt, debt.id)
+        log(token, :update, :debt, debt.id)
         return success
       end
     end
@@ -299,7 +301,7 @@ module Cedek
 
       user = User.find(user_id)
       raise "No tienes privilegios para ver este contenido" if user.user_type_id != 1
-      Log.limit(max).offset(max * page).order("id desc").to_json(only: [:id, :date, :user_id, :object_type_id], methods: [:user_name, :action_friendly])
+      return Log.limit(max).offset(max * page).order("id desc").to_json(only: [:id, :date, :user_id, :object_type_id], methods: [:user_name, :action_friendly])
     end
 
     get '/users/:userId' do |userId|
@@ -474,7 +476,7 @@ module Cedek
 
     def get_user_from_token(token)
       return token if token.is_a?(Integer)
-      tk = Token.where("token = ?", token).last
+      tk = Token.where("token = ?", token).order("id desc").first
       return nil if tk.nil?
       return tk.user_id
     end

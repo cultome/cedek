@@ -146,7 +146,9 @@ app.controller('RootCtrl', ['$scope', '$route', '$location', 'AuthService', 'Use
       };
 
       $scope.$on("userUpdated", function(evt, userId){
-        $scope.currentUser = UserService.get(userId);
+        if($scope.currentUser.id === userId){
+          $scope.currentUser = UserService.get(userId);
+        }
       });
 
       $scope.$on("$locationChangeStart", function(evt, next, current){
