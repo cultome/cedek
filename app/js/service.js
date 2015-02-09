@@ -203,12 +203,14 @@ app.factory('DebtService', ['$resource', 'AuthService', function($resource, Auth
 
   return {
     makePayment: function(studentId, courseId, payment, amount, successCb, failCb){
-      return DebtResource.save({studentId: studentId, courseId: courseId, payment: payment, amount: amount, action: "pay"}, successCb, failCb);
+      var token = AuthService.getToken();
+      return DebtResource.save({studentId: studentId, courseId: courseId, payment: payment, amount: amount, action: "pay", t: token}, successCb, failCb);
     },
 
     payLater: function(studentId, courseId, amount, charge, date, successCb, failCb){
       var chrgBool = charge === "true";
-      return DebtResource.save({studentId: studentId, courseId: courseId, date: date, charge: chrgBool, amount: amount, action: "later"}, successCb, failCb);
+      var token = AuthService.getToken();
+      return DebtResource.save({studentId: studentId, courseId: courseId, date: date, charge: chrgBool, amount: amount, action: "later", t: token}, successCb, failCb);
     },
 
     payNow: function(debtId, successCb, failCb){
@@ -295,6 +297,7 @@ app.factory('UserService', ['$resource', 'AuthService', function($resource, Auth
     
     update: function(userId, info, successCb, failCb){
       var token = AuthService.getToken();
+      delete info.user_type_name;
       return UserResource.update({userId: userId, t: token}, info, successCb, failCb);
     },
 

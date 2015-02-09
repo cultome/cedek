@@ -100,11 +100,11 @@ module Cedek
 
         elsif self.object_type_id == 7 # Inscripcion
           person = Person.find(self.object_id)
-          return "#{ self.action.name } #{self.object_type.name} <a href='#/person/editar/#{person.id}'>#{person.name}</a>"
+          return "#{ self.action.name } #{self.object_type.name} <a href='#/persona/editar/#{person.id}'>#{person.name}</a>"
 
         elsif self.object_type_id == 8 # Deuda
           person = Debt.find(self.object_id).person
-          return "#{ self.action.name } #{self.object_type.name} para <a href='#/person/editar/#{person.id}'>#{person.name}</a>"
+          return "#{ self.action.name } #{self.object_type.name} para <a href='#/persona/editar/#{person.id}'>#{person.name}</a>"
 
         else
           return "#{ self.action.name } #{self.object_type.name} ##{self.object_id}"
