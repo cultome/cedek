@@ -1,7 +1,7 @@
 /* jshint strict: true */
 var app = angular.module('CEDEK');
 
-var serviceEndpoint = "https://cedek-cultome.c9.io";
+var serviceEndpoint = "https://cedek-micedek-1.c9.io";
 
 app.factory('PeopleService', ['$resource', 'AuthService', function($resource, AuthService){
   "use strict";
