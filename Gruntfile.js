@@ -35,7 +35,7 @@ module.exports = function(grunt) {
         "eqeqeq": true,
         "eqnull": true,
         "immed": true,
-        "latedef": true,
+        "latedef": false,
         "newcap": true,
         "noarg": true,
         "undef": true,
@@ -104,14 +104,14 @@ module.exports = function(grunt) {
             dest: 'public/'
           },
           {
-            expand: true, cwd: 'bower_components/bootstrap/',
+            expand: true, cwd: 'node_modules/bootstrap/',
             src: [
               'fonts/*'
             ],
             dest: 'public/',
           },
           {
-            expand: true, cwd: 'bower_components/',
+            expand: true, cwd: 'node_modules/',
             src: [
               'jquery/dist/jquery.min.js',
               'jquery/dist/jquery.min.map',
@@ -123,8 +123,7 @@ module.exports = function(grunt) {
               'angular-resource/angular-resource.min.js.map',
               'angular-sanitize/angular-sanitize.min.js',
               'angular-sanitize/angular-sanitize.min.js.map',
-              'notifyjs/dist/notify.min.js',
-              'notifyjs/dist/styles/bootstrap/notify-bootstrap.js',
+              'notifyjs-browser/dist/notify.js',
               'bootstrap/dist/js/bootstrap.min.js',
               'bootstrap/dist/css/bootstrap.min.css',
             ],
@@ -157,18 +156,17 @@ module.exports = function(grunt) {
               retVal = retVal.replace(/<!-- cedek.min.css -->/g, "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/cedek.min.css\"/>");
 
               // cambiamos a las versiones minimizadas de las librerias de tercero
-              retVal = retVal.replace(/..\/bower_components\/bootstrap\/dist\/css\/bootstrap.min.css/g, "lib\/bootstrap.min.css");
+              retVal = retVal.replace(/..\/node_modules\/bootstrap\/dist\/css\/bootstrap.min.css/g, "lib\/bootstrap.min.css");
 
               retVal = retVal.replace(/lib\/(([\w-_ ]+)\/)+/g, "lib\/"); // movemos el path de las librerias de tercero desde app a lib
 
-              retVal = retVal.replace(/..\/bower_components\/angular\/angular.min.js/g, "lib\/angular.min.js");
-              retVal = retVal.replace(/..\/bower_components\/angular-route\/angular-route.min.js/g, "lib\/angular-route.min.js");
-              retVal = retVal.replace(/..\/bower_components\/angular-resource\/angular-resource.min.js/g, "lib\/angular-resource.min.js");
-              retVal = retVal.replace(/..\/bower_components\/angular-sanitize\/angular-sanitize.min.js/g, "lib\/angular-sanitize.min.js");
-              retVal = retVal.replace(/..\/bower_components\/jquery\/dist\/jquery.min.js/g, "lib\/jquery.min.js");
-              retVal = retVal.replace(/..\/bower_components\/bootstrap\/dist\/js\/bootstrap.min.js/g, "lib\/bootstrap.min.js");
-              retVal = retVal.replace(/..\/bower_components\/notifyjs\/dist\/notify.min.js/g, "lib\/notify.min.js");
-              retVal = retVal.replace(/..\/bower_components\/notifyjs\/dist\/styles\/bootstrap\/notify-bootstrap.js/g, "lib\/notify-bootstrap.js");
+              retVal = retVal.replace(/..\/node_modules\/angular\/angular.min.js/g, "lib\/angular.min.js");
+              retVal = retVal.replace(/..\/node_modules\/angular-route\/angular-route.min.js/g, "lib\/angular-route.min.js");
+              retVal = retVal.replace(/..\/node_modules\/angular-resource\/angular-resource.min.js/g, "lib\/angular-resource.min.js");
+              retVal = retVal.replace(/..\/node_modules\/angular-sanitize\/angular-sanitize.min.js/g, "lib\/angular-sanitize.min.js");
+              retVal = retVal.replace(/..\/node_modules\/jquery\/dist\/jquery.min.js/g, "lib\/jquery.min.js");
+              retVal = retVal.replace(/..\/node_modules\/bootstrap\/dist\/js\/bootstrap.min.js/g, "lib\/bootstrap.min.js");
+              retVal = retVal.replace(/..\/node_modules\/notifyjs-browser\/dist\/notify.js/g, "lib\/notify.js");
 
               return retVal;
             } else {

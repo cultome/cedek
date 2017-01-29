@@ -24,7 +24,6 @@ responses.js
 db/
 generated.js
 logs/
-bower_components/
 node_modules/
 target/
 build/
