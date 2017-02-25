@@ -15,7 +15,7 @@ angular.module('CEDEK').controller('UserCtrl', ['$scope', '$routeParams', '$loca
       $scope.create = function(user){
         UserService.create(user, function(usr){
           $scope.notify("El usuario '" + user.name +  "' fue creado ", "success");
-          $location.path("usuario/editar/" + usr.id);
+          $location.path("usuarios/listar");
         });
       };
 

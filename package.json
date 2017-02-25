@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/cultome/cedek"
   },
+  "scripts": { 
+    "grunt": "./node_modules/grunt-cli/bin/grunt"
+  },
   "dependencies": {
     "angular": "~1.2.16",
     "angular-resource": "~1.2.21",

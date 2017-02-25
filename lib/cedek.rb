@@ -33,7 +33,7 @@ module Cedek
         }
       }[ENV["RACK_ENV"]]
 
-      puts "[*] Connecting to #{db_config[:database]} databse."
+      puts "[*] Connecting to #{db_config[:database]} database."
 
       ActiveRecord::Base.establish_connection(db_config)
     end
