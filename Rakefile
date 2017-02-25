@@ -1,5 +1,7 @@
+$LOAD_PATH.unshift('./lib')
+
 desc "Recreate database schema"
-task :reset => :environment do
+task :migrate => :environment do
   recreate_schema
 end
 
@@ -40,7 +42,7 @@ end
 
 desc "Run sinatra app"
 task :run => :environment do
-  Cedek::App.send(:run!)
+  Cedek::App.send(:run!, {port: 4567})
 end
 
 desc "Run interatively"
@@ -51,8 +53,16 @@ task :console => :environment do
   IRB.start
 end
 
+desc "Backup database"
+task :backup do
+  require 'time'
+
+  dest_file = "backup/db_backup_#{Time.now.to_s.gsub(" ", "_")}.db"
+  cp "db/app.db", dest_file
+end
+
 desc "Initialize the dependencies"
-task :init do
+task :resources do
   system "npm install"
   system "./node_modules/grunt-cli/bin/grunt"
 end
