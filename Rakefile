@@ -77,6 +77,9 @@ task :environment do
   ENV["RACK_ENV"] = ENV["RACK_ENV"] || "development"
   puts "[*] Running in #{ENV["RACK_ENV"]} environment."
 
+
+  $LOAD_PATH.unshift('/home/pi/cedek/lib')
+
   require 'cedek'
 
   include Cedek::Model
