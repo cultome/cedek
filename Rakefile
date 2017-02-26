@@ -42,7 +42,7 @@ end
 
 desc "Run sinatra app"
 task :run => :environment do
-  Cedek::App.send(:run!, {port: 4567})
+  Cedek::App.send(:run!, {port: 4567, bind: "0.0.0.0"})
 end
 
 desc "Run interatively"

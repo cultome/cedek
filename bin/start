@@ -1,0 +1,2 @@
+#!/bin/bash
+rackup --port 4567 --server thin --host 0.0.0.0 --include ../lib
